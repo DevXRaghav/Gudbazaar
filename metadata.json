@@ -1,0 +1,6 @@
+{
+  "name": "Gudbazaar - Pure Jaggery & Natural Sweetness",
+  "description": "Premium Indian D2C platform offering authentic, ethically sourced natural jaggery blocks, powder, cubes, and liquid jaggery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
