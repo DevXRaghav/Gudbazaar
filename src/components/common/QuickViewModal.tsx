@@ -56,6 +56,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
               alt={product.name}
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover object-center"
+              onError={(e) => {
+                e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+              }}
             />
           </div>
         </div>

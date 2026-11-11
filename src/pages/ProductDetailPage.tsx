@@ -189,6 +189,9 @@ export const ProductDetailPage: React.FC = () => {
                       }
                     : undefined
                 }
+                onError={(e) => {
+                  e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                }}
               />
 
               {/* Zoom Instruction Hint */}
@@ -222,6 +225,9 @@ export const ProductDetailPage: React.FC = () => {
                       alt={`${product.name} view ${idx + 1}`}
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                      }}
                     />
                   </button>
                 ))}

@@ -131,6 +131,9 @@ export const CartDrawer: React.FC = () => {
                   alt={item.name}
                   referrerPolicy="no-referrer"
                   className="w-18 h-18 sm:w-20 sm:h-20 object-cover rounded-lg bg-[#FFF9EF] shrink-0 border border-[#E9DDC9]/50"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                  }}
                 />
 
                 <div className="flex-1 flex flex-col justify-between">

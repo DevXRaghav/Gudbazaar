@@ -12,7 +12,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
   title = 'Gudbazaar — Pure Jaggery & Natural Sweetness',
   description = 'Discover authentic traditional Indian jaggery. Shop handcrafted jaggery blocks, pure gud powder, cubes, and liquid kakvi direct to your doorstep.',
   canonicalPath = '',
-  ogImage = '/src/assets/images/hero_jaggery_display_1794312375180.jpg',
+  ogImage = '/images/hero_jaggery_display.jpg',
   schema,
 }) => {
   useEffect(() => {

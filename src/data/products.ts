@@ -1,10 +1,10 @@
 import { Product, Coupon } from '../types';
 
-export const HERO_IMAGE = '/src/assets/images/hero_jaggery_display_1794312375180.jpg';
-export const JAGGERY_BLOCKS_IMG = '/src/assets/images/cat_jaggery_blocks_1794312376619.jpg';
-export const JAGGERY_POWDER_IMG = '/src/assets/images/cat_jaggery_powder_1794312377123.jpg';
-export const LIQUID_JAGGERY_IMG = '/src/assets/images/cat_liquid_jaggery_1794312378401.jpg';
-export const STORY_FARM_IMG = '/src/assets/images/story_sugarcane_farm_1794312377940.jpg';
+export const HERO_IMAGE = '/images/hero_jaggery_display.jpg';
+export const JAGGERY_BLOCKS_IMG = '/images/cat_jaggery_blocks.jpg';
+export const JAGGERY_POWDER_IMG = '/images/cat_jaggery_powder.jpg';
+export const LIQUID_JAGGERY_IMG = '/images/cat_liquid_jaggery.jpg';
+export const STORY_FARM_IMG = '/images/story_sugarcane_farm.jpg';
 
 export const CATEGORIES = [
   {

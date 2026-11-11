@@ -64,6 +64,15 @@ const DEFAULT_BANNERS: BannerItem[] = [
 
 const STORAGE_KEY = 'gudbazaar_custom_banners';
 
+const sanitizeImageUrl = (url?: string) => {
+  if (!url) return HERO_IMAGE;
+  if (url.includes('hero_jaggery_display')) return HERO_IMAGE;
+  if (url.includes('cat_jaggery_blocks')) return JAGGERY_BLOCKS_IMG;
+  if (url.includes('cat_jaggery_powder')) return JAGGERY_POWDER_IMG;
+  if (url.includes('cat_liquid_jaggery')) return LIQUID_JAGGERY_IMG;
+  return url;
+};
+
 export const ProductBannerSection: React.FC = () => {
   const [banners] = useState<BannerItem[]>(() => {
     try {
@@ -71,7 +80,10 @@ export const ProductBannerSection: React.FC = () => {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.map((b: BannerItem) => ({
+            ...b,
+            imageUrl: sanitizeImageUrl(b.imageUrl),
+          }));
         }
       }
     } catch {
@@ -128,6 +140,9 @@ export const ProductBannerSection: React.FC = () => {
               alt={currentBanner.title || currentBanner.productName}
               referrerPolicy="no-referrer"
               className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-700"
+              onError={(e) => {
+                e.currentTarget.src = HERO_IMAGE;
+              }}
             />
 
             {/* Gradient Scrim for Content Readability */}
