@@ -2,23 +2,25 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, Truck, Lock, AlertCircle, ArrowLeft, Check, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { PINCODE_DELIVERY_DATA } from '../data/products';
 import { CustomerAddress, Order } from '../types';
 import { SEOHead } from '../components/seo/SEOHead';
 
 export const CheckoutPage: React.FC = () => {
   const { items, subtotal, discount, shippingFee, total, coupon, clearCart, setLastOrder } = useCart();
+  const { user, openAuthModal, addOrderToHistory } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<CustomerAddress>({
-    fullName: '',
-    mobile: '',
-    email: '',
-    addressLine: '',
-    city: '',
-    state: '',
-    pincode: '',
-    landmark: '',
+    fullName: user?.fullName || '',
+    mobile: user?.mobile || '',
+    email: user?.email || '',
+    addressLine: user?.addressLine || '',
+    city: user?.city || '',
+    state: user?.state || '',
+    pincode: user?.pincode || '',
+    landmark: user?.landmark || '',
     addressType: 'home',
   });
 
@@ -107,6 +109,7 @@ export const CheckoutPage: React.FC = () => {
       };
 
       setLastOrder(newOrder);
+      addOrderToHistory(newOrder);
       clearCart();
       setIsSubmitting(false);
       navigate('/order-confirmation');
@@ -161,9 +164,24 @@ export const CheckoutPage: React.FC = () => {
               
               {/* Customer Contact & Address Form */}
               <div className="bg-white rounded-xl border border-[#E9DDC9] p-6 shadow-xs">
-                <div className="flex items-center gap-2 pb-4 mb-4 border-b border-[#E9DDC9]">
-                  <Truck className="w-5 h-5 text-[#47752F]" />
-                  <h2 className="text-base font-bold text-[#4A2415]">Delivery Details</h2>
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-[#E9DDC9]">
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-5 h-5 text-[#47752F]" />
+                    <h2 className="text-base font-bold text-[#4A2415]">Delivery Details</h2>
+                  </div>
+                  {user ? (
+                    <span className="text-[11px] font-semibold text-[#47752F] bg-[#47752F]/10 px-2 py-0.5 rounded">
+                      Autofilled from {user.fullName.split(' ')[0]}'s Profile
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => openAuthModal('signin')}
+                      className="text-xs font-semibold text-[#47752F] hover:underline"
+                    >
+                      Have an account? Sign in
+                    </button>
+                  )}
                 </div>
 
                 <div className="space-y-4 text-xs">

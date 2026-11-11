@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Search, ShoppingBag, Menu, X, ArrowRight } from 'lucide-react';
+import { Search, ShoppingBag, Menu, X, ArrowRight, User } from 'lucide-react';
 import { LogoLink } from './Logo';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   onOpenSearch?: () => void;
@@ -10,6 +11,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   const { totalItemCount, openDrawer } = useCart();
+  const { user, openAuthModal } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchModal, setShowSearchModal] = useState(false);
@@ -88,6 +90,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               title="Search products"
             >
               <Search className="w-5 h-5" />
+            </button>
+
+            {/* Customer Account / Sign Up Popup Trigger */}
+            <button
+              onClick={() => openAuthModal(user ? 'profile' : 'signup')}
+              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-semibold transition-all border ${
+                user
+                  ? 'bg-[#47752F]/10 border-[#47752F]/30 text-[#47752F] hover:bg-[#47752F]/20'
+                  : 'bg-[#FFF9EF] hover:bg-[#E9DDC9]/50 border-[#E9DDC9] text-[#4A2415]'
+              }`}
+              title={user ? `Logged in as ${user.fullName}` : 'Sign Up / Customer Profile'}
+              aria-label="Customer Account Profile"
+            >
+              <User className="w-4 h-4 text-[#47752F]" />
+              <span className="hidden sm:inline">
+                {user ? user.fullName.split(' ')[0] : 'Sign In'}
+              </span>
             </button>
 
             {/* Shopping Bag with Cart Count */}
@@ -201,7 +220,34 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                 </button>
               </div>
 
-              <nav className="mt-6 flex flex-col gap-4">
+              {/* Mobile Account Banner */}
+              <div className="mt-4 p-3 bg-[#FFF9EF] rounded-xl border border-[#E9DDC9] flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-[#47752F] text-white flex items-center justify-center font-bold text-xs">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-[#4A2415]">
+                      {user ? user.fullName : 'Customer Account'}
+                    </p>
+                    <p className="text-[10px] text-[#47752F] font-semibold">
+                      {user ? 'View profile & orders' : 'Sign in & get 15% off'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    openAuthModal(user ? 'profile' : 'signup');
+                  }}
+                  className="px-3 py-1 bg-[#4A2415] text-[#FFF9EF] text-xs font-bold rounded-lg"
+                >
+                  {user ? 'Profile' : 'Sign In'}
+                </button>
+              </div>
+
+              <nav className="mt-4 flex flex-col gap-3">
                 {navLinks.map((link) => (
                   <NavLink
                     key={link.path}

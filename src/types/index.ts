@@ -101,3 +101,19 @@ export interface Coupon {
   minOrderValue: number;
   description: string;
 }
+
+export interface CustomerProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  mobile: string;
+  password?: string;
+  addressLine?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  landmark?: string;
+  sweetenerPreference?: 'Daily Tea & Beverages' | 'Ayurvedic & Health' | 'Traditional Cooking' | 'Baking & Gourmet';
+  createdAt: string;
+}
+
