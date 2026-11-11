@@ -63,6 +63,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [savedOrders]);
 
+  // Automatically open the signup popup after website loads if not logged in
+  useEffect(() => {
+    if (user) return;
+    const hasSeen = sessionStorage.getItem('gudbazaar_auto_signup_seen_v2');
+    if (!hasSeen) {
+      const timer = setTimeout(() => {
+        setIsAuthModalOpen(true);
+        setAuthModalMode('signup');
+        sessionStorage.setItem('gudbazaar_auto_signup_seen_v2', 'true');
+      }, 1200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
+
   const openAuthModal = (mode: 'signup' | 'signin' | 'profile' = user ? 'profile' : 'signup') => {
     setAuthModalMode(mode);
     setIsAuthModalOpen(true);

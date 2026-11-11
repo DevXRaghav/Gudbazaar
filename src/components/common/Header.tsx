@@ -36,30 +36,30 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
   return (
     <>
       {/* SECTION A — ANNOUNCEMENT BAR */}
-      <div className="bg-[#4A2415] text-[#FFF9EF] text-xs py-2 px-4 text-center tracking-wide font-medium flex items-center justify-center gap-2">
-        <span>Bringing Natural Sweetness to Your Everyday Life.</span>
+      <div className="bg-[#4A2415] text-[#FFF9EF] text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-1.5 sm:gap-2 overflow-hidden">
+        <span className="truncate">Bringing Natural Sweetness to Your Everyday Life.</span>
         <span className="hidden sm:inline text-[#E99A19]">·</span>
         <span className="hidden sm:inline text-[#FFF9EF]/90">Free Delivery across India on orders above ₹499</span>
       </div>
 
       {/* SECTION B — STICKY NAVIGATION BAR (Strict 3-zone contract) */}
       <header className="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E9DDC9]/70 backdrop-blur-md bg-white/95">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-17 md:h-18 flex items-center justify-between gap-2 sm:gap-4 md:gap-8">
           
           {/* Zone 1: Brand Wordmark & Motif */}
-          <div className="shrink-0 flex items-center gap-3">
+          <div className="shrink-0 flex items-center gap-1.5 sm:gap-3">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="md:hidden p-2 -ml-2 text-[#4A2415] hover:text-[#47752F] focus:outline-none"
+              className="md:hidden p-2 -ml-1 text-[#4A2415] hover:text-[#47752F] hover:bg-[#FFF9EF] active:bg-[#E9DDC9]/50 rounded-lg transition-colors focus:outline-none touch-manipulation"
               aria-label="Open mobile menu"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <LogoLink size="md" />
           </div>
 
           {/* Zone 2: 4 Clean Single-Line Text Links */}
-          <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-[#4A2415]">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-[15px] font-medium text-[#4A2415]">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
@@ -78,24 +78,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </nav>
 
           {/* Zone 3: Search & Shopping Bag */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2.5 md:gap-4 shrink-0">
             {/* Search Trigger */}
             <button
               onClick={() => {
                 if (onOpenSearch) onOpenSearch();
                 else setShowSearchModal(true);
               }}
-              className="p-2 text-[#4A2415] hover:text-[#47752F] hover:bg-[#FFF9EF] rounded-full transition-colors focus:outline-none"
+              className="p-2 text-[#4A2415] hover:text-[#47752F] hover:bg-[#FFF9EF] active:bg-[#E9DDC9]/40 rounded-full transition-colors focus:outline-none touch-manipulation"
               aria-label="Search products"
               title="Search products"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
             </button>
 
             {/* Customer Account / Sign Up Popup Trigger */}
             <button
               onClick={() => openAuthModal(user ? 'profile' : 'signup')}
-              className={`flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs font-semibold transition-all border ${
+              className={`flex items-center gap-1.5 p-2 sm:py-1.5 sm:px-3 rounded-full text-xs font-semibold transition-all border touch-manipulation ${
                 user
                   ? 'bg-[#47752F]/10 border-[#47752F]/30 text-[#47752F] hover:bg-[#47752F]/20'
                   : 'bg-[#FFF9EF] hover:bg-[#E9DDC9]/50 border-[#E9DDC9] text-[#4A2415]'
@@ -112,12 +112,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
             {/* Shopping Bag with Cart Count */}
             <button
               onClick={openDrawer}
-              className="relative flex items-center gap-2 py-2 px-3.5 bg-[#FFF9EF] hover:bg-[#E9DDC9]/50 border border-[#E9DDC9] text-[#4A2415] rounded-full text-sm font-medium transition-colors focus:outline-none"
+              className="relative flex items-center gap-1.5 sm:gap-2 py-1.5 px-2.5 sm:py-2 sm:px-3.5 bg-[#FFF9EF] hover:bg-[#E9DDC9]/50 active:bg-[#E9DDC9]/70 border border-[#E9DDC9] text-[#4A2415] rounded-full text-xs sm:text-sm font-medium transition-colors focus:outline-none touch-manipulation"
               aria-label="View shopping bag"
             >
               <ShoppingBag className="w-4 h-4 text-[#47752F]" />
               <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">Bag</span>
-              <span className="w-5 h-5 rounded-full bg-[#4A2415] text-[#FFF9EF] text-[11px] font-bold flex items-center justify-center tabular-nums">
+              <span className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full bg-[#4A2415] text-[#FFF9EF] text-[10px] sm:text-[11px] font-bold flex items-center justify-center tabular-nums">
                 {totalItemCount}
               </span>
             </button>

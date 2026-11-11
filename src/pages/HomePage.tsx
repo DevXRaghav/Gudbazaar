@@ -67,6 +67,9 @@ export const HomePage: React.FC = () => {
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                  }}
                 />
               </div>
               <h3 className="text-sm font-bold text-[#4A2415] group-hover:text-[#47752F] transition-colors leading-snug">

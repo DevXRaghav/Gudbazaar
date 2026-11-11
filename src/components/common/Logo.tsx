@@ -16,9 +16,13 @@ export const GudbazaarLogo: React.FC<LogoProps> = ({
 }) => {
   const isLight = variant === 'light';
 
-  // Sizing mapping
+  // Sizing mapping with responsive mobile scale
   const heightClass =
-    size === 'sm' ? 'h-9 md:h-10' : size === 'lg' ? 'h-14 md:h-16' : 'h-11 md:h-12';
+    size === 'sm'
+      ? 'h-8 sm:h-9 md:h-10'
+      : size === 'lg'
+      ? 'h-12 sm:h-14 md:h-16'
+      : 'h-8.5 sm:h-10 md:h-12';
 
   if (isLight) {
     // For dark background sections (e.g. deep jaggery brown footer)

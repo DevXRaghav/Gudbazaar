@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, Truck, Lock, AlertCircle, ArrowLeft, Check, Sparkles } from 'lucide-react';
+import { ShieldCheck, Truck, Lock, AlertCircle, ArrowLeft, Check, Sparkles, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { PINCODE_DELIVERY_DATA } from '../data/products';
+import { INDIAN_STATES_AND_UT } from '../data/indianStates';
 import { CustomerAddress, Order } from '../types';
 import { SEOHead } from '../components/seo/SEOHead';
 
@@ -287,16 +288,35 @@ export const CheckoutPage: React.FC = () => {
 
                     <div>
                       <label className="block font-semibold text-[#4A2415] mb-1">
-                        State *
+                        State / Union Territory *
                       </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.state}
-                        onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                        placeholder="Maharashtra"
-                        className="w-full px-3.5 py-2.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F]"
-                      />
+                      <div className="relative">
+                        <select
+                          required
+                          value={formData.state}
+                          onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                          className="w-full px-3.5 py-2.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F] cursor-pointer appearance-none pr-8"
+                        >
+                          <option value="">Select State or UT</option>
+                          <optgroup label="States (28)">
+                            {INDIAN_STATES_AND_UT.slice(0, 28).map((st) => (
+                              <option key={st} value={st}>
+                                {st}
+                              </option>
+                            ))}
+                          </optgroup>
+                          <optgroup label="Union Territories (8)">
+                            {INDIAN_STATES_AND_UT.slice(28).map((ut) => (
+                              <option key={ut} value={ut}>
+                                {ut}
+                              </option>
+                            ))}
+                          </optgroup>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-[#4A2415]/60">
+                          <ChevronDown className="w-4 h-4" />
+                        </div>
+                      </div>
                       {errors.state && <p className="text-red-700 text-[11px] mt-1">{errors.state}</p>}
                     </div>
                   </div>

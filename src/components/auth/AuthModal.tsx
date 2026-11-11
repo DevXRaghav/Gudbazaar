@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Phone, Lock, MapPin, Sparkles, Check, LogOut, Package, ArrowRight, Eye, EyeOff, Tag, Heart } from 'lucide-react';
+import { X, User, Mail, Phone, Lock, MapPin, Sparkles, Check, LogOut, Package, ArrowRight, Eye, EyeOff, Tag, Heart, ChevronDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useAuth } from '../../context/AuthContext';
 import { PINCODE_DELIVERY_DATA } from '../../data/products';
+import { INDIAN_STATES_AND_UT } from '../../data/indianStates';
 import { CustomerProfile } from '../../types';
 
 export const AuthModal: React.FC = () => {
@@ -352,32 +353,66 @@ export const AuthModal: React.FC = () => {
                 </div>
               </div>
 
-              {/* Optional City & PIN Code */}
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                <div>
-                  <label className="block font-bold text-[#4A2415] mb-1">
-                    Delivery PIN Code
-                  </label>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={pincode}
-                    onChange={handlePincodeChange}
-                    placeholder="e.g. 400001"
-                    className="w-full px-3 py-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F]"
-                  />
+              {/* Location: PIN Code, City, and State / UT Dropdown */}
+              <div className="space-y-2.5 pt-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-bold text-[#4A2415] mb-1">
+                      Delivery PIN Code
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={pincode}
+                      onChange={handlePincodeChange}
+                      placeholder="e.g. 400001"
+                      className="w-full px-3 py-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-bold text-[#4A2415] mb-1">
+                      City / District
+                    </label>
+                    <input
+                      type="text"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      placeholder="e.g. Mumbai, Pune, Jaipur"
+                      className="w-full px-3 py-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F]"
+                    />
+                  </div>
                 </div>
+
                 <div>
                   <label className="block font-bold text-[#4A2415] mb-1">
-                    City / State
+                    State / Union Territory
                   </label>
-                  <input
-                    type="text"
-                    value={city ? `${city}, ${state}` : ''}
-                    readOnly
-                    placeholder="Auto-detected"
-                    className="w-full px-3 py-2 bg-[#E9DDC9]/30 border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415]/80 focus:outline-none"
-                  />
+                  <div className="relative">
+                    <select
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      className="w-full px-3 py-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs text-[#4A2415] focus:outline-none focus:border-[#47752F] cursor-pointer appearance-none pr-8"
+                    >
+                      <option value="">Select State or Union Territory</option>
+                      <optgroup label="States (28)">
+                        {INDIAN_STATES_AND_UT.slice(0, 28).map((item) => (
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Union Territories (8)">
+                        {INDIAN_STATES_AND_UT.slice(28).map((item) => (
+                          <option key={item} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-[#4A2415]/60">
+                      <ChevronDown className="w-4 h-4" />
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -571,7 +606,7 @@ export const AuthModal: React.FC = () => {
                       placeholder="Street address, house / apartment number"
                       className="w-full px-3 py-1.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-[#4A2415]"
                     />
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <input
                         type="text"
                         maxLength={6}
@@ -582,11 +617,28 @@ export const AuthModal: React.FC = () => {
                       />
                       <input
                         type="text"
-                        value={editCity ? `${editCity}, ${editState}` : ''}
-                        readOnly
-                        placeholder="City, State"
-                        className="px-3 py-1.5 bg-[#E9DDC9]/30 border border-[#E9DDC9] rounded-lg text-[#4A2415]"
+                        value={editCity}
+                        onChange={(e) => setEditCity(e.target.value)}
+                        placeholder="City"
+                        className="px-3 py-1.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-[#4A2415]"
                       />
+                      <select
+                        value={editState}
+                        onChange={(e) => setEditState(e.target.value)}
+                        className="px-2 py-1.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-[#4A2415] text-xs cursor-pointer"
+                      >
+                        <option value="">State / UT</option>
+                        <optgroup label="States">
+                          {INDIAN_STATES_AND_UT.slice(0, 28).map((st) => (
+                            <option key={st} value={st}>{st}</option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="Union Territories">
+                          {INDIAN_STATES_AND_UT.slice(28).map((ut) => (
+                            <option key={ut} value={ut}>{ut}</option>
+                          ))}
+                        </optgroup>
+                      </select>
                     </div>
                     <button
                       type="submit"
