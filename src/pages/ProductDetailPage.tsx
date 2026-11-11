@@ -11,11 +11,13 @@ import {
   Clock,
   Sparkles,
   ArrowRight,
+  AlertCircle,
 } from 'lucide-react';
 import { PRODUCTS, PINCODE_DELIVERY_DATA } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/common/ProductCard';
 import { SEOHead } from '../components/seo/SEOHead';
+import { validateIndianPincode } from '../utils/pincodeValidator';
 
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -80,27 +82,19 @@ export const ProductDetailPage: React.FC = () => {
 
   const handlePincodeCheck = (e: React.FormEvent) => {
     e.preventDefault();
-    const clean = pincodeInput.trim();
-    if (!/^\d{6}$/.test(clean)) {
-      setPincodeResult({ valid: false, message: 'Please enter a valid 6-digit Indian PIN code' });
-      return;
-    }
-
-    const data = PINCODE_DELIVERY_DATA[clean];
-    if (data) {
+    const result = validateIndianPincode(pincodeInput);
+    if (result.isValid) {
       setPincodeResult({
         valid: true,
-        city: data.city,
-        state: data.state,
-        days: data.days,
-        message: `Delivery in ${data.days} days to ${data.city}, ${data.state}. Cash on Delivery available!`,
+        city: result.city,
+        state: result.state,
+        days: result.days,
+        message: result.message,
       });
     } else {
-      // General valid Indian pincode fallback
       setPincodeResult({
-        valid: true,
-        days: 3,
-        message: `Standard Pan-India delivery within 3–4 business days. Pre-paid & COD supported.`,
+        valid: false,
+        message: result.message,
       });
     }
   };
@@ -420,15 +414,19 @@ export const ProductDetailPage: React.FC = () => {
                 </form>
 
                 {pincodeResult && (
-                  <div className={`mt-2.5 text-xs flex items-start gap-1.5 ${
-                    pincodeResult.valid ? 'text-[#47752F] font-medium' : 'text-red-700'
-                  }`}>
+                  <div
+                    className={`mt-3 p-2.5 rounded-lg text-xs flex items-start gap-2 border transition-all ${
+                      pincodeResult.valid
+                        ? 'bg-[#47752F]/10 border-[#47752F]/30 text-[#47752F]'
+                        : 'bg-red-50 border-red-200 text-red-800'
+                    }`}
+                  >
                     {pincodeResult.valid ? (
-                      <Check className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 shrink-0 text-[#47752F] mt-0.5" />
                     ) : (
-                      <Clock className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                      <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
                     )}
-                    <span>{pincodeResult.message}</span>
+                    <span className="leading-relaxed font-medium">{pincodeResult.message}</span>
                   </div>
                 )}
               </div>

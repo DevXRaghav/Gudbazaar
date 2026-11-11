@@ -4,8 +4,8 @@ import { CustomerProfile, Order } from '../types';
 interface AuthContextType {
   user: CustomerProfile | null;
   isAuthModalOpen: boolean;
-  authModalMode: 'signup' | 'signin' | 'profile';
-  openAuthModal: (mode?: 'signup' | 'signin' | 'profile') => void;
+  authModalMode: 'prompt' | 'signup' | 'signin' | 'profile';
+  openAuthModal: (mode?: 'prompt' | 'signup' | 'signin' | 'profile') => void;
   closeAuthModal: () => void;
   register: (data: Omit<CustomerProfile, 'id' | 'createdAt'>) => { success: boolean; message?: string };
   login: (emailOrPhone: string, password?: string) => { success: boolean; message?: string };
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'signup' | 'signin' | 'profile'>('signup');
+  const [authModalMode, setAuthModalMode] = useState<'prompt' | 'signup' | 'signin' | 'profile'>('prompt');
 
   useEffect(() => {
     try {
@@ -63,22 +63,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [savedOrders]);
 
-  // Automatically open the signup popup after website loads if not logged in
+  // Automatically open the lightweight signup/login prompt popup after website loads if not logged in
   useEffect(() => {
     if (user) return;
-    const hasSeen = sessionStorage.getItem('gudbazaar_auto_signup_seen_v2');
+    const hasSeen = sessionStorage.getItem('gudbazaar_auto_auth_prompt_seen_v1');
     if (!hasSeen) {
       const timer = setTimeout(() => {
         setIsAuthModalOpen(true);
-        setAuthModalMode('signup');
-        sessionStorage.setItem('gudbazaar_auto_signup_seen_v2', 'true');
-      }, 1200);
+        setAuthModalMode('prompt');
+        sessionStorage.setItem('gudbazaar_auto_auth_prompt_seen_v1', 'true');
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [user]);
 
-  const openAuthModal = (mode: 'signup' | 'signin' | 'profile' = user ? 'profile' : 'signup') => {
+  const openAuthModal = (mode: 'prompt' | 'signup' | 'signin' | 'profile' = user ? 'profile' : 'prompt') => {
     setAuthModalMode(mode);
     setIsAuthModalOpen(true);
   };

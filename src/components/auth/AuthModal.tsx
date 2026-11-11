@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Phone, Lock, MapPin, Sparkles, Check, LogOut, Package, ArrowRight, Eye, EyeOff, Tag, Heart, ChevronDown } from 'lucide-react';
+import { X, User, Mail, Phone, Lock, MapPin, Sparkles, Check, LogOut, Package, ArrowRight, ArrowLeft, Eye, EyeOff, Tag, Heart, ChevronDown, UserPlus, LogIn } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useAuth } from '../../context/AuthContext';
 import { PINCODE_DELIVERY_DATA } from '../../data/products';
 import { INDIAN_STATES_AND_UT } from '../../data/indianStates';
+import { GudbazaarLogo } from '../common/Logo';
 import { CustomerProfile } from '../../types';
+import { validateIndianPincode } from '../../utils/pincodeValidator';
 
 export const AuthModal: React.FC = () => {
   const {
@@ -20,7 +22,7 @@ export const AuthModal: React.FC = () => {
     savedOrders,
   } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<'signup' | 'signin' | 'profile'>(
+  const [activeTab, setActiveTab] = useState<'prompt' | 'signup' | 'signin' | 'profile'>(
     user ? 'profile' : authModalMode
   );
 
@@ -29,7 +31,7 @@ export const AuthModal: React.FC = () => {
     if (user) {
       setActiveTab('profile');
     } else {
-      setActiveTab(authModalMode === 'profile' ? 'signup' : authModalMode);
+      setActiveTab(authModalMode === 'profile' ? 'prompt' : authModalMode);
     }
   }, [authModalMode, user]);
 
@@ -65,18 +67,26 @@ export const AuthModal: React.FC = () => {
   const handlePincodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 6);
     setPincode(val);
-    if (val.length === 6 && PINCODE_DELIVERY_DATA[val]) {
-      setCity(PINCODE_DELIVERY_DATA[val].city);
-      setState(PINCODE_DELIVERY_DATA[val].state);
+    if (val.length === 6) {
+      const check = validateIndianPincode(val);
+      if (check.isValid) {
+        if (check.city) setCity(check.city);
+        if (check.state) setState(check.state);
+        setErrorMessage(null);
+      }
     }
   };
 
   const handleEditPincodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 6);
     setEditPincode(val);
-    if (val.length === 6 && PINCODE_DELIVERY_DATA[val]) {
-      setEditCity(PINCODE_DELIVERY_DATA[val].city);
-      setEditState(PINCODE_DELIVERY_DATA[val].state);
+    if (val.length === 6) {
+      const check = validateIndianPincode(val);
+      if (check.isValid) {
+        if (check.city) setEditCity(check.city);
+        if (check.state) setEditState(check.state);
+        setErrorMessage(null);
+      }
     }
   };
 
@@ -100,6 +110,15 @@ export const AuthModal: React.FC = () => {
     if (password.length < 6) {
       setErrorMessage('Password must be at least 6 characters');
       return;
+    }
+
+    // If pincode is provided, enforce strict Indian postal validation
+    if (pincode.trim()) {
+      const pinCheck = validateIndianPincode(pincode);
+      if (!pinCheck.isValid) {
+        setErrorMessage(pinCheck.message);
+        return;
+      }
     }
 
     const res = register({
@@ -172,28 +191,51 @@ export const AuthModal: React.FC = () => {
       onClick={closeAuthModal}
     >
       <div
-        className="relative w-full max-w-md sm:max-w-lg bg-[#FFFFFF] rounded-2xl shadow-2xl border border-[#E9DDC9] overflow-hidden flex flex-col max-h-[92vh] text-[#4A2415]"
+        className={`relative w-full ${
+          activeTab === 'prompt' ? 'max-w-md' : 'max-w-md sm:max-w-lg'
+        } bg-[#FFFFFF] rounded-2xl shadow-2xl border border-[#E9DDC9] overflow-hidden flex flex-col max-h-[92vh] text-[#4A2415] transition-all duration-300`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header Banner */}
-        <div className="bg-[#FFF9EF] p-5 border-b border-[#E9DDC9] flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-[#47752F] text-white flex items-center justify-center font-bold text-xs shadow-xs">
-              <User className="w-4 h-4" />
+        <div className="bg-[#FFF9EF] p-4 sm:p-5 border-b border-[#E9DDC9] flex items-center justify-between">
+          {!user && activeTab === 'prompt' ? (
+            <div className="flex items-center gap-2">
+              <GudbazaarLogo size="sm" />
             </div>
-            <div>
-              <h2 className="text-base font-bold text-[#4A2415]">
-                {user
-                  ? `Welcome, ${user.fullName.split(' ')[0]}`
-                  : activeTab === 'signup'
-                  ? 'Join Gudbazaar'
-                  : 'Customer Sign In'}
+          ) : !user && (activeTab === 'signup' || activeTab === 'signin') ? (
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('prompt');
+                  setErrorMessage(null);
+                }}
+                className="flex items-center gap-1.5 text-xs font-bold text-[#47752F] hover:text-[#4A2415] transition-colors py-1 px-2 -ml-1 rounded-lg hover:bg-[#E9DDC9]/40 active:scale-95"
+                title="Go back to options"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back</span>
+              </button>
+              <div className="h-4 w-px bg-[#E9DDC9]" />
+              <h2 className="text-sm font-bold text-[#4A2415]">
+                {activeTab === 'signup' ? 'Create Customer Profile' : 'Customer Sign In'}
               </h2>
-              <p className="text-[11px] text-[#47752F] font-semibold">
-                Pure Jaggery · Natural Wellness Profile
-              </p>
             </div>
-          </div>
+          ) : (
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-[#47752F] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <User className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-bold text-[#4A2415]">
+                  Welcome, {user?.fullName.split(' ')[0]}
+                </h2>
+                <p className="text-[11px] text-[#47752F] font-semibold">
+                  Pure Jaggery · Natural Wellness Profile
+                </p>
+              </div>
+            </div>
+          )}
 
           <button
             onClick={closeAuthModal}
@@ -204,8 +246,8 @@ export const AuthModal: React.FC = () => {
           </button>
         </div>
 
-        {/* Tab Selector (when not logged in) */}
-        {!user && (
+        {/* Tab Switcher (Only visible when user has entered Sign Up or Sign In form) */}
+        {!user && (activeTab === 'signup' || activeTab === 'signin') && (
           <div className="grid grid-cols-2 p-1.5 bg-[#FFF9EF] border-b border-[#E9DDC9]/70 text-xs font-semibold">
             <button
               type="button"
@@ -219,7 +261,7 @@ export const AuthModal: React.FC = () => {
                   : 'text-[#4A2415]/60 hover:text-[#4A2415]'
               }`}
             >
-              Create Account (Sign Up)
+              Sign Up (15% Off)
             </button>
             <button
               type="button"
@@ -252,7 +294,108 @@ export const AuthModal: React.FC = () => {
         )}
 
         {/* Modal Scrollable Body */}
-        <div className="p-6 overflow-y-auto space-y-5 text-xs">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs">
+          
+          {/* TAB 0: COMPACT INITIAL CHOICE PROMPT */}
+          {!user && activeTab === 'prompt' && (
+            <div className="space-y-4 py-1">
+              
+              {/* Highlight Welcome Discount Banner */}
+              <div className="p-4 bg-gradient-to-br from-[#4A2415] to-[#633520] text-white rounded-xl shadow-xs border border-[#E99A19]/30">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5 text-[#E99A19] font-bold text-xs">
+                    <Sparkles className="w-4 h-4" />
+                    <span>Welcome to Gudbazaar</span>
+                  </div>
+                  <span className="text-[10px] bg-[#E99A19] text-[#4A2415] px-2 py-0.5 rounded-full font-extrabold uppercase shrink-0">
+                    15% OFF
+                  </span>
+                </div>
+                <p className="text-xs text-[#FFF9EF] font-medium mt-1.5 leading-snug">
+                  Experience traditional single-origin Indian jaggery, crafted naturally with zero chemicals.
+                </p>
+                <div className="mt-3 pt-2.5 border-t border-white/15 flex items-center justify-between text-[11px] text-[#FFF9EF]/90">
+                  <span>First Order Code: <strong className="text-[#E99A19] font-mono tracking-wider font-bold">FIRSTGUD</strong></span>
+                  <span className="text-[#FFF9EF]/70">Free Shipping on ₹499+</span>
+                </div>
+              </div>
+
+              {/* Action Prompt Headline */}
+              <div className="text-center pt-1 pb-0.5">
+                <h3 className="text-sm font-bold text-[#4A2415]">
+                  Sign up or Log in to continue
+                </h3>
+                <p className="text-[11px] text-[#4A2415]/70 mt-0.5">
+                  Choose an option below to access member discounts and tracking:
+                </p>
+              </div>
+
+              {/* Choice 1: Sign Up (Opens the bigger form) */}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('signup');
+                  setErrorMessage(null);
+                }}
+                className="w-full p-3.5 sm:p-4 bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] rounded-xl transition-all shadow-md group flex items-center justify-between text-left active:scale-[0.99] cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                    <UserPlus className="w-5 h-5 text-[#E99A19]" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-xs sm:text-sm text-white flex items-center gap-1.5">
+                      <span>Create New Account (Sign Up)</span>
+                      <span className="text-[10px] bg-[#E99A19] text-[#4A2415] px-1.5 py-0.2 rounded font-extrabold uppercase">
+                        Save 15%
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#FFF9EF]/80 mt-0.5">
+                      New to Gudbazaar · Quick 30-sec profile setup
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#E99A19] group-hover:translate-x-1 transition-transform shrink-0" />
+              </button>
+
+              {/* Choice 2: Log In */}
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('signin');
+                  setErrorMessage(null);
+                }}
+                className="w-full p-3.5 bg-[#FFF9EF] hover:bg-[#E9DDC9]/50 border border-[#E9DDC9] rounded-xl transition-all group flex items-center justify-between text-left active:scale-[0.99] cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-[#E9DDC9]/50 flex items-center justify-center shrink-0">
+                    <LogIn className="w-4 h-4 text-[#47752F]" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-xs text-[#4A2415]">
+                      Log In to Existing Account
+                    </div>
+                    <p className="text-[11px] text-[#4A2415]/70 mt-0.5">
+                      Sign in using your mobile number or email
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-[#4A2415]/50 group-hover:translate-x-1 transition-transform shrink-0" />
+              </button>
+
+              {/* Continue as Guest */}
+              <div className="pt-1 text-center">
+                <button
+                  type="button"
+                  onClick={closeAuthModal}
+                  className="text-xs text-[#4A2415]/60 hover:text-[#4A2415] hover:underline"
+                >
+                  Continue browsing as guest →
+                </button>
+              </div>
+
+            </div>
+          )}
           
           {/* TAB 1: SIGN UP FORM */}
           {!user && activeTab === 'signup' && (

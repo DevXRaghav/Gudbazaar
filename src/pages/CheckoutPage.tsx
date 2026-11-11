@@ -7,6 +7,7 @@ import { PINCODE_DELIVERY_DATA } from '../data/products';
 import { INDIAN_STATES_AND_UT } from '../data/indianStates';
 import { CustomerAddress, Order } from '../types';
 import { SEOHead } from '../components/seo/SEOHead';
+import { validateIndianPincode } from '../utils/pincodeValidator';
 
 export const CheckoutPage: React.FC = () => {
   const { items, subtotal, discount, shippingFee, total, coupon, clearCart, setLastOrder } = useCart();
@@ -35,9 +36,12 @@ export const CheckoutPage: React.FC = () => {
     const val = e.target.value.replace(/\D/g, '').slice(0, 6);
     setFormData((prev) => {
       const updated = { ...prev, pincode: val };
-      if (val.length === 6 && PINCODE_DELIVERY_DATA[val]) {
-        updated.city = PINCODE_DELIVERY_DATA[val].city;
-        updated.state = PINCODE_DELIVERY_DATA[val].state;
+      if (val.length === 6) {
+        const check = validateIndianPincode(val);
+        if (check.isValid) {
+          if (check.city) updated.city = check.city;
+          if (check.state) updated.state = check.state;
+        }
       }
       return updated;
     });
@@ -58,9 +62,13 @@ export const CheckoutPage: React.FC = () => {
     if (!formData.addressLine.trim()) newErrors.addressLine = 'Flat / House No. and Street address required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.state.trim()) newErrors.state = 'State is required';
-    if (!/^\d{6}$/.test(formData.pincode)) {
-      newErrors.pincode = 'Enter a valid 6-digit PIN code';
+    
+    // Strict Indian PIN code check
+    const pinCheck = validateIndianPincode(formData.pincode);
+    if (!pinCheck.isValid) {
+      newErrors.pincode = pinCheck.message;
     }
+
     if (paymentMethod === 'UPI' && upiId && !upiId.includes('@')) {
       newErrors.upi = 'Enter a valid UPI ID (e.g., username@okaxis)';
     }

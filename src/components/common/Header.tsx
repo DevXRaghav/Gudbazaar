@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
             {/* Customer Account / Sign Up Popup Trigger */}
             <button
-              onClick={() => openAuthModal(user ? 'profile' : 'signup')}
+              onClick={() => openAuthModal(user ? 'profile' : 'prompt')}
               className={`flex items-center gap-1.5 p-2 sm:py-1.5 sm:px-3 rounded-full text-xs font-semibold transition-all border touch-manipulation ${
                 user
                   ? 'bg-[#47752F]/10 border-[#47752F]/30 text-[#47752F] hover:bg-[#47752F]/20'
@@ -239,7 +239,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
                   type="button"
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    openAuthModal(user ? 'profile' : 'signup');
+                    openAuthModal(user ? 'profile' : 'prompt');
                   }}
                   className="px-3 py-1 bg-[#4A2415] text-[#FFF9EF] text-xs font-bold rounded-lg"
                 >
