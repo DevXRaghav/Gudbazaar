@@ -1,40 +1,74 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { X, Trash2, ArrowRight, ShoppingBag, Tag, Check, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, Trash2, ArrowRight, Share2, Truck, Tag, Check, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
-import { FREE_SHIPPING_THRESHOLD } from '../../data/products';
+import { useAuth } from '../../context/AuthContext';
+import { PRODUCTS, FREE_SHIPPING_THRESHOLD } from '../../data/products';
+
+const DISCOUNT_THRESHOLD = 999; // 5% discount milestone threshold
 
 export const CartDrawer: React.FC = () => {
   const {
     items,
     isDrawerOpen,
     closeDrawer,
+    addToCart,
     updateQuantity,
     removeFromCart,
     subtotal,
-    discount,
-    shippingFee,
-    total,
-    freeShippingRemaining,
-    coupon,
-    couponError,
-    applyCoupon,
-    removeCoupon,
+    totalItemCount,
   } = useCart();
 
-  const [couponInput, setCouponInput] = useState('');
-  const [couponFeedback, setCouponFeedback] = useState<string | null>(null);
+  const { user, openAuthModal } = useAuth();
   const navigate = useNavigate();
+
+  // Mobile tab state: 'cart' or 'addons'
+  const [mobileTab, setMobileTab] = useState<'cart' | 'addons'>('cart');
+  const [addedItemIds, setAddedItemIds] = useState<Record<string, boolean>>({});
+  const [shareFeedback, setShareFeedback] = useState(false);
 
   if (!isDrawerOpen) return null;
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!couponInput.trim()) return;
-    const res = applyCoupon(couponInput);
-    setCouponFeedback(res.message);
-    if (res.success) {
-      setCouponInput('');
+  // Selected quick-add recommendations
+  const recommendedSlugs = [
+    'brown-desi-khand-1kg',
+    'jaggery-cubes-gur-ki-dali-650gm',
+    'sulphurless-desi-khand-1kg',
+    'gur-chana-roasted-chickpeas-200gm',
+    'peanut-chikki-cookies-healthy-jaggery-snack-200g',
+    'palm-jaggery-270g',
+    'natural-desi-jaggery-block',
+    'liquid-jaggery-syrup-kakvi',
+  ];
+
+  // Pick recommendations that match or fall back to any available PRODUCTS
+  const recommendationList = recommendedSlugs
+    .map((slug) => PRODUCTS.find((p) => p.slug === slug))
+    .filter((p): p is (typeof PRODUCTS)[0] => Boolean(p));
+
+  const handleQuickAdd = (product: (typeof PRODUCTS)[0]) => {
+    addToCart(product, product.variants[0]?.weight || product.weight, 1);
+    setAddedItemIds((prev) => ({ ...prev, [product.id]: true }));
+    setTimeout(() => {
+      setAddedItemIds((prev) => ({ ...prev, [product.id]: false }));
+    }, 1200);
+  };
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Gudbazaar - Pure Natural Jaggery & Desi Khand',
+          text: 'Check out authentic artisanal jaggery handcrafted from single-origin sugarcane!',
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.origin);
+        setShareFeedback(true);
+        setTimeout(() => setShareFeedback(false), 2000);
+      }
+    } catch {
+      // User cancelled share
     }
   };
 
@@ -43,261 +77,395 @@ export const CartDrawer: React.FC = () => {
     navigate('/checkout');
   };
 
-  const freeShippingProgress = Math.min(
-    100,
-    Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 100)
-  );
+  // Milestone Progress Calculations
+  // Step 1: Free Shipping (₹499)
+  // Step 2: 5% Discount (₹999)
+  const isFreeShippingUnlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const isDiscountUnlocked = subtotal >= DISCOUNT_THRESHOLD;
+
+  let progressPercentage = 0;
+  if (subtotal <= 0) {
+    progressPercentage = 0;
+  } else if (subtotal < FREE_SHIPPING_THRESHOLD) {
+    // 0% to 50%
+    progressPercentage = Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 50);
+  } else if (subtotal < DISCOUNT_THRESHOLD) {
+    // 50% to 100%
+    const extra = subtotal - FREE_SHIPPING_THRESHOLD;
+    const span = DISCOUNT_THRESHOLD - FREE_SHIPPING_THRESHOLD;
+    progressPercentage = 50 + Math.round((extra / span) * 50);
+  } else {
+    progressPercentage = 100;
+  }
+
+  const freeShippingAway = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const discountAway = Math.max(0, DISCOUNT_THRESHOLD - subtotal);
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#4A2415]/60 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-[#2E1810]/60 backdrop-blur-xs transition-opacity duration-300"
         onClick={closeDrawer}
+        aria-hidden="true"
       />
 
-      {/* Drawer Container */}
-      <div className="relative w-full max-w-md bg-[#FFFFFF] h-full shadow-2xl flex flex-col z-10 text-[#4A2415]">
+      {/* Drawer Container: wide 2-column modal as shown in reference */}
+      <div className="relative w-full max-w-full md:max-w-4xl lg:max-w-5xl bg-[#FFFFFF] h-full shadow-2xl flex flex-col z-10 text-[#2E1810] animate-in slide-in-from-right duration-300">
         
-        {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-[#E9DDC9] flex items-center justify-between bg-[#FFF9EF]">
-          <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-[#47752F]" />
-            <h2 className="text-base font-bold text-[#4A2415]">Your Shopping Bag</h2>
-            <span className="text-xs bg-[#4A2415] text-[#FFF9EF] px-2 py-0.5 rounded-full font-bold tabular-nums">
-              {items.length}
-            </span>
+        {/* Top Header Bar matching reference: "YOUR CART", Share, Login, Close */}
+        <div className="px-5 py-4 sm:px-7 sm:py-5 border-b border-[#EFE7DA] bg-[#FFFFFF] flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#2E1810] uppercase">
+            YOUR CART
+          </h2>
+
+          <div className="flex items-center gap-3 sm:gap-4">
+            {/* Share Button */}
+            <div className="relative">
+              <button
+                onClick={handleShare}
+                className="p-1.5 text-[#2E1810]/70 hover:text-[#2E1810] transition-colors rounded-md hover:bg-[#FAF5EE]"
+                title="Share Gudbazaar"
+                aria-label="Share"
+              >
+                <Share2 className="w-5 h-5" />
+              </button>
+              {shareFeedback && (
+                <span className="absolute -bottom-7 right-0 text-[10px] bg-[#2E1810] text-[#FFF9EF] px-2 py-0.5 rounded shadow whitespace-nowrap z-20">
+                  Link copied!
+                </span>
+              )}
+            </div>
+
+            {/* Login / Customer Profile CTA button */}
+            {user ? (
+              <button
+                onClick={() => {
+                  closeDrawer();
+                  openAuthModal('profile');
+                }}
+                className="px-4 py-1.5 bg-[#4A2415] hover:bg-[#381a0e] text-[#FFF9EF] text-xs sm:text-sm font-semibold rounded-xs transition-colors flex items-center gap-1.5"
+              >
+                <span>{user.fullName.split(' ')[0]}</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => openAuthModal('signin')}
+                className="px-5 py-1.5 bg-[#4A2415] hover:bg-[#381a0e] text-[#FFF9EF] text-xs sm:text-sm font-semibold rounded-xs transition-colors shadow-xs"
+              >
+                Login
+              </button>
+            )}
+
+            {/* Close (X) Button */}
+            <button
+              onClick={closeDrawer}
+              className="p-1.5 text-[#2E1810]/70 hover:text-[#2E1810] transition-colors rounded-md hover:bg-[#FAF5EE]"
+              aria-label="Close cart"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
+        </div>
+
+        {/* Mobile View Toggle Switch (< md screens) */}
+        <div className="md:hidden flex border-b border-[#EFE7DA] bg-[#FAF5EE] text-xs font-semibold">
           <button
-            onClick={closeDrawer}
-            className="p-1.5 rounded-full hover:bg-[#E9DDC9]/60 text-[#4A2415]/70 hover:text-[#4A2415] transition-colors"
-            aria-label="Close cart drawer"
+            onClick={() => setMobileTab('cart')}
+            className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
+              mobileTab === 'cart'
+                ? 'border-[#4A2415] text-[#4A2415] bg-white'
+                : 'border-transparent text-[#2E1810]/60'
+            }`}
           >
-            <X className="w-5 h-5" />
+            Cart Items ({totalItemCount})
+          </button>
+          <button
+            onClick={() => setMobileTab('addons')}
+            className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
+              mobileTab === 'addons'
+                ? 'border-[#47752F] text-[#47752F] bg-white'
+                : 'border-transparent text-[#2E1810]/60'
+            }`}
+          >
+            Grab These Too! 🌿
           </button>
         </div>
 
-        {/* Free Shipping Progress Indicator */}
-        <div className="bg-[#FFF9EF] px-5 py-3 border-b border-[#E9DDC9]">
-          <div className="flex items-center justify-between text-xs mb-1.5 font-medium">
-            {freeShippingRemaining > 0 ? (
-              <span>
-                Add <span className="font-bold text-[#47752F]">₹{freeShippingRemaining}</span> more for <strong className="text-[#4A2415]">FREE Shipping</strong>
-              </span>
-            ) : (
-              <span className="text-[#47752F] font-bold flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#E99A19]" /> You have unlocked FREE Shipping!
-              </span>
-            )}
-            <span className="text-[11px] text-[#4A2415]/60 tabular-nums">{freeShippingProgress}%</span>
-          </div>
-          <div className="w-full h-1.5 bg-[#E9DDC9] rounded-full overflow-hidden">
-            <div
-              className="h-full bg-[#47752F] transition-all duration-500 rounded-full"
-              style={{ width: `${freeShippingProgress}%` }}
-            />
-          </div>
-        </div>
-
-        {/* Cart Items List */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
-          {items.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#4A2415]">
-              <div className="w-16 h-16 rounded-full bg-[#FFF9EF] border border-[#E9DDC9] flex items-center justify-center mb-4">
-                <ShoppingBag className="w-8 h-8 text-[#47752F]/60" />
-              </div>
-              <h3 className="text-base font-bold text-[#4A2415]">Your bag is empty</h3>
-              <p className="text-xs text-[#4A2415]/70 mt-1 max-w-xs">
-                Explore our pure jaggery collection and experience natural sweetness in your everyday life.
-              </p>
-              <button
-                onClick={() => {
-                  closeDrawer();
-                  navigate('/shop');
-                }}
-                className="mt-5 px-6 py-2.5 bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] text-xs font-semibold rounded-lg transition-colors"
-              >
-                Shop All Products
-              </button>
+        {/* Main 2-Column Body */}
+        <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+          
+          {/* ================= LEFT COLUMN: "Great Choice! Grab these too!" ================= */}
+          <div
+            className={`w-full md:w-[48%] bg-[#FAF5EE] border-b md:border-b-0 md:border-r border-[#EFE7DA] flex flex-col min-h-0 ${
+              mobileTab === 'cart' ? 'hidden md:flex' : 'flex'
+            }`}
+          >
+            <div className="px-5 pt-4 pb-2.5 sm:px-6 sm:pt-5 sm:pb-3">
+              <h3 className="text-[#47752F] font-bold text-sm sm:text-base tracking-tight">
+                Great Choice! Grab these too!
+              </h3>
             </div>
-          ) : (
-            items.map((item) => (
-              <div
-                key={item.id}
-                className="flex gap-3.5 p-3 rounded-xl border border-[#E9DDC9]/70 bg-white hover:border-[#47752F]/40 transition-colors"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  referrerPolicy="no-referrer"
-                  className="w-18 h-18 sm:w-20 sm:h-20 object-cover rounded-lg bg-[#FFF9EF] shrink-0 border border-[#E9DDC9]/50"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/hero_jaggery_display.jpg';
-                  }}
-                />
 
-                <div className="flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-start justify-between gap-1">
-                      <Link
-                        to={`/product/${item.slug}`}
-                        onClick={closeDrawer}
-                        className="text-xs sm:text-sm font-bold text-[#4A2415] hover:text-[#47752F] line-clamp-1"
-                      >
-                        {item.name}
-                      </Link>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-[#4A2415]/40 hover:text-red-700 p-1 -mr-1"
-                        aria-label={`Remove ${item.name}`}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                    <span className="text-[11px] text-[#47752F] font-medium block mt-0.5">
-                      Pack: {item.weight}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-2 pt-1 border-t border-[#E9DDC9]/30">
-                    {/* Quantity Stepper */}
-                    <div className="flex items-center border border-[#E9DDC9] rounded-md bg-[#FFF9EF]">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="px-2 py-0.5 text-xs font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50"
-                        aria-label="Decrease quantity"
-                      >
-                        -
-                      </button>
-                      <span className="px-2.5 py-0.5 text-xs font-bold tabular-nums text-[#4A2415]">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="px-2 py-0.5 text-xs font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+            {/* Recommendations Vertical List */}
+            <div className="flex-1 overflow-y-auto px-5 pb-5 sm:px-6 sm:pb-6 space-y-3.5 divide-y divide-[#EFE7DA]/50">
+              {recommendationList.map((product) => {
+                const isJustAdded = addedItemIds[product.id];
+                return (
+                  <div
+                    key={product.id}
+                    className="pt-3.5 first:pt-0 flex items-center justify-between gap-3 group"
+                  >
+                    {/* Thumbnail */}
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xs bg-white border border-[#E8DEC8]/80 overflow-hidden shrink-0">
+                      <img
+                        src={product.primaryImage}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                        }}
+                      />
                     </div>
 
-                    {/* Item Total */}
-                    <div className="text-right">
-                      <span className="text-sm font-bold text-[#4A2415] tabular-nums">
-                        ₹{item.price * item.quantity}
-                      </span>
-                      {item.mrp > item.price && (
-                        <span className="block text-[10px] text-[#4A2415]/40 line-through tabular-nums">
-                          ₹{item.mrp * item.quantity}
+                    {/* Product Name & Price */}
+                    <div className="flex-1 min-w-0 pr-2">
+                      <h4 className="text-xs sm:text-sm font-medium text-[#2E1810] leading-snug line-clamp-2">
+                        {product.name}
+                      </h4>
+                      <p className="text-xs sm:text-sm font-normal text-[#2E1810] mt-1">
+                        ₹{product.price.toFixed(2)}
+                      </p>
+                    </div>
+
+                    {/* Dark Brown "Add" Button matching reference screenshot */}
+                    <button
+                      onClick={() => handleQuickAdd(product)}
+                      disabled={isJustAdded}
+                      className={`px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-xs transition-all duration-150 shrink-0 ${
+                        isJustAdded
+                          ? 'bg-[#47752F] text-white'
+                          : 'bg-[#4A2415] hover:bg-[#35190e] text-white shadow-xs'
+                      }`}
+                    >
+                      {isJustAdded ? (
+                        <span className="flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" /> Added
                         </span>
+                      ) : (
+                        'Add'
                       )}
-                    </div>
+                    </button>
                   </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ================= RIGHT COLUMN: Milestones, Cart Items & Checkout ================= */}
+          <div
+            className={`w-full md:w-[52%] bg-[#FFFFFF] flex flex-col justify-between min-h-0 ${
+              mobileTab === 'addons' ? 'hidden md:flex' : 'flex'
+            }`}
+          >
+            {/* Top Milestones Section */}
+            <div className="p-4 sm:p-6 border-b border-[#EFE7DA] bg-[#FFFFFF]">
+              {/* Milestone Icons & Labels */}
+              <div className="flex items-center justify-between text-xs text-[#6B5E54] mb-2 px-1">
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                      isFreeShippingUnlocked
+                        ? 'bg-[#47752F] text-white'
+                        : 'bg-[#F2ECE1] text-[#4A2415]'
+                    }`}
+                  >
+                    {isFreeShippingUnlocked ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <Truck className="w-3.5 h-3.5" />
+                    )}
+                  </div>
+                  <span
+                    className={`font-medium ${
+                      isFreeShippingUnlocked ? 'text-[#47752F] font-bold' : 'text-[#6B5E54]'
+                    }`}
+                  >
+                    Free Shipping
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                      isDiscountUnlocked
+                        ? 'bg-[#47752F] text-white'
+                        : 'bg-[#F2ECE1] text-[#4A2415]'
+                    }`}
+                  >
+                    {isDiscountUnlocked ? (
+                      <Check className="w-3.5 h-3.5" />
+                    ) : (
+                      <Tag className="w-3.5 h-3.5" />
+                    )}
+                  </div>
+                  <span
+                    className={`font-medium ${
+                      isDiscountUnlocked ? 'text-[#47752F] font-bold' : 'text-[#6B5E54]'
+                    }`}
+                  >
+                    5% Discount
+                  </span>
                 </div>
               </div>
-            ))
-          )}
-        </div>
 
-        {/* Drawer Footer with Coupon & Checkout Summary */}
-        {items.length > 0 && (
-          <div className="p-4 sm:p-5 border-t border-[#E9DDC9] bg-[#FFF9EF] space-y-3">
-            
-            {/* Coupon Code Section */}
-            {coupon ? (
-              <div className="flex items-center justify-between bg-white px-3 py-2 rounded-lg border border-[#47752F]/40 text-xs">
-                <div className="flex items-center gap-1.5 text-[#47752F] font-semibold">
-                  <Tag className="w-3.5 h-3.5" />
-                  <span>Coupon {coupon.code} Applied</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-[#47752F] tabular-nums">-₹{discount}</span>
+              {/* Dual-Tier Progress Bar */}
+              <div className="w-full h-1.5 bg-[#EFE7DA] rounded-full overflow-hidden relative">
+                <div
+                  className="h-full bg-[#4A2415] transition-all duration-500 rounded-full"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+
+              {/* Dynamic Milestone Copy matching screenshot */}
+              <div className="text-center mt-2 text-xs sm:text-sm text-[#2E1810]">
+                {subtotal <= 0 ? (
+                  <span>Add items to unlock <strong>FREE SHIPPING</strong>!</span>
+                ) : !isFreeShippingUnlocked ? (
+                  <span>
+                    You are ₹{freeShippingAway.toFixed(2)} away from{' '}
+                    <strong className="font-bold">FREE SHIPPING!</strong>
+                  </span>
+                ) : !isDiscountUnlocked ? (
+                  <span>
+                    You unlocked <strong>FREE SHIPPING!</strong> Add ₹{discountAway.toFixed(2)} more for{' '}
+                    <strong className="text-[#47752F] font-bold">5% DISCOUNT!</strong>
+                  </span>
+                ) : (
+                  <span className="text-[#47752F] font-bold">
+                    🎉 You unlocked FREE SHIPPING & 5% DISCOUNT!
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Cart Items List */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+              {items.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#2E1810]">
+                  <div className="w-16 h-16 rounded-full bg-[#FAF5EE] border border-[#EFE7DA] flex items-center justify-center mb-3">
+                    <ShoppingBag className="w-8 h-8 text-[#47752F]/70" />
+                  </div>
+                  <h3 className="text-base font-bold text-[#2E1810]">Your cart is empty</h3>
+                  <p className="text-xs text-[#2E1810]/70 mt-1 max-w-xs">
+                    Choose from our selection on the left to quickly add items to your cart!
+                  </p>
                   <button
-                    onClick={removeCoupon}
-                    className="text-xs text-red-700 hover:underline"
+                    onClick={() => setMobileTab('addons')}
+                    className="md:hidden mt-4 px-4 py-2 bg-[#4A2415] text-white text-xs font-semibold rounded-xs"
                   >
-                    Remove
+                    View Recommended Items
                   </button>
                 </div>
-              </div>
-            ) : (
-              <form onSubmit={handleApplyCoupon} className="flex gap-1.5">
-                <div className="relative flex-1">
-                  <Tag className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#4A2415]/50" />
-                  <input
-                    type="text"
-                    value={couponInput}
-                    onChange={(e) => setCouponInput(e.target.value)}
-                    placeholder="Coupon code (e.g. SWEET10)"
-                    className="w-full pl-8 pr-3 py-1.5 bg-white border border-[#E9DDC9] rounded-lg text-xs uppercase tracking-wider text-[#4A2415] focus:outline-none focus:border-[#47752F]"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="px-3.5 py-1.5 bg-[#4A2415] hover:bg-[#47752F] text-white text-xs font-semibold rounded-lg transition-colors"
-                >
-                  Apply
-                </button>
-              </form>
-            )}
+              ) : (
+                items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-start gap-3 sm:gap-4 pb-4 border-b border-[#EFE7DA]/70 last:border-b-0"
+                  >
+                    {/* Square Image */}
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xs bg-[#FAF5EE] border border-[#EFE7DA] overflow-hidden shrink-0">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                        }}
+                      />
+                    </div>
 
-            {(couponFeedback || couponError) && !coupon && (
-              <p className="text-[11px] text-red-700 font-medium">
-                {couponError || couponFeedback}
-              </p>
-            )}
+                    {/* Details: Title & Trash on top, Stepper & Price below */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <h4 className="text-xs sm:text-sm font-semibold text-[#2E1810] line-clamp-2 leading-snug">
+                            {item.name}
+                          </h4>
+                          <span className="text-[11px] text-[#2E1810]/60 block mt-0.5">
+                            Pack: {item.weight}
+                          </span>
+                        </div>
 
-            {/* Price Calculations */}
-            <div className="space-y-1.5 text-xs text-[#4A2415]/80 pt-1">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span className="font-semibold tabular-nums text-[#4A2415]">₹{subtotal}</span>
-              </div>
-              {discount > 0 && (
-                <div className="flex justify-between text-[#47752F]">
-                  <span>Discount ({coupon?.code})</span>
-                  <span className="font-semibold tabular-nums">-₹{discount}</span>
-                </div>
+                        {/* Trash Delete Icon matching reference */}
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="text-[#8C827A] hover:text-red-700 p-1 -mr-1 transition-colors"
+                          aria-label={`Remove ${item.name}`}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center justify-between mt-3">
+                        {/* Boxed Stepper matching reference screenshot: [ - ] 1 [ + ] */}
+                        <div className="inline-flex items-center border border-[#D6C7B2] rounded-xs bg-white text-xs">
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="px-2.5 py-1 text-[#2E1810] hover:bg-[#FAF5EE] transition-colors font-medium"
+                            aria-label="Decrease quantity"
+                          >
+                            —
+                          </button>
+                          <span className="px-3 py-1 text-xs font-semibold tabular-nums text-[#2E1810] min-w-[24px] text-center">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="px-2.5 py-1 text-[#2E1810] hover:bg-[#FAF5EE] transition-colors font-medium"
+                            aria-label="Increase quantity"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        {/* Price formatted with decimals matching screenshot */}
+                        <div className="text-right">
+                          <span className="text-xs sm:text-sm font-semibold text-[#2E1810] tabular-nums">
+                            ₹{(item.price * item.quantity).toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
               )}
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span className="font-semibold tabular-nums">
-                  {shippingFee === 0 ? (
-                    <span className="text-[#47752F] font-bold">FREE</span>
-                  ) : (
-                    `₹${shippingFee}`
-                  )}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm font-bold text-[#4A2415] pt-2 border-t border-[#E9DDC9]">
-                <span>Total Amount</span>
-                <span className="text-base tabular-nums text-[#4A2415]">₹{total}</span>
-              </div>
             </div>
 
-            {/* Checkout & View Bag Buttons */}
-            <div className="pt-2 flex flex-col gap-2">
+            {/* Bottom Checkout Section matching reference screenshot */}
+            <div className="p-4 sm:p-6 border-t border-[#EFE7DA] bg-[#FFFFFF] space-y-3">
+              <div className="flex items-center justify-between text-xs sm:text-sm text-[#2E1810]">
+                <span className="font-medium">
+                  Subtotal ({totalItemCount} item{totalItemCount === 1 ? '' : 's'})
+                </span>
+                <span className="text-sm sm:text-base font-semibold text-[#2E1810] tabular-nums">
+                  ₹{subtotal.toFixed(2)}
+                </span>
+              </div>
+
+              {/* Prominent Full-Width Dark Brown "Checkout →" Button */}
               <button
                 onClick={handleCheckout}
-                className="w-full py-3 bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] text-xs font-bold uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-98"
+                disabled={items.length === 0}
+                className="w-full py-3.5 bg-[#4A2415] hover:bg-[#35190e] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm sm:text-base tracking-wide flex items-center justify-center gap-1.5 rounded-xs transition-colors shadow-xs"
               >
-                <span>Proceed to Checkout</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-
-              <button
-                onClick={() => {
-                  closeDrawer();
-                  navigate('/cart');
-                }}
-                className="w-full py-2 text-center text-xs font-semibold text-[#47752F] hover:text-[#4A2415] transition-colors"
-              >
-                View Full Cart & Detailed Bill
+                <span>Checkout</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
               </button>
             </div>
           </div>
-        )}
 
+        </div>
       </div>
     </div>
   );
