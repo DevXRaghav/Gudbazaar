@@ -69,8 +69,6 @@ export const CartDrawer: React.FC = () => {
   };
 
   // Milestone Progress Calculations
-  // Step 1: Free Shipping (₹499)
-  // Step 2: 5% Discount (₹999)
   const isFreeShippingUnlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
   const isDiscountUnlocked = subtotal >= DISCOUNT_THRESHOLD;
 
@@ -78,10 +76,8 @@ export const CartDrawer: React.FC = () => {
   if (subtotal <= 0) {
     progressPercentage = 0;
   } else if (subtotal < FREE_SHIPPING_THRESHOLD) {
-    // 0% to 50%
     progressPercentage = Math.round((subtotal / FREE_SHIPPING_THRESHOLD) * 50);
   } else if (subtotal < DISCOUNT_THRESHOLD) {
-    // 50% to 100%
     const extra = subtotal - FREE_SHIPPING_THRESHOLD;
     const span = DISCOUNT_THRESHOLD - FREE_SHIPPING_THRESHOLD;
     progressPercentage = 50 + Math.round((extra / span) * 50);
@@ -96,33 +92,46 @@ export const CartDrawer: React.FC = () => {
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#2E1810]/60 backdrop-blur-xs transition-opacity duration-300"
+        className="fixed inset-0 bg-[#2E1810]/60 dark:bg-black/75 backdrop-blur-xs transition-opacity duration-300"
         onClick={closeDrawer}
         aria-hidden="true"
       />
 
-      {/* Drawer Container: wide 2-column modal as shown in reference */}
-      <div className="relative w-full max-w-full md:max-w-4xl lg:max-w-5xl bg-[#FFFFFF] h-full shadow-2xl flex flex-col z-10 text-[#2E1810] animate-in slide-in-from-right duration-300">
+      {/* Drawer Container */}
+      <div className="relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl bg-[#FFFFFF] dark:bg-[#1C110B] h-full shadow-2xl flex flex-col z-10 text-[#2E1810] dark:text-[#F5EBE1] animate-in slide-in-from-right duration-300">
         
-        {/* Top Header Bar matching reference: "YOUR CART", Share, Login, Close */}
-        <div className="px-5 py-4 sm:px-7 sm:py-5 border-b border-[#EFE7DA] bg-[#FFFFFF] flex items-center justify-between">
-          <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#2E1810] uppercase">
+        {/* Top Header Bar matching reference */}
+        <div className="px-4 py-3.5 sm:px-6 sm:py-4 md:px-5 lg:px-7 border-b border-[#EFE7DA] dark:border-[#3B2519] bg-[#FFFFFF] dark:bg-[#180E08] flex items-center justify-between transition-colors shrink-0">
+          <h2 className="text-base sm:text-lg md:text-lg lg:text-xl font-bold tracking-tight text-[#2E1810] dark:text-[#F5EBE1] uppercase">
             YOUR CART
           </h2>
 
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            {/* Quick Header Checkout Button on Tablet/Desktop */}
+            {items.length > 0 && (
+              <button
+                type="button"
+                onClick={handleCheckout}
+                className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#47752F] dark:bg-[#6BB545] hover:bg-[#3d6826] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg transition-all shadow-xs cursor-pointer touch-manipulation active:scale-95"
+                title="Proceed directly to checkout"
+              >
+                <span>Checkout (₹{subtotal.toFixed(0)})</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+
             {/* Share Button */}
             <div className="relative">
               <button
                 onClick={handleShare}
-                className="p-1.5 text-[#2E1810]/70 hover:text-[#2E1810] transition-colors rounded-md hover:bg-[#FAF5EE]"
+                className="p-1.5 text-[#2E1810]/70 dark:text-[#D8C7B8]/70 hover:text-[#2E1810] dark:hover:text-[#F5EBE1] transition-colors rounded-md hover:bg-[#FAF5EE] dark:hover:bg-[#261810]"
                 title="Share Gudbazaar"
                 aria-label="Share"
               >
                 <Share2 className="w-5 h-5" />
               </button>
               {shareFeedback && (
-                <span className="absolute -bottom-7 right-0 text-[10px] bg-[#2E1810] text-[#FFF9EF] px-2 py-0.5 rounded shadow whitespace-nowrap z-20">
+                <span className="absolute -bottom-7 right-0 text-[10px] bg-[#2E1810] dark:bg-[#F5AA28] text-[#FFF9EF] dark:text-[#120A06] px-2 py-0.5 rounded shadow whitespace-nowrap z-20 font-bold">
                   Link copied!
                 </span>
               )}
@@ -135,14 +144,14 @@ export const CartDrawer: React.FC = () => {
                   closeDrawer();
                   openAuthModal('profile');
                 }}
-                className="px-4 py-1.5 bg-[#4A2415] hover:bg-[#381a0e] text-[#FFF9EF] text-xs sm:text-sm font-semibold rounded-xs transition-colors flex items-center gap-1.5"
+                className="px-3.5 sm:px-4 py-1.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#381a0e] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs sm:text-sm font-semibold rounded-xs transition-colors flex items-center gap-1.5"
               >
                 <span>{user.fullName.split(' ')[0]}</span>
               </button>
             ) : (
               <button
                 onClick={() => openAuthModal('signin')}
-                className="px-5 py-1.5 bg-[#4A2415] hover:bg-[#381a0e] text-[#FFF9EF] text-xs sm:text-sm font-semibold rounded-xs transition-colors shadow-xs"
+                className="px-4 sm:px-5 py-1.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#381a0e] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs sm:text-sm font-semibold rounded-xs transition-colors shadow-xs"
               >
                 Login
               </button>
@@ -151,7 +160,7 @@ export const CartDrawer: React.FC = () => {
             {/* Close (X) Button */}
             <button
               onClick={closeDrawer}
-              className="p-1.5 text-[#2E1810]/70 hover:text-[#2E1810] transition-colors rounded-md hover:bg-[#FAF5EE]"
+              className="p-1.5 text-[#2E1810]/70 dark:text-[#D8C7B8]/70 hover:text-[#2E1810] dark:hover:text-[#F5EBE1] transition-colors rounded-md hover:bg-[#FAF5EE] dark:hover:bg-[#261810]"
               aria-label="Close cart"
             >
               <X className="w-5 h-5" />
@@ -160,55 +169,76 @@ export const CartDrawer: React.FC = () => {
         </div>
 
         {/* Mobile View Toggle Switch (< md screens) */}
-        <div className="md:hidden flex border-b border-[#EFE7DA] bg-[#FAF5EE] text-xs font-semibold">
+        <div className="md:hidden flex border-b border-[#EFE7DA] dark:border-[#3B2519] bg-[#FAF5EE] dark:bg-[#261810] text-xs font-semibold shrink-0">
           <button
+            type="button"
             onClick={() => setMobileTab('cart')}
-            className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
+            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 touch-manipulation cursor-pointer ${
               mobileTab === 'cart'
-                ? 'border-[#4A2415] text-[#4A2415] bg-white'
-                : 'border-transparent text-[#2E1810]/60'
+                ? 'border-[#4A2415] dark:border-[#6BB545] text-[#4A2415] dark:text-[#6BB545] bg-white dark:bg-[#1C110B] font-bold'
+                : 'border-transparent text-[#2E1810]/60 dark:text-[#D8C7B8]/60 hover:text-[#2E1810]'
             }`}
           >
-            Cart Items ({totalItemCount})
+            <span>Cart Items</span>
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                mobileTab === 'cart'
+                  ? 'bg-[#4A2415] text-[#FFF9EF] dark:bg-[#6BB545] dark:text-[#120A06]'
+                  : 'bg-[#EFE7DA] dark:bg-[#3B2519] text-[#4A2415] dark:text-[#F5EBE1]'
+              }`}
+            >
+              {totalItemCount}
+            </span>
           </button>
           <button
+            type="button"
             onClick={() => setMobileTab('addons')}
-            className={`flex-1 py-2.5 text-center transition-colors border-b-2 ${
+            className={`flex-1 py-3 text-center transition-all border-b-2 flex items-center justify-center gap-1.5 touch-manipulation cursor-pointer ${
               mobileTab === 'addons'
-                ? 'border-[#47752F] text-[#47752F] bg-white'
-                : 'border-transparent text-[#2E1810]/60'
+                ? 'border-[#47752F] dark:border-[#6BB545] text-[#47752F] dark:text-[#6BB545] bg-white dark:bg-[#1C110B] font-bold'
+                : 'border-transparent text-[#2E1810]/60 dark:text-[#D8C7B8]/60 hover:text-[#2E1810]'
             }`}
           >
-            Grab These Too! 🌿
+            <span>Grab These Too!</span>
+            <span className="text-sm">🌿</span>
           </button>
         </div>
 
         {/* Main 2-Column Body */}
-        <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+        <div className="flex-1 min-h-0 w-full overflow-hidden flex flex-col md:flex-row">
           
-          {/* ================= LEFT COLUMN: "Great Choice! Grab these too!" ================= */}
+          {/* LEFT COLUMN: Recommendations */}
           <div
-            className={`w-full md:w-[48%] bg-[#FAF5EE] border-b md:border-b-0 md:border-r border-[#EFE7DA] flex flex-col min-h-0 ${
+            className={`w-full md:w-[46%] lg:w-[48%] h-full max-h-full bg-[#FAF5EE] dark:bg-[#160D08] border-b md:border-b-0 md:border-r border-[#EFE7DA] dark:border-[#3B2519] flex flex-col min-h-0 overflow-hidden ${
               mobileTab === 'cart' ? 'hidden md:flex' : 'flex'
             }`}
           >
-            <div className="px-5 pt-4 pb-2.5 sm:px-6 sm:pt-5 sm:pb-3">
-              <h3 className="text-[#47752F] font-bold text-sm sm:text-base tracking-tight">
-                Great Choice! Grab these too!
-              </h3>
+            {/* Header with Title & Sourcing Badge */}
+            <div className="px-3.5 py-2.5 sm:px-4 md:px-4 lg:px-6 sm:pt-3.5 sm:pb-3 border-b border-[#EFE7DA] dark:border-[#3B2519]/70 bg-[#FAF5EE] dark:bg-[#160D08] shrink-0">
+              <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+                <h3 className="text-[#47752F] dark:text-[#6BB545] font-bold text-xs sm:text-sm md:text-xs lg:text-base tracking-tight truncate">
+                  Great Choice! Grab these too!
+                </h3>
+                <span className="text-[10px] font-semibold text-[#8D5B18] dark:text-[#E99A19] bg-[#E99A19]/10 px-2 py-0.5 rounded-full border border-[#E99A19]/25 shrink-0 whitespace-nowrap">
+                  100% Organic UP
+                </span>
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-[#2E1810]/60 dark:text-[#D8C7B8]/60 mt-0.5 line-clamp-1">
+                Quickly add pure organic jaggery, cubes, khand & shakkar to your bag
+              </p>
             </div>
 
-            {/* Recommendations Vertical List */}
-            <div className="flex-1 overflow-y-auto px-5 pb-5 sm:px-6 sm:pb-6 space-y-3.5 divide-y divide-[#EFE7DA]/50">
+            {/* Recommendations Vertical Scrollable List strictly bounded */}
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-4 md:px-3.5 lg:px-6 py-2.5 sm:pb-5 space-y-2.5 divide-y divide-[#EFE7DA]/60 dark:divide-[#3B2519]/60">
               {recommendationList.map((product) => {
                 const isJustAdded = addedItemIds[product.id];
                 return (
                   <div
                     key={product.id}
-                    className="pt-3.5 first:pt-0 flex items-center justify-between gap-3 group"
+                    className="pt-2.5 first:pt-0 flex items-center justify-between gap-2 sm:gap-2.5 md:gap-2 lg:gap-3 group"
                   >
                     {/* Thumbnail */}
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xs bg-white border border-[#E8DEC8]/80 overflow-hidden shrink-0">
+                    <div className="w-12 h-12 sm:w-13 sm:h-13 md:w-12 md:h-12 lg:w-16 lg:h-16 rounded-lg bg-white dark:bg-[#261810] border border-[#E8DEC8]/80 dark:border-[#3B2519] overflow-hidden shrink-0 shadow-xs">
                       <img
                         src={product.primaryImage}
                         alt={product.name}
@@ -219,67 +249,101 @@ export const CartDrawer: React.FC = () => {
                       />
                     </div>
 
-                    {/* Product Name & Price */}
-                    <div className="flex-1 min-w-0 pr-2">
-                      <h4 className="text-xs sm:text-sm font-medium text-[#2E1810] leading-snug line-clamp-2">
+                    {/* Product Details with strict text containment */}
+                    <div className="flex-1 min-w-0 pr-1">
+                      <h4 className="text-xs sm:text-[13px] md:text-xs lg:text-sm font-semibold text-[#2E1810] dark:text-[#F5EBE1] leading-tight line-clamp-2 break-words">
                         {product.name}
                       </h4>
-                      <p className="text-xs sm:text-sm font-normal text-[#2E1810] mt-1">
-                        ₹{product.price.toFixed(2)}
-                      </p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-xs sm:text-[13px] md:text-xs lg:text-sm font-bold text-[#47752F] dark:text-[#6BB545] tabular-nums shrink-0">
+                          ₹{product.price.toFixed(2)}
+                        </span>
+                        <span className="text-[10px] text-[#2E1810]/60 dark:text-[#D8C7B8]/60 bg-white/80 dark:bg-[#261810] px-1.5 py-0.5 rounded border border-[#E8DEC8]/60 dark:border-[#3B2519] truncate max-w-[100px] md:max-w-[85px] lg:max-w-[120px]">
+                          {product.packagingType || 'Packet'} · {product.weight}
+                        </span>
+                      </div>
                     </div>
 
-                    {/* Dark Brown "Add" Button matching reference screenshot */}
+                    {/* Touch-Friendly Add Button */}
                     <button
+                      type="button"
                       onClick={() => handleQuickAdd(product)}
                       disabled={isJustAdded}
-                      className={`px-4 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-xs transition-all duration-150 shrink-0 ${
+                      className={`min-h-[32px] md:min-h-[30px] lg:min-h-[36px] min-w-[58px] md:min-w-[56px] lg:min-w-[76px] px-2.5 md:px-2 lg:px-4 py-1.5 text-xs font-bold rounded-lg transition-all duration-150 shrink-0 touch-manipulation cursor-pointer active:scale-95 shadow-xs flex items-center justify-center ${
                         isJustAdded
-                          ? 'bg-[#47752F] text-white'
-                          : 'bg-[#4A2415] hover:bg-[#35190e] text-white shadow-xs'
+                          ? 'bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06]'
+                          : 'bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#35190e] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06]'
                       }`}
+                      aria-label={`Add ${product.name} to cart`}
                     >
                       {isJustAdded ? (
-                        <span className="flex items-center gap-1">
-                          <Check className="w-3.5 h-3.5" /> Added
+                        <span className="flex items-center gap-1 font-bold text-[11px] lg:text-xs">
+                          <Check className="w-3 h-3 lg:w-3.5 lg:h-3.5" /> Added
                         </span>
                       ) : (
-                        'Add'
+                        '+ Add'
                       )}
                     </button>
                   </div>
                 );
               })}
             </div>
+
+            {/* Quick Sticky Checkout Bar in Recommendations when items exist */}
+            {items.length > 0 && (
+              <div className="shrink-0 p-3 bg-white dark:bg-[#1C110B] border-t border-[#EFE7DA] dark:border-[#3B2519] flex items-center justify-between gap-2 shadow-xs">
+                <div>
+                  <span className="text-[10px] text-[#2E1810]/60 dark:text-[#D8C7B8]/60 block leading-tight">Total ({totalItemCount} item{totalItemCount === 1 ? '' : 's'})</span>
+                  <span className="text-xs sm:text-sm font-bold text-[#2E1810] dark:text-[#F5EBE1] tabular-nums">₹{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setMobileTab('cart')}
+                    className="px-2.5 py-1.5 bg-[#FAF5EE] dark:bg-[#261810] hover:bg-[#EFE7DA] text-[#4A2415] dark:text-[#F5EBE1] text-xs font-semibold rounded-lg border border-[#E8DEC8]/80 dark:border-[#3B2519] transition-colors"
+                  >
+                    View Bag
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCheckout}
+                    className="px-3.5 py-1.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#35190e] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg flex items-center gap-1 shadow-xs transition-colors"
+                  >
+                    <span>Checkout</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* ================= RIGHT COLUMN: Milestones, Cart Items & Checkout ================= */}
+          {/* RIGHT COLUMN: Milestones, Cart Items & Checkout */}
           <div
-            className={`w-full md:w-[52%] bg-[#FFFFFF] flex flex-col justify-between min-h-0 ${
+            className={`w-full md:w-[54%] lg:w-[52%] h-full max-h-full bg-[#FFFFFF] dark:bg-[#1C110B] flex flex-col min-h-0 overflow-hidden ${
               mobileTab === 'addons' ? 'hidden md:flex' : 'flex'
             }`}
           >
             {/* Top Milestones Section */}
-            <div className="p-4 sm:p-6 border-b border-[#EFE7DA] bg-[#FFFFFF]">
+            <div className="shrink-0 p-3.5 sm:p-4 md:p-3.5 lg:p-6 border-b border-[#EFE7DA] dark:border-[#3B2519] bg-[#FFFFFF] dark:bg-[#180E08]">
               {/* Milestone Icons & Labels */}
-              <div className="flex items-center justify-between text-xs text-[#6B5E54] mb-2 px-1">
+              <div className="flex items-center justify-between text-xs text-[#6B5E54] dark:text-[#D8C7B8] mb-2 px-0.5">
                 <div className="flex items-center gap-1.5">
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                    className={`w-5.5 h-5.5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center transition-colors ${
                       isFreeShippingUnlocked
-                        ? 'bg-[#47752F] text-white'
-                        : 'bg-[#F2ECE1] text-[#4A2415]'
+                        ? 'bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06]'
+                        : 'bg-[#F2ECE1] dark:bg-[#261810] text-[#4A2415] dark:text-[#F5EBE1]'
                     }`}
                   >
                     {isFreeShippingUnlocked ? (
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                     ) : (
-                      <Truck className="w-3.5 h-3.5" />
+                      <Truck className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                     )}
                   </div>
                   <span
-                    className={`font-medium ${
-                      isFreeShippingUnlocked ? 'text-[#47752F] font-bold' : 'text-[#6B5E54]'
+                    className={`font-medium text-[11px] lg:text-xs ${
+                      isFreeShippingUnlocked ? 'text-[#47752F] dark:text-[#6BB545] font-bold' : 'text-[#6B5E54] dark:text-[#D8C7B8]'
                     }`}
                   >
                     Free Shipping
@@ -288,21 +352,21 @@ export const CartDrawer: React.FC = () => {
 
                 <div className="flex items-center gap-1.5">
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${
+                    className={`w-5.5 h-5.5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center transition-colors ${
                       isDiscountUnlocked
-                        ? 'bg-[#47752F] text-white'
-                        : 'bg-[#F2ECE1] text-[#4A2415]'
+                        ? 'bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06]'
+                        : 'bg-[#F2ECE1] dark:bg-[#261810] text-[#4A2415] dark:text-[#F5EBE1]'
                     }`}
                   >
                     {isDiscountUnlocked ? (
-                      <Check className="w-3.5 h-3.5" />
+                      <Check className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                     ) : (
-                      <Tag className="w-3.5 h-3.5" />
+                      <Tag className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                     )}
                   </div>
                   <span
-                    className={`font-medium ${
-                      isDiscountUnlocked ? 'text-[#47752F] font-bold' : 'text-[#6B5E54]'
+                    className={`font-medium text-[11px] lg:text-xs ${
+                      isDiscountUnlocked ? 'text-[#47752F] dark:text-[#6BB545] font-bold' : 'text-[#6B5E54] dark:text-[#D8C7B8]'
                     }`}
                   >
                     5% Discount
@@ -311,15 +375,15 @@ export const CartDrawer: React.FC = () => {
               </div>
 
               {/* Dual-Tier Progress Bar */}
-              <div className="w-full h-1.5 bg-[#EFE7DA] rounded-full overflow-hidden relative">
+              <div className="w-full h-1.5 bg-[#EFE7DA] dark:bg-[#261810] rounded-full overflow-hidden relative">
                 <div
-                  className="h-full bg-[#4A2415] transition-all duration-500 rounded-full"
+                  className="h-full bg-[#4A2415] dark:bg-[#F5AA28] transition-all duration-500 rounded-full"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
 
-              {/* Dynamic Milestone Copy matching screenshot */}
-              <div className="text-center mt-2 text-xs sm:text-sm text-[#2E1810]">
+              {/* Dynamic Milestone Copy */}
+              <div className="text-center mt-2 text-xs sm:text-xs md:text-xs lg:text-sm text-[#2E1810] dark:text-[#F5EBE1]">
                 {subtotal <= 0 ? (
                   <span>Add items to unlock <strong>FREE SHIPPING</strong>!</span>
                 ) : !isFreeShippingUnlocked ? (
@@ -330,10 +394,10 @@ export const CartDrawer: React.FC = () => {
                 ) : !isDiscountUnlocked ? (
                   <span>
                     You unlocked <strong>FREE SHIPPING!</strong> Add ₹{discountAway.toFixed(2)} more for{' '}
-                    <strong className="text-[#47752F] font-bold">5% DISCOUNT!</strong>
+                    <strong className="text-[#47752F] dark:text-[#6BB545] font-bold">5% DISCOUNT!</strong>
                   </span>
                 ) : (
-                  <span className="text-[#47752F] font-bold">
+                  <span className="text-[#47752F] dark:text-[#6BB545] font-bold">
                     🎉 You unlocked FREE SHIPPING & 5% DISCOUNT!
                   </span>
                 )}
@@ -341,19 +405,19 @@ export const CartDrawer: React.FC = () => {
             </div>
 
             {/* Cart Items List */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3.5 sm:p-4 md:p-3.5 lg:p-6 space-y-3.5 lg:space-y-4">
               {items.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#2E1810]">
-                  <div className="w-16 h-16 rounded-full bg-[#FAF5EE] border border-[#EFE7DA] flex items-center justify-center mb-3">
-                    <ShoppingBag className="w-8 h-8 text-[#47752F]/70" />
+                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#2E1810] dark:text-[#F5EBE1]">
+                  <div className="w-16 h-16 rounded-full bg-[#FAF5EE] dark:bg-[#261810] border border-[#EFE7DA] dark:border-[#3B2519] flex items-center justify-center mb-3">
+                    <ShoppingBag className="w-8 h-8 text-[#47752F]/70 dark:text-[#6BB545]" />
                   </div>
-                  <h3 className="text-base font-bold text-[#2E1810]">Your cart is empty</h3>
-                  <p className="text-xs text-[#2E1810]/70 mt-1 max-w-xs">
+                  <h3 className="text-base font-bold text-[#2E1810] dark:text-[#F5EBE1]">Your cart is empty</h3>
+                  <p className="text-xs text-[#2E1810]/70 dark:text-[#D8C7B8]/70 mt-1 max-w-xs">
                     Choose from our selection on the left to quickly add items to your cart!
                   </p>
                   <button
                     onClick={() => setMobileTab('addons')}
-                    className="md:hidden mt-4 px-4 py-2 bg-[#4A2415] text-white text-xs font-semibold rounded-xs"
+                    className="md:hidden mt-4 px-4 py-2 bg-[#4A2415] dark:bg-[#6BB545] text-white dark:text-[#120A06] text-xs font-semibold rounded-xs"
                   >
                     View Recommended Items
                   </button>
@@ -362,10 +426,10 @@ export const CartDrawer: React.FC = () => {
                 items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start gap-3 sm:gap-4 pb-4 border-b border-[#EFE7DA]/70 last:border-b-0"
+                    className="flex items-start gap-2.5 sm:gap-3 md:gap-2.5 lg:gap-4 pb-3.5 border-b border-[#EFE7DA]/70 dark:border-[#3B2519] last:border-b-0"
                   >
                     {/* Square Image */}
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xs bg-[#FAF5EE] border border-[#EFE7DA] overflow-hidden shrink-0">
+                    <div className="w-14 h-14 sm:w-15 sm:h-15 md:w-13 md:h-13 lg:w-20 lg:h-20 rounded-md bg-[#FAF5EE] dark:bg-[#261810] border border-[#EFE7DA] dark:border-[#3B2519] overflow-hidden shrink-0">
                       <img
                         src={item.image}
                         alt={item.name}
@@ -376,53 +440,53 @@ export const CartDrawer: React.FC = () => {
                       />
                     </div>
 
-                    {/* Details: Title & Trash on top, Stepper & Price below */}
+                    {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
+                      <div className="flex items-start justify-between gap-1.5 sm:gap-2">
                         <div>
-                          <h4 className="text-xs sm:text-sm font-semibold text-[#2E1810] line-clamp-2 leading-snug">
+                          <h4 className="text-xs sm:text-[13px] md:text-xs lg:text-sm font-semibold text-[#2E1810] dark:text-[#F5EBE1] line-clamp-2 leading-snug">
                             {item.name}
                           </h4>
-                          <span className="text-[11px] text-[#2E1810]/60 block mt-0.5">
+                          <span className="text-[10px] md:text-[10px] lg:text-[11px] text-[#2E1810]/60 dark:text-[#D8C7B8]/70 block mt-0.5">
                             Pack: {item.weight}
                           </span>
                         </div>
 
-                        {/* Trash Delete Icon matching reference */}
+                        {/* Trash Delete Icon */}
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-[#8C827A] hover:text-red-700 p-1 -mr-1 transition-colors"
+                          className="text-[#8C827A] dark:text-[#D8C7B8]/60 hover:text-red-700 dark:hover:text-red-400 p-1 -mr-1 transition-colors"
                           aria-label={`Remove ${item.name}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
 
-                      <div className="flex items-center justify-between mt-3">
-                        {/* Boxed Stepper matching reference screenshot: [ - ] 1 [ + ] */}
-                        <div className="inline-flex items-center border border-[#D6C7B2] rounded-xs bg-white text-xs">
+                      <div className="flex items-center justify-between mt-2.5 lg:mt-3">
+                        {/* Stepper */}
+                        <div className="inline-flex items-center border border-[#D6C7B2] dark:border-[#42291C] rounded-md bg-white dark:bg-[#261810] text-xs">
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="px-2.5 py-1 text-[#2E1810] hover:bg-[#FAF5EE] transition-colors font-medium"
+                            className="px-2 py-0.5 lg:px-2.5 lg:py-1 text-[#2E1810] dark:text-[#F5EBE1] hover:bg-[#FAF5EE] dark:hover:bg-[#322016] transition-colors font-medium touch-manipulation"
                             aria-label="Decrease quantity"
                           >
                             —
                           </button>
-                          <span className="px-3 py-1 text-xs font-semibold tabular-nums text-[#2E1810] min-w-[24px] text-center">
+                          <span className="px-2 lg:px-3 py-0.5 lg:py-1 text-xs font-semibold tabular-nums text-[#2E1810] dark:text-[#F5EBE1] min-w-[20px] lg:min-w-[24px] text-center">
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateQuantity(item.id, Math.min(SECURITY_RULES.MAX_QUANTITY_PER_ITEM, item.quantity + 1))}
-                            className="px-2.5 py-1 text-[#2E1810] hover:bg-[#FAF5EE] transition-colors font-medium"
+                            className="px-2 py-0.5 lg:px-2.5 lg:py-1 text-[#2E1810] dark:text-[#F5EBE1] hover:bg-[#FAF5EE] dark:hover:bg-[#322016] transition-colors font-medium touch-manipulation"
                             aria-label="Increase quantity"
                           >
                             +
                           </button>
                         </div>
 
-                        {/* Price formatted with decimals matching screenshot */}
+                        {/* Price */}
                         <div className="text-right">
-                          <span className="text-xs sm:text-sm font-semibold text-[#2E1810] tabular-nums">
+                          <span className="text-xs sm:text-[13px] md:text-xs lg:text-sm font-semibold text-[#2E1810] dark:text-[#F5EBE1] tabular-nums">
                             ₹{(item.price * item.quantity).toFixed(2)}
                           </span>
                         </div>
@@ -433,22 +497,32 @@ export const CartDrawer: React.FC = () => {
               )}
             </div>
 
-            {/* Bottom Checkout Section matching reference screenshot */}
-            <div className="p-4 sm:p-6 border-t border-[#EFE7DA] bg-[#FFFFFF] space-y-3">
-              <div className="flex items-center justify-between text-xs sm:text-sm text-[#2E1810]">
-                <span className="font-medium">
-                  Subtotal ({totalItemCount} item{totalItemCount === 1 ? '' : 's'})
-                </span>
-                <span className="text-sm sm:text-base font-semibold text-[#2E1810] tabular-nums">
+            {/* Bottom Checkout Section with iOS safe-area padding (shrink-0 pinned) */}
+            <div className="shrink-0 p-3.5 sm:p-4 md:p-3.5 lg:p-6 border-t border-[#EFE7DA] dark:border-[#3B2519] bg-[#FFFFFF] dark:bg-[#180E08] space-y-2.5 lg:space-y-3 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-lg z-20">
+              <div className="flex items-center justify-between text-xs sm:text-xs md:text-xs lg:text-sm text-[#2E1810] dark:text-[#F5EBE1]">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-medium">
+                    Subtotal ({totalItemCount} item{totalItemCount === 1 ? '' : 's'})
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setMobileTab('addons')}
+                    className="md:hidden text-[11px] font-bold text-[#47752F] dark:text-[#6BB545] underline ml-2 cursor-pointer touch-manipulation"
+                  >
+                    + Add More
+                  </button>
+                </div>
+                <span className="text-xs sm:text-sm md:text-xs lg:text-base font-semibold text-[#2E1810] dark:text-[#F5EBE1] tabular-nums">
                   ₹{subtotal.toFixed(2)}
                 </span>
               </div>
 
-              {/* Prominent Full-Width Dark Brown "Checkout →" Button */}
+              {/* Checkout Button */}
               <button
+                type="button"
                 onClick={handleCheckout}
                 disabled={items.length === 0}
-                className="w-full py-3.5 bg-[#4A2415] hover:bg-[#35190e] disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium text-sm sm:text-base tracking-wide flex items-center justify-center gap-1.5 rounded-xs transition-colors shadow-xs"
+                className="w-full py-3 lg:py-3.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#35190e] dark:hover:bg-[#5aa038] disabled:opacity-50 disabled:cursor-not-allowed text-white dark:text-[#120A06] font-bold text-xs sm:text-sm md:text-xs lg:text-base tracking-wide flex items-center justify-center gap-1.5 rounded-xl transition-all shadow-md touch-manipulation active:scale-[0.99] cursor-pointer"
               >
                 <span>Checkout</span>
                 <ArrowRight className="w-4 h-4 ml-1" />

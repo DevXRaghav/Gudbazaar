@@ -60,9 +60,6 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     } else if (scriptTag) {
       scriptTag.remove();
     }
-
-    // Scroll to top on route change
-    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [title, description, canonicalPath, ogImage, schema]);
 
   return null;

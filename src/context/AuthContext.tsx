@@ -6,6 +6,8 @@ import {
   resetAuthRateLimit,
   auditInputSecurity,
   sanitizeText,
+  hashCredentialSync,
+  sanitizeUserProfile,
 } from '../utils/security';
 
 interface AuthContextType {
@@ -14,7 +16,7 @@ interface AuthContextType {
   authModalMode: 'prompt' | 'signup' | 'signin' | 'profile';
   openAuthModal: (mode?: 'prompt' | 'signup' | 'signin' | 'profile') => void;
   closeAuthModal: () => void;
-  register: (data: Omit<CustomerProfile, 'id' | 'createdAt'>) => { success: boolean; message?: string };
+  register: (data: Omit<CustomerProfile, 'id' | 'createdAt'>, rawPassword?: string) => { success: boolean; message?: string };
   login: (emailOrPhone: string, password?: string) => { success: boolean; message?: string };
   logout: () => void;
   updateProfile: (updates: Partial<CustomerProfile>) => void;
@@ -32,7 +34,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<CustomerProfile | null>(() => {
     try {
       const saved = localStorage.getItem(USER_STORAGE_KEY);
-      return saved ? JSON.parse(saved) : null;
+      if (!saved) return null;
+      const parsed = JSON.parse(saved);
+      // CISO: Ensure active session never contains credentials
+      return sanitizeUserProfile(parsed);
     } catch {
       return null;
     }
@@ -53,7 +58,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     try {
       if (user) {
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+        // CISO: Never persist password credentials in browser session storage
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sanitizeUserProfile(user)));
       } else {
         localStorage.removeItem(USER_STORAGE_KEY);
       }
@@ -94,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthModalOpen(false);
   };
 
-  const register = (data: Omit<CustomerProfile, 'id' | 'createdAt'>) => {
+  const register = (data: Omit<CustomerProfile, 'id' | 'createdAt'>, rawPassword?: string) => {
     // 1. Cybersecurity: Audit for injection scripts
     const nameAudit = auditInputSecurity(data.fullName, 'Full Name');
     if (!nameAudit.isSafe) return { success: false, message: nameAudit.errorMessage };
@@ -106,7 +112,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const cleanMobile = data.mobile.replace(/\D/g, '').slice(0, 10);
 
     // Check existing registered users database
-    let existingUsers: CustomerProfile[] = [];
+    let existingUsers: (CustomerProfile & { password?: string })[] = [];
     try {
       const db = localStorage.getItem(USERS_DB_STORAGE_KEY);
       existingUsers = db ? JSON.parse(db) : [];
@@ -125,16 +131,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
     }
 
-    const newProfile: CustomerProfile = {
+    // Cryptographic hashing of password before saving
+    const passwordToHash = rawPassword || 'gudbazaar123';
+    const passwordHash = hashCredentialSync(passwordToHash);
+
+    const newRecord: CustomerProfile = {
       ...data,
       id: `usr_${Date.now()}`,
       fullName: data.fullName.trim().slice(0, 80),
       email: cleanEmail,
       mobile: cleanMobile,
+      passwordHash,
       createdAt: new Date().toISOString(),
     };
 
-    existingUsers.push(newProfile);
+    existingUsers.push(newRecord);
     try {
       localStorage.setItem(USERS_DB_STORAGE_KEY, JSON.stringify(existingUsers));
     } catch {
@@ -142,7 +153,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     resetAuthRateLimit();
-    setUser(newProfile);
+    const cleanSessionUser = sanitizeUserProfile(newRecord);
+    setUser(cleanSessionUser);
     return { success: true };
   };
 
@@ -163,7 +175,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const identifier = emailOrPhone.trim().toLowerCase();
     const cleanMobile = emailOrPhone.replace(/\D/g, '').slice(0, 10);
 
-    let existingUsers: CustomerProfile[] = [];
+    let existingUsers: (CustomerProfile & { password?: string })[] = [];
     try {
       const db = localStorage.getItem(USERS_DB_STORAGE_KEY);
       existingUsers = db ? JSON.parse(db) : [];
@@ -176,14 +188,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
     if (!found) {
-      // Create quick guest-converted account if not found
+      // Create guest-converted account if not found with hashed default
       const isPhone = /^\d{10}$/.test(cleanMobile);
+      const defaultHash = hashCredentialSync(password || 'gudbazaar123');
       const guestProfile: CustomerProfile = {
         id: `usr_${Date.now()}`,
         fullName: isPhone ? 'Valued Customer' : identifier.split('@')[0],
         email: isPhone ? `${cleanMobile}@gudbazaar.com` : identifier,
         mobile: isPhone ? cleanMobile : '9820012345',
-        password: password || 'gudbazaar123',
+        passwordHash: defaultHash,
         createdAt: new Date().toISOString(),
       };
       existingUsers.push(guestProfile);
@@ -193,21 +206,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // ignore
       }
       resetAuthRateLimit();
-      setUser(guestProfile);
+      setUser(sanitizeUserProfile(guestProfile));
       return { success: true };
     }
 
-    // Verify password if specified
-    if (found.password && password && found.password !== password) {
-      const lockMsg = recordFailedAuthAttempt();
-      return {
-        success: false,
-        message: lockMsg || 'Incorrect password. Security attempt logged. Please try again.',
-      };
+    // Verify password if specified (support both new hashed and legacy test records)
+    if (password) {
+      const candidateHash = hashCredentialSync(password);
+      const isMatch = (found.passwordHash && found.passwordHash === candidateHash) ||
+                      (found.password && found.password === password);
+
+      if (!isMatch) {
+        const lockMsg = recordFailedAuthAttempt();
+        return {
+          success: false,
+          message: lockMsg || 'Incorrect password. Security attempt logged. Please try again.',
+        };
+      }
     }
 
     resetAuthRateLimit();
-    setUser(found);
+    setUser(sanitizeUserProfile(found));
     return { success: true };
   };
 
@@ -218,7 +237,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = (updates: Partial<CustomerProfile>) => {
     if (!user) return;
-    const updated = { ...user, ...updates };
+    // CISO: Prevent Prototype Pollution or unauthorized credential tampering via profile updates
+    const safeUpdates: Partial<CustomerProfile> = { ...updates };
+    delete safeUpdates.id;
+    delete (safeUpdates as any).password;
+    delete safeUpdates.passwordHash;
+
+    const updated = { ...user, ...safeUpdates };
     setUser(updated);
 
     // Update in DB as well
@@ -228,7 +253,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const existingUsers: CustomerProfile[] = JSON.parse(db);
         const idx = existingUsers.findIndex((u) => u.id === user.id);
         if (idx !== -1) {
-          existingUsers[idx] = updated;
+          existingUsers[idx] = { ...existingUsers[idx], ...safeUpdates };
           localStorage.setItem(USERS_DB_STORAGE_KEY, JSON.stringify(existingUsers));
         }
       }

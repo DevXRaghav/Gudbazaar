@@ -38,9 +38,9 @@ export const GudbazaarLogo: React.FC<LogoProps> = ({
     );
   }
 
-  // Standard transparent logo for light/cream header and content
+  // Standard logo with dark mode adaptive container for high contrast
   return (
-    <div className={`inline-flex items-center select-none ${className}`}>
+    <div className={`inline-flex items-center select-none dark:bg-[#FFF9EF] dark:px-2 dark:py-1 dark:rounded-xl dark:shadow-xs transition-colors ${className}`}>
       <img
         src={OFFICIAL_LOGO_URL}
         alt="Gudbazaar - Pure Jaggery"

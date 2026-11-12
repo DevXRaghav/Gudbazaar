@@ -83,6 +83,21 @@ export interface CustomerAddress {
   addressType: 'home' | 'work';
 }
 
+export type PaymentStatus =
+  | 'pending_payment'
+  | 'awaiting_cod_verification'
+  | 'verified_paid';
+
+export type OrderStatus =
+  | 'draft_order'
+  | 'pending_payment'
+  | 'received'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled';
+
 export interface Order {
   orderId: string;
   items: CartItem[];
@@ -93,9 +108,11 @@ export interface Order {
   couponCode?: string;
   customerAddress: CustomerAddress;
   paymentMethod: 'UPI' | 'Card' | 'NetBanking' | 'COD';
-  status: 'confirmed' | 'processing' | 'shipped' | 'delivered';
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
   createdAt: string;
   estimatedDeliveryDate: string;
+  isDevelopmentOrder?: boolean;
 }
 
 export interface Coupon {
@@ -111,7 +128,7 @@ export interface CustomerProfile {
   fullName: string;
   email: string;
   mobile: string;
-  password?: string;
+  passwordHash?: string;
   addressLine?: string;
   city?: string;
   state?: string;

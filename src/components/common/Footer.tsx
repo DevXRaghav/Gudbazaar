@@ -5,7 +5,7 @@ import { GudbazaarLogo } from './Logo';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#4A2415] text-[#FFF9EF] border-t border-[#4A2415] pt-16 pb-12 mt-20">
+    <footer className="bg-[#4A2415] dark:bg-[#150B07] text-[#FFF9EF] border-t border-[#4A2415] dark:border-[#3B2519] pt-16 pb-12 safe-pb mt-20 transition-colors">
       {/* Trust Badges Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-[#FFF9EF]/10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">

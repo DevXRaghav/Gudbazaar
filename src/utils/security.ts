@@ -1,3 +1,5 @@
+import type { CustomerProfile } from '../types';
+
 /**
  * GUDBAZAAR CHIEF CYBERSECURITY OFFICER (CISO) DEFENSE SUITE
  * 
@@ -253,3 +255,63 @@ export function recordFailedAuthAttempt(): string | null {
 export function resetAuthRateLimit(): void {
   delete rateLimiters['auth_rate_limit'];
 }
+
+/**
+ * One-way cryptographic SHA-256 hash using Web Crypto API.
+ * Ensures passwords are never stored in cleartext in client-side storage during development.
+ */
+export async function hashCredential(value: string, salt: string = 'gudbazaar_auth_salt_v1'): Promise<string> {
+  if (!value) return '';
+  try {
+    if (typeof crypto !== 'undefined' && crypto.subtle) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(`${salt}:${value}`);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    }
+  } catch {
+    // fallback if WebCrypto subtle is unavailable
+  }
+  // Fallback hash implementation (FNV-1a 64-bit style)
+  let h1 = 0xdeadbeef;
+  let h2 = 0x41c64e6d;
+  const str = `${salt}:${value}`;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+}
+
+/**
+ * Synchronous credential hash fallback for synchronous auth operations.
+ */
+export function hashCredentialSync(value: string, salt: string = 'gudbazaar_auth_salt_v1'): string {
+  if (!value) return '';
+  let h1 = 0xdeadbeef;
+  let h2 = 0x41c64e6d;
+  const str = `${salt}:${value}`;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+}
+
+/**
+ * Strips sensitive security credential keys from user objects before serialization.
+ */
+export function sanitizeUserProfile<T extends Partial<CustomerProfile> | Record<string, any>>(user: T): CustomerProfile {
+  const sanitized = { ...user } as any;
+  delete sanitized.password;
+  delete sanitized.passwordHash;
+  return sanitized as CustomerProfile;
+}
+

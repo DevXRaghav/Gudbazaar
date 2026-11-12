@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Trash2, ArrowRight, ShoppingBag, Tag, Check, Sparkles, ShieldCheck } from 'lucide-react';
+import { Trash2, ArrowRight, ShoppingBag, Tag, Sparkles, ShieldCheck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { FREE_SHIPPING_THRESHOLD } from '../data/products';
 import { SEOHead } from '../components/seo/SEOHead';
@@ -42,7 +42,7 @@ export const CartPage: React.FC = () => {
   );
 
   return (
-    <div className="bg-[#FFF9EF] min-h-screen py-8 sm:py-12">
+    <div className="bg-[#FFF9EF] dark:bg-[#120A06] min-h-screen py-8 sm:py-12 transition-colors duration-200">
       <SEOHead
         title="Your Shopping Bag | Gudbazaar"
         description="Review items in your Gudbazaar shopping bag and apply seasonal discounts."
@@ -52,71 +52,71 @@ export const CartPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-[#4A2415]/60 mb-6">
-          <Link to="/" className="hover:text-[#47752F]">Home</Link>
+        <div className="flex items-center gap-2 text-xs text-[#4A2415]/70 dark:text-[#D8C7B8]/70 mb-6">
+          <Link to="/" className="hover:text-[#47752F] dark:hover:text-[#6BB545]">Home</Link>
           <span>/</span>
-          <Link to="/shop" className="hover:text-[#47752F]">Shop</Link>
+          <Link to="/shop" className="hover:text-[#47752F] dark:hover:text-[#6BB545]">Shop</Link>
           <span>/</span>
-          <span className="text-[#4A2415] font-semibold">Shopping Bag</span>
+          <span className="text-[#4A2415] dark:text-[#F5EBE1] font-semibold">Shopping Bag</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#4A2415] tracking-tight mb-8">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#4A2415] dark:text-[#F5EBE1] tracking-tight mb-8">
           Shopping Bag ({items.reduce((s, i) => s + i.quantity, 0)} items)
         </h1>
 
         {items.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-[#E9DDC9] p-12 text-center max-w-xl mx-auto shadow-xs">
-            <div className="w-16 h-16 rounded-full bg-[#FFF9EF] border border-[#E9DDC9] text-[#47752F] flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white dark:bg-[#1C110B] rounded-2xl border border-[#E9DDC9] dark:border-[#3B2519] p-12 text-center max-w-xl mx-auto shadow-xs">
+            <div className="w-16 h-16 rounded-full bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#3B2519] text-[#47752F] dark:text-[#6BB545] flex items-center justify-center mx-auto mb-4">
               <ShoppingBag className="w-8 h-8" />
             </div>
-            <h2 className="text-lg font-bold text-[#4A2415]">Your bag is completely empty</h2>
-            <p className="text-xs text-[#4A2415]/70 mt-1 max-w-sm mx-auto">
+            <h2 className="text-lg font-bold text-[#4A2415] dark:text-[#F5EBE1]">Your bag is completely empty</h2>
+            <p className="text-xs text-[#4A2415]/70 dark:text-[#D8C7B8]/70 mt-1 max-w-sm mx-auto">
               You have not added any natural jaggery products yet. Explore our bestselling collections and add authentic sweetness to your home.
             </p>
             <Link
               to="/shop"
-              className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+              className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
             >
               <span>Explore Products</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
             
             {/* Left Items Column */}
-            <div className="lg:col-span-8 flex flex-col gap-6">
+            <div className="md:col-span-7 lg:col-span-8 flex flex-col gap-6">
               
               {/* Free Shipping Progress */}
-              <div className="bg-white p-4 sm:p-5 rounded-xl border border-[#E9DDC9] shadow-xs">
+              <div className="bg-white dark:bg-[#1C110B] p-4 sm:p-5 rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] shadow-xs">
                 <div className="flex items-center justify-between text-xs font-semibold mb-2">
                   {freeShippingRemaining > 0 ? (
-                    <span className="text-[#4A2415]">
-                      Add <strong className="text-[#47752F]">₹{freeShippingRemaining}</strong> more for <strong>FREE Delivery</strong> across India
+                    <span className="text-[#4A2415] dark:text-[#F5EBE1]">
+                      Add <strong className="text-[#47752F] dark:text-[#6BB545]">₹{freeShippingRemaining}</strong> more for <strong>FREE Delivery</strong> across India
                     </span>
                   ) : (
-                    <span className="text-[#47752F] flex items-center gap-1 font-bold">
-                      <Sparkles className="w-4 h-4 text-[#E99A19]" /> Congratulations! You have unlocked FREE Shipping
+                    <span className="text-[#47752F] dark:text-[#6BB545] flex items-center gap-1 font-bold">
+                      <Sparkles className="w-4 h-4 text-[#E99A19] dark:text-[#F5AA28]" /> Congratulations! You have unlocked FREE Shipping
                     </span>
                   )}
-                  <span className="tabular-nums text-[#4A2415]/70">{freeShippingProgress}%</span>
+                  <span className="tabular-nums text-[#4A2415]/70 dark:text-[#D8C7B8]/70">{freeShippingProgress}%</span>
                 </div>
-                <div className="w-full h-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#3B2519] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-[#47752F] rounded-full transition-all duration-500"
+                    className="h-full bg-[#47752F] dark:bg-[#6BB545] rounded-full transition-all duration-500"
                     style={{ width: `${freeShippingProgress}%` }}
                   />
                 </div>
               </div>
 
               {/* Freshness & Moisture Reminder */}
-              <div className="bg-[#FFF9EF] p-3.5 rounded-xl border border-[#E9DDC9] flex items-center gap-3 text-xs text-[#4A2415]">
-                <Sparkles className="w-4 h-4 text-[#47752F] shrink-0" />
+              <div className="bg-[#FFF9EF] dark:bg-[#261810] p-3.5 rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] flex items-center gap-3 text-xs text-[#4A2415] dark:text-[#F5EBE1]">
+                <Sparkles className="w-4 h-4 text-[#47752F] dark:text-[#6BB545] shrink-0" />
                 <span><strong>Fresh Batch Guarantee:</strong> All items are prepared fresh from organic UP sugarcane. To preserve peak taste, keep away from moisture and store in a sealed pack container, airtight jar, or packet.</span>
               </div>
 
               {/* Items Card */}
-              <div className="bg-white rounded-xl border border-[#E9DDC9] divide-y divide-[#E9DDC9]/70 shadow-xs overflow-hidden">
+              <div className="bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] divide-y divide-[#E9DDC9]/70 dark:divide-[#3B2519] shadow-xs overflow-hidden">
                 {items.map((item) => (
                   <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
                     <div className="flex items-center gap-4">
@@ -124,27 +124,27 @@ export const CartPage: React.FC = () => {
                         src={item.image}
                         alt={item.name}
                         referrerPolicy="no-referrer"
-                        className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg bg-[#FFF9EF] border border-[#E9DDC9] shrink-0"
+                        className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#3B2519] shrink-0"
                       />
                       <div>
-                        <span className="text-[11px] font-semibold text-[#47752F] uppercase tracking-wider block">
+                        <span className="text-[11px] font-semibold text-[#47752F] dark:text-[#6BB545] uppercase tracking-wider block">
                           {item.category}
                         </span>
                         <Link
                           to={`/product/${item.slug}`}
-                          className="text-sm sm:text-base font-bold text-[#4A2415] hover:text-[#47752F] transition-colors"
+                          className="text-sm sm:text-base font-bold text-[#4A2415] dark:text-[#F5EBE1] hover:text-[#47752F] dark:hover:text-[#6BB545] transition-colors"
                         >
                           {item.name}
                         </Link>
-                        <p className="text-xs text-[#4A2415]/70 mt-0.5">
-                          Pack Size: <span className="font-semibold text-[#4A2415]">{item.weight}</span>
+                        <p className="text-xs text-[#4A2415]/70 dark:text-[#D8C7B8]/70 mt-0.5">
+                          Pack Size: <span className="font-semibold text-[#4A2415] dark:text-[#F5EBE1]">{item.weight}</span>
                         </p>
                         <div className="mt-1 flex items-baseline gap-2">
-                          <span className="text-sm font-bold text-[#4A2415] tabular-nums">
+                          <span className="text-sm font-bold text-[#4A2415] dark:text-[#F5EBE1] tabular-nums">
                             ₹{item.price}
                           </span>
                           {item.mrp > item.price && (
-                            <span className="text-xs text-[#4A2415]/40 line-through tabular-nums">
+                            <span className="text-xs text-[#4A2415]/40 dark:text-[#D8C7B8]/40 line-through tabular-nums">
                               ₹{item.mrp}
                             </span>
                           )}
@@ -152,21 +152,23 @@ export const CartPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E9DDC9]/50">
+                    <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E9DDC9]/50 dark:border-[#3B2519]">
                       {/* Quantity Stepper */}
-                      <div className="flex items-center border border-[#E9DDC9] rounded-lg bg-[#FFF9EF]">
+                      <div className="flex items-center border border-[#E9DDC9] dark:border-[#3B2519] rounded-lg bg-[#FFF9EF] dark:bg-[#261810]">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-3 py-1 text-sm font-bold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-l-lg"
+                          className="px-3 py-1 text-sm font-bold text-[#4A2415] dark:text-[#F5EBE1] hover:bg-[#E9DDC9]/50 dark:hover:bg-[#322016] rounded-l-lg touch-manipulation"
+                          aria-label="Decrease quantity"
                         >
                           -
                         </button>
-                        <span className="px-3.5 py-1 text-xs font-bold tabular-nums text-[#4A2415]">
+                        <span className="px-3.5 py-1 text-xs font-bold tabular-nums text-[#4A2415] dark:text-[#F5EBE1]">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-3 py-1 text-sm font-bold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-r-lg"
+                          className="px-3 py-1 text-sm font-bold text-[#4A2415] dark:text-[#F5EBE1] hover:bg-[#E9DDC9]/50 dark:hover:bg-[#322016] rounded-r-lg touch-manipulation"
+                          aria-label="Increase quantity"
                         >
                           +
                         </button>
@@ -174,7 +176,7 @@ export const CartPage: React.FC = () => {
 
                       {/* Line Item Total */}
                       <div className="text-right min-w-[70px]">
-                        <span className="text-base font-extrabold text-[#4A2415] tabular-nums">
+                        <span className="text-base font-extrabold text-[#4A2415] dark:text-[#F5EBE1] tabular-nums">
                           ₹{item.price * item.quantity}
                         </span>
                       </div>
@@ -182,7 +184,7 @@ export const CartPage: React.FC = () => {
                       {/* Remove Button */}
                       <button
                         onClick={() => removeFromCart(item.id)}
-                        className="text-[#4A2415]/40 hover:text-red-700 p-1.5 transition-colors"
+                        className="text-[#4A2415]/40 dark:text-[#D8C7B8]/50 hover:text-red-700 dark:hover:text-red-400 p-1.5 transition-colors touch-manipulation"
                         title="Remove item"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -196,13 +198,13 @@ export const CartPage: React.FC = () => {
               <div className="flex items-center justify-between text-xs">
                 <Link
                   to="/shop"
-                  className="font-semibold text-[#47752F] hover:text-[#4A2415] flex items-center gap-1"
+                  className="font-semibold text-[#47752F] dark:text-[#6BB545] hover:text-[#4A2415] dark:hover:text-[#F5EBE1] flex items-center gap-1"
                 >
                   <span>← Continue Shopping</span>
                 </Link>
                 <button
                   onClick={clearCart}
-                  className="text-[#4A2415]/60 hover:text-red-700 underline"
+                  className="text-[#4A2415]/60 dark:text-[#D8C7B8]/60 hover:text-red-700 dark:hover:text-red-400 underline touch-manipulation"
                 >
                   Clear Entire Bag
                 </button>
@@ -211,27 +213,27 @@ export const CartPage: React.FC = () => {
             </div>
 
             {/* Right Summary Column */}
-            <div className="lg:col-span-4 bg-white rounded-xl border border-[#E9DDC9] p-6 shadow-xs space-y-5">
-              <h2 className="text-base font-bold text-[#4A2415] pb-3 border-b border-[#E9DDC9]">
+            <div className="lg:col-span-4 bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-6 shadow-xs space-y-5 transition-colors">
+              <h2 className="text-base font-bold text-[#4A2415] dark:text-[#F5EBE1] pb-3 border-b border-[#E9DDC9] dark:border-[#3B2519]">
                 Order Summary
               </h2>
 
               {/* Coupon Engine */}
               <div>
-                <label className="block text-xs font-semibold text-[#4A2415] mb-1.5">
+                <label className="block text-xs font-semibold text-[#4A2415] dark:text-[#F5EBE1] mb-1.5">
                   Have a Coupon Code?
                 </label>
                 {coupon ? (
-                  <div className="flex items-center justify-between bg-[#FFF9EF] px-3 py-2 rounded-lg border border-[#47752F]/40 text-xs">
-                    <div className="flex items-center gap-1.5 text-[#47752F] font-bold">
+                  <div className="flex items-center justify-between bg-[#FFF9EF] dark:bg-[#261810] px-3 py-2 rounded-lg border border-[#47752F]/40 dark:border-[#6BB545]/40 text-xs">
+                    <div className="flex items-center gap-1.5 text-[#47752F] dark:text-[#6BB545] font-bold">
                       <Tag className="w-3.5 h-3.5" />
                       <span>{coupon.code}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-[#47752F] tabular-nums">-₹{discount}</span>
+                      <span className="font-bold text-[#47752F] dark:text-[#6BB545] tabular-nums">-₹{discount}</span>
                       <button
                         onClick={removeCoupon}
-                        className="text-xs text-red-700 hover:underline"
+                        className="text-xs text-red-700 dark:text-red-400 hover:underline touch-manipulation"
                       >
                         Remove
                       </button>
@@ -244,11 +246,11 @@ export const CartPage: React.FC = () => {
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
                       placeholder="e.g. SWEET10, FIRSTGUD"
-                      className="flex-1 px-3 py-2 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-xs uppercase tracking-wider text-[#4A2415] focus:outline-none focus:border-[#47752F]"
+                      className="flex-1 px-3 py-2 bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#42291C] rounded-lg text-xs uppercase tracking-wider text-[#4A2415] dark:text-[#F5EBE1] focus:outline-none focus:border-[#47752F] dark:focus:border-[#6BB545]"
                     />
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-[#4A2415] hover:bg-[#47752F] text-white text-xs font-semibold rounded-lg transition-colors"
+                      className="px-4 py-2 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg transition-colors touch-manipulation"
                     >
                       Apply
                     </button>
@@ -256,14 +258,14 @@ export const CartPage: React.FC = () => {
                 )}
 
                 {(couponFeedback || couponError) && !coupon && (
-                  <p className="mt-1.5 text-[11px] text-red-700 font-medium">
+                  <p className="mt-1.5 text-[11px] text-red-700 dark:text-red-400 font-medium">
                     {couponError || couponFeedback}
                   </p>
                 )}
 
                 {/* Available Offers hint */}
-                <div className="mt-2 text-[11px] text-[#4A2415]/70 bg-[#FFF9EF] p-2.5 rounded-lg border border-[#E9DDC9]/60">
-                  <span className="font-bold text-[#47752F] block">Available Coupons:</span>
+                <div className="mt-2 text-[11px] text-[#4A2415]/70 dark:text-[#D8C7B8]/70 bg-[#FFF9EF] dark:bg-[#261810] p-2.5 rounded-lg border border-[#E9DDC9]/60 dark:border-[#3B2519]">
+                  <span className="font-bold text-[#47752F] dark:text-[#6BB545] block">Available Coupons:</span>
                   <p>• <strong>SWEET10</strong>: 10% off above ₹299</p>
                   <p>• <strong>FIRSTGUD</strong>: 15% off first order (above ₹450)</p>
                   <p>• <strong>PUREJAGGERY</strong>: 20% off above ₹799</p>
@@ -271,13 +273,13 @@ export const CartPage: React.FC = () => {
               </div>
 
               {/* Price Breakdown */}
-              <div className="space-y-2.5 text-xs text-[#4A2415]/85 pt-3 border-t border-[#E9DDC9]">
+              <div className="space-y-2.5 text-xs text-[#4A2415]/85 dark:text-[#D8C7B8] pt-3 border-t border-[#E9DDC9] dark:border-[#3B2519]">
                 <div className="flex justify-between">
                   <span>Bag Subtotal</span>
-                  <span className="font-bold text-[#4A2415] tabular-nums">₹{subtotal}</span>
+                  <span className="font-bold text-[#4A2415] dark:text-[#F5EBE1] tabular-nums">₹{subtotal}</span>
                 </div>
                 {discount > 0 && (
-                  <div className="flex justify-between text-[#47752F]">
+                  <div className="flex justify-between text-[#47752F] dark:text-[#6BB545]">
                     <span>Coupon Discount</span>
                     <span className="font-bold tabular-nums">-₹{discount}</span>
                   </div>
@@ -286,30 +288,30 @@ export const CartPage: React.FC = () => {
                   <span>Delivery Charges</span>
                   <span className="font-bold tabular-nums">
                     {shippingFee === 0 ? (
-                      <span className="text-[#47752F]">FREE</span>
+                      <span className="text-[#47752F] dark:text-[#6BB545]">FREE</span>
                     ) : (
                       `₹${shippingFee}`
                     )}
                   </span>
                 </div>
-                <div className="flex justify-between text-base font-extrabold text-[#4A2415] pt-3 border-t border-[#E9DDC9]">
+                <div className="flex justify-between text-base font-extrabold text-[#4A2415] dark:text-[#F5EBE1] pt-3 border-t border-[#E9DDC9] dark:border-[#3B2519]">
                   <span>Total Amount</span>
                   <span className="tabular-nums">₹{total}</span>
                 </div>
-                <p className="text-[10px] text-[#4A2415]/60 text-right">Includes all applicable GST taxes</p>
+                <p className="text-[10px] text-[#4A2415]/60 dark:text-[#D8C7B8]/60 text-right">Includes all applicable GST taxes</p>
               </div>
 
               {/* Checkout Button */}
               <button
                 onClick={() => navigate('/checkout')}
-                className="w-full py-3.5 bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-98"
+                className="w-full py-3.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-98 touch-manipulation"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-[#4A2415]/60 text-center">
-                <ShieldCheck className="w-4 h-4 text-[#47752F]" />
+              <div className="pt-2 flex items-center justify-center gap-2 text-[11px] text-[#4A2415]/60 dark:text-[#D8C7B8]/60 text-center">
+                <ShieldCheck className="w-4 h-4 text-[#47752F] dark:text-[#6BB545]" />
                 <span>Safe & Secure Indian Payment Gateways</span>
               </div>
 
