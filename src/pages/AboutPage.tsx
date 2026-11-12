@@ -50,7 +50,7 @@ export const AboutPage: React.FC = () => {
               However, modern commercial sugar processing strips sugarcane of nearly 95% of its natural nutrients through harsh carbonation and sulfur bleaching. Even in local markets, industrial jaggery often contains sodium hydrosulphite to artificially produce a bright yellow cosmetic hue.
             </p>
             <p className="font-medium text-[#47752F]">
-              At Gudbazaar, we refused these shortcuts. We partner directly with multigenerational cane farmers in Kolhapur, Mandya, and western Uttar Pradesh who harvest mature cane and boil it in open iron pans using only natural plant-based clarifiers.
+              At Gudbazaar, we refused these shortcuts. Everything is 100% certified organic and prepared fresh, sourced all the way from the roots of Uttar Pradesh — the historic agricultural heartland recognized by the Government of India for world-class sugarcane production. Handcrafted fresh in open iron pans using only natural plant-based clarifiers and sealed against moisture in 1kg packets and airtight jars.
             </p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export const AboutPage: React.FC = () => {
             Bring Pure Indian Goodness to Your Home Today
           </h2>
           <p className="text-xs sm:text-sm text-[#E9DDC9]/80 mt-2 max-w-md mx-auto">
-            Experience our 12 curated jaggery items, backed by fast Pan-India shipping and our purity guarantee.
+            Experience our 7 freshly prepared organic jaggery, cubes, khand, and shakkar items in 1kg packs, backed by fast Pan-India shipping and our moisture-proof seal guarantee.
           </p>
           <div className="mt-8">
             <Link

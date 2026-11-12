@@ -1,13 +1,14 @@
 export type ProductCategory =
   | 'All'
-  | 'Jaggery Blocks'
-  | 'Jaggery Powder'
-  | 'Jaggery Cubes'
-  | 'Liquid Jaggery'
-  | 'Jaggery Specialities';
+  | 'Raw Gud'
+  | 'Gud Cubes'
+  | 'Pure Desi Khand'
+  | 'Pure Organic Shakkar';
+
+export type PackagingType = 'Packet' | 'Jar';
 
 export interface ProductVariant {
-  weight: string;
+  weight: string; // '500g' | '1000g'
   price: number;
   mrp: number;
   inStock: boolean;
@@ -31,6 +32,7 @@ export interface Product {
   name: string;
   slug: string;
   category: ProductCategory;
+  packagingType: PackagingType;
   shortDescription: string;
   description: string;
   primaryImage: string;
@@ -52,6 +54,7 @@ export interface Product {
   isBestseller?: boolean;
   harvestOrigin?: string;
   tagline?: string;
+  linkedVariantSlug?: string; // e.g. switches to Jar version from Packet or vice-versa
 }
 
 export interface CartItem {
@@ -65,6 +68,7 @@ export interface CartItem {
   mrp: number;
   quantity: number;
   category: ProductCategory;
+  packagingType?: PackagingType;
 }
 
 export interface CustomerAddress {

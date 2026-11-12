@@ -53,7 +53,7 @@ export const HomePage: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {CATEGORIES.map((category) => (
             <Link
               key={category.name}
@@ -152,9 +152,9 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-lg bg-[#FFF9EF] border border-[#E9DDC9] text-[#47752F] flex items-center justify-center mb-4">
               <Sparkles className="w-6 h-6 text-[#E99A19]" />
             </div>
-            <h3 className="text-base font-bold text-[#4A2415]">Carefully Selected Products</h3>
+            <h3 className="text-base font-bold text-[#4A2415]">100% Organic & Freshly Prepared</h3>
             <p className="mt-2 text-xs text-[#4A2415]/75 leading-relaxed">
-              A refined catalogue of 12 purposeful essentials — from free-flowing chai powders and tea cubes to soothing honeyed liquid kakvi.
+              Every batch of our Raw Gud, Cubes, Desi Khand, and Shakkar is prepared fresh from pure organic cane juice without chemical preservatives.
             </p>
           </div>
 
@@ -163,9 +163,9 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-lg bg-[#FFF9EF] border border-[#E9DDC9] text-[#47752F] flex items-center justify-center mb-4">
               <CheckCircle2 className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-[#4A2415]">Quality-Focused Sourcing</h3>
+            <h3 className="text-base font-bold text-[#4A2415]">Roots of Uttar Pradesh</h3>
             <p className="mt-2 text-xs text-[#4A2415]/75 leading-relaxed">
-              Partnering directly with smallholder farming clusters in Kolhapur, Mandya, and western UP. Crushed within 24 hours of fresh harvest.
+              Sourced all the way from the roots of Uttar Pradesh — recognized by the Government of India for the finest sugarcane production.
             </p>
           </div>
 
@@ -174,9 +174,9 @@ export const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-lg bg-[#FFF9EF] border border-[#E9DDC9] text-[#47752F] flex items-center justify-center mb-4">
               <Truck className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-[#4A2415]">Delivered to Your Doorstep</h3>
+            <h3 className="text-base font-bold text-[#4A2415]">1kg Sealed Packets & Airtight Jars</h3>
             <p className="mt-2 text-xs text-[#4A2415]/75 leading-relaxed">
-              Direct-to-consumer express logistics with moisture-proof, food-grade packaging that keeps jaggery fresh throughout all seasons.
+              Sold in 1kg pack sizes. Specially packaged to keep away from moisture in sealed pack containers, jars, or resealable packets.
             </p>
           </div>
 
@@ -252,44 +252,44 @@ export const HomePage: React.FC = () => {
               </p>
             </div>
             <Link
-              to="/shop?category=Jaggery+Powder"
+              to="/shop?category=Pure+Organic+Shakkar"
               className="mt-4 pt-3 border-t border-[#E9DDC9]/60 text-xs font-semibold text-[#47752F] hover:text-[#4A2415] flex items-center justify-between"
             >
-              <span>Explore Jaggery Powders</span>
+              <span>Explore Organic Shakkar</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           <div className="bg-white rounded-xl border border-[#E9DDC9] p-5 flex flex-col justify-between">
             <div>
-              <span className="text-xs font-bold text-[#E99A19]">02. Festive Halwa & Puran Poli</span>
-              <h3 className="text-base font-bold text-[#4A2415] mt-1">Authentic Desi Blocks</h3>
+              <span className="text-xs font-bold text-[#E99A19]">02. Festive Halwa & Traditional Sweets</span>
+              <h3 className="text-base font-bold text-[#4A2415] mt-1">Raw Gud (Packets & Jar)</h3>
               <p className="text-xs text-[#4A2415]/75 mt-2 leading-relaxed">
-                The soul of festive Indian cooking. Crumbled into sweet lentil fillings, atta halwa, or warm winter laddoos with roasted nuts.
+                The soul of authentic Indian kitchens. Handcrafted fresh in open pans from single-origin sugarcane in Uttar Pradesh.
               </p>
             </div>
             <Link
-              to="/shop?category=Jaggery+Blocks"
+              to="/shop?category=Raw+Gud"
               className="mt-4 pt-3 border-t border-[#E9DDC9]/60 text-xs font-semibold text-[#47752F] hover:text-[#4A2415] flex items-center justify-between"
             >
-              <span>Explore Jaggery Blocks</span>
+              <span>Explore Raw Gud</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           <div className="bg-white rounded-xl border border-[#E9DDC9] p-5 flex flex-col justify-between">
             <div>
-              <span className="text-xs font-bold text-[#E99A19]">03. Pancakes & Warm Rotis</span>
-              <h3 className="text-base font-bold text-[#4A2415] mt-1">Liquid Kakvi Drizzle</h3>
+              <span className="text-xs font-bold text-[#E99A19]">03. Healthy Snacking & Tea Rituals</span>
+              <h3 className="text-base font-bold text-[#4A2415] mt-1">Artisanal Gud Cubes</h3>
               <p className="text-xs text-[#4A2415]/75 mt-2 leading-relaxed">
-                A nutrient-dense Indian alternative to maple syrup and honey. Drizzle over hot ghee rotis, dosas, oats, or Greek yoghurt.
+                Bite-sized portioned cubes in Raw, Dryfruits, Crunchy Peanut, and All-in-One blends in 500g and 1000g sizes.
               </p>
             </div>
             <Link
-              to="/shop?category=Liquid+Jaggery"
+              to="/shop?category=Gud+Cubes"
               className="mt-4 pt-3 border-t border-[#E9DDC9]/60 text-xs font-semibold text-[#47752F] hover:text-[#4A2415] flex items-center justify-between"
             >
-              <span>Explore Liquid Jaggery</span>
+              <span>Explore Gud Cubes</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </Link>
           </div>

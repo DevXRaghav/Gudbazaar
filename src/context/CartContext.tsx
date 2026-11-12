@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product, CartItem, Coupon, Order } from '../types';
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING_FEE, VALID_COUPONS } from '../data/products';
+import {
+  sanitizeCartQuantity,
+  checkCouponRateLimit,
+  recordFailedCouponAttempt,
+  resetCouponRateLimit,
+  auditInputSecurity,
+  SECURITY_RULES,
+} from '../utils/security';
 
 interface CartContextType {
   items: CartItem[];
@@ -91,7 +99,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const addToCart = (product: Product, variantWeight?: string, quantity = 1) => {
+  const addToCart = (product: Product, variantWeight?: string, rawQuantity = 1) => {
+    const qtyCheck = sanitizeCartQuantity(rawQuantity);
+    const quantity = qtyCheck.value;
+
     const selectedVariant = variantWeight
       ? product.variants.find((v) => v.weight === variantWeight) || product.variants[0]
       : product.variants[0];
@@ -104,8 +115,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setItems((prevItems) => {
       const existing = prevItems.find((item) => item.id === itemId);
       if (existing) {
+        const nextQty = Math.min(SECURITY_RULES.MAX_QUANTITY_PER_ITEM, existing.quantity + quantity);
         return prevItems.map((item) =>
-          item.id === itemId ? { ...item, quantity: item.quantity + quantity } : item
+          item.id === itemId ? { ...item, quantity: nextQty } : item
         );
       }
       const newItem: CartItem = {
@@ -119,6 +131,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         mrp,
         quantity,
         category: product.category,
+        packagingType: product.packagingType,
       };
       return [...prevItems, newItem];
     });
@@ -126,11 +139,14 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsDrawerOpen(true);
   };
 
-  const updateQuantity = (itemId: string, quantity: number) => {
-    if (quantity <= 0) {
+  const updateQuantity = (itemId: string, rawQuantity: number) => {
+    if (rawQuantity <= 0) {
       removeFromCart(itemId);
       return;
     }
+    const qtyCheck = sanitizeCartQuantity(rawQuantity);
+    const quantity = qtyCheck.value;
+
     setItems((prev) =>
       prev.map((item) => (item.id === itemId ? { ...item, quantity } : item))
     );
@@ -157,13 +173,31 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [subtotal, coupon]);
 
-  const applyCoupon = (code: string) => {
-    const cleanCode = code.trim().toUpperCase();
+  const applyCoupon = (rawCode: string) => {
+    // 1. Cybersecurity: Check rate limiter
+    const rateCheck = checkCouponRateLimit();
+    if (!rateCheck.isAllowed) {
+      const err = rateCheck.errorMessage || 'Too many attempts. Please try again later.';
+      setCouponError(err);
+      return { success: false, message: err };
+    }
+
+    // 2. Cybersecurity: Audit for malicious injection tokens
+    const secAudit = auditInputSecurity(rawCode, 'Coupon Code');
+    if (!secAudit.isSafe) {
+      const lockMsg = recordFailedCouponAttempt() || secAudit.errorMessage || 'Invalid input pattern.';
+      setCouponError(lockMsg);
+      return { success: false, message: lockMsg };
+    }
+
+    const cleanCode = rawCode.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
     const found = VALID_COUPONS.find((c) => c.code === cleanCode);
 
     if (!found) {
-      setCouponError('Invalid coupon code. Try SWEET10 or FIRSTGUD');
-      return { success: false, message: 'Invalid coupon code. Try SWEET10 or FIRSTGUD' };
+      const lockMsg = recordFailedCouponAttempt();
+      const msg = lockMsg || 'Invalid coupon code. Try SWEET10 or FIRSTGUD';
+      setCouponError(msg);
+      return { success: false, message: msg };
     }
 
     if (subtotal < found.minOrderValue) {
@@ -172,6 +206,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, message: msg };
     }
 
+    resetCouponRateLimit();
     setCoupon(found);
     setCouponError(null);
     return { success: true, message: `Coupon ${found.code} applied successfully!` };

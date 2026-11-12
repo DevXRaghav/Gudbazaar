@@ -18,13 +18,15 @@ import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/common/ProductCard';
 import { SEOHead } from '../components/seo/SEOHead';
 import { validateIndianPincode } from '../utils/pincodeValidator';
+import { sanitizeSlug, sanitizeCartQuantity, SECURITY_RULES, auditInputSecurity } from '../utils/security';
 
 export const ProductDetailPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  const product = PRODUCTS.find((p) => p.slug === slug) || PRODUCTS[0];
+  const safeSlug = sanitizeSlug(slug || '');
+  const product = PRODUCTS.find((p) => p.slug === safeSlug) || PRODUCTS[0];
 
   // Active Image and Gallery Zoom state
   const [activeImage, setActiveImage] = useState(product.primaryImage);
@@ -232,18 +234,18 @@ export const ProductDetailPage: React.FC = () => {
             <div className="mt-4 pt-4 border-t border-[#E9DDC9]/60 grid grid-cols-3 gap-3 text-center text-xs text-[#4A2415]">
               <div className="p-2.5 bg-[#FFF9EF] rounded-lg">
                 <ShieldCheck className="w-4 h-4 mx-auto text-[#47752F] mb-1" />
-                <span className="font-semibold block text-[11px]">Lab Verified</span>
-                <span className="text-[10px] text-[#4A2415]/60">Chemical free</span>
+                <span className="font-semibold block text-[11px]">100% Organic</span>
+                <span className="text-[10px] text-[#4A2415]/60">Zero chemicals</span>
               </div>
               <div className="p-2.5 bg-[#FFF9EF] rounded-lg">
                 <Truck className="w-4 h-4 mx-auto text-[#47752F] mb-1" />
-                <span className="font-semibold block text-[11px]">Direct Farm</span>
-                <span className="text-[10px] text-[#4A2415]/60">Kolhapur / Mandya</span>
+                <span className="font-semibold block text-[11px]">Roots of UP</span>
+                <span className="text-[10px] text-[#4A2415]/60">Govt. Recognized</span>
               </div>
               <div className="p-2.5 bg-[#FFF9EF] rounded-lg">
                 <RotateCcw className="w-4 h-4 mx-auto text-[#47752F] mb-1" />
-                <span className="font-semibold block text-[11px]">Freshness</span>
-                <span className="text-[10px] text-[#4A2415]/60">12 Mo. Shelf Life</span>
+                <span className="font-semibold block text-[11px]">Prepared Fresh</span>
+                <span className="text-[10px] text-[#4A2415]/60">Small farm batch</span>
               </div>
             </div>
 
@@ -300,14 +302,62 @@ export const ProductDetailPage: React.FC = () => {
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-[#4A2415]/60 mt-1">Inclusive of all taxes. Free delivery on orders over ₹499.</p>
+              {/* 100% Fresh Organic & Moisture Care Banner */}
+              <div className="mt-4 p-3.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-xl flex items-start gap-3">
+                <Sparkles className="w-4 h-4 text-[#47752F] shrink-0 mt-0.5" />
+                <div className="text-xs text-[#4A2415]">
+                  <p className="font-bold text-[#47752F]">100% Freshly Prepared Batch · Certified Organic</p>
+                  <p className="text-[11px] text-[#4A2415]/80 mt-0.5">
+                    Sourced from the roots of Uttar Pradesh (Govt. of India recognized). <strong>Keep away from moisture!</strong> Always store in a sealed pack container, airtight jar, or sealed packet. Avoid wet spoons.
+                  </p>
+                </div>
+              </div>
 
-              {/* Pack Size / Variant Selector */}
+              {/* Packaging Type Switcher: Packet vs Jar */}
+              <div className="mt-5 pt-4 border-t border-[#E9DDC9]/70">
+                <label className="text-xs font-bold text-[#4A2415] uppercase tracking-wider block mb-2">
+                  Packaging Type: <span className="text-[#47752F]">{product.packagingType === 'Jar' ? 'Airtight Jar' : 'Airtight Packet'}</span>
+                </label>
+                <div className="flex gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (product.packagingType === 'Jar' && product.linkedVariantSlug) {
+                        navigate(`/product/${product.linkedVariantSlug}`);
+                      }
+                    }}
+                    className={`py-2 px-4 rounded-lg text-xs font-semibold border transition-all ${
+                      product.packagingType === 'Packet'
+                        ? 'bg-[#47752F] text-white border-[#47752F] shadow-xs'
+                        : 'bg-[#FFF9EF] text-[#4A2415] border-[#E9DDC9] hover:border-[#47752F]'
+                    }`}
+                  >
+                    Airtight Packet
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (product.packagingType === 'Packet' && product.linkedVariantSlug) {
+                        navigate(`/product/${product.linkedVariantSlug}`);
+                      }
+                    }}
+                    className={`py-2 px-4 rounded-lg text-xs font-semibold border transition-all ${
+                      product.packagingType === 'Jar'
+                        ? 'bg-[#47752F] text-white border-[#47752F] shadow-xs'
+                        : 'bg-[#FFF9EF] text-[#4A2415] border-[#E9DDC9] hover:border-[#47752F]'
+                    }`}
+                  >
+                    Airtight Jar
+                  </button>
+                </div>
+              </div>
+
+              {/* Quantity Options (500g / 1000g) Selector */}
               {product.variants.length > 1 && (
-                <div className="mt-6">
+                <div className="mt-5">
                   <div className="flex items-center justify-between mb-2">
                     <label className="text-xs font-bold text-[#4A2415] uppercase tracking-wider">
-                      Select Pack Size: <span className="text-[#47752F]">{selectedWeight}</span>
+                      Quantity Option: <span className="text-[#47752F]">{selectedWeight}</span>
                     </label>
                   </div>
                   <div className="flex flex-wrap gap-2.5">
@@ -316,7 +366,7 @@ export const ProductDetailPage: React.FC = () => {
                         key={v.sku}
                         type="button"
                         onClick={() => setSelectedWeight(v.weight)}
-                        className={`py-2 px-3.5 rounded-lg text-xs font-semibold border transition-all ${
+                        className={`py-2 px-4 rounded-lg text-xs font-semibold border transition-all ${
                           selectedWeight === v.weight
                             ? 'bg-[#4A2415] text-[#FFF9EF] border-[#4A2415] shadow-xs'
                             : 'bg-[#FFF9EF] text-[#4A2415] border-[#E9DDC9] hover:border-[#47752F]'
@@ -329,14 +379,15 @@ export const ProductDetailPage: React.FC = () => {
                 </div>
               )}
 
-              {/* Quantity Selector */}
+              {/* Quantity Stepper with Cybersecurity Bounds */}
               <div className="mt-6 flex items-center gap-4">
-                <label className="text-xs font-bold text-[#4A2415] uppercase tracking-wider">Quantity:</label>
+                <label className="text-xs font-bold text-[#4A2415] uppercase tracking-wider">Units:</label>
                 <div className="flex items-center border border-[#E9DDC9] rounded-lg bg-[#FFF9EF]">
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     className="px-3 py-1.5 text-sm font-bold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-l-lg"
+                    aria-label="Decrease quantity"
                   >
                     -
                   </button>
@@ -345,8 +396,9 @@ export const ProductDetailPage: React.FC = () => {
                   </span>
                   <button
                     type="button"
-                    onClick={() => setQuantity((q) => q + 1)}
+                    onClick={() => setQuantity((q) => Math.min(SECURITY_RULES.MAX_QUANTITY_PER_ITEM, q + 1))}
                     className="px-3 py-1.5 text-sm font-bold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-r-lg"
+                    aria-label="Increase quantity"
                   >
                     +
                   </button>

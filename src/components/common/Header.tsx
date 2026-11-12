@@ -37,9 +37,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
     <>
       {/* SECTION A — ANNOUNCEMENT BAR */}
       <div className="bg-[#4A2415] text-[#FFF9EF] text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-1.5 sm:gap-2 overflow-hidden">
-        <span className="truncate">Bringing Natural Sweetness to Your Everyday Life.</span>
+        <span className="truncate">🌿 100% Organic & Prepared Fresh · Sourced from the Roots of Uttar Pradesh (Govt. of India Recognized Sugarcane Belt)</span>
         <span className="hidden sm:inline text-[#E99A19]">·</span>
-        <span className="hidden sm:inline text-[#FFF9EF]/90">Free Delivery across India on orders above ₹499</span>
+        <span className="hidden sm:inline text-[#FFF9EF]/90">Free Delivery above ₹499</span>
       </div>
 
       {/* SECTION B — STICKY NAVIGATION BAR (Strict 3-zone contract) */}
@@ -268,13 +268,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
               </nav>
 
               <div className="mt-8 pt-6 border-t border-[#E9DDC9]">
-                <p className="text-xs font-semibold text-[#47752F] uppercase tracking-wider mb-3">Shop Categories</p>
+                <p className="text-xs font-semibold text-[#47752F] uppercase tracking-wider mb-3">Shop Categories (1kg)</p>
                 <div className="flex flex-col gap-2 text-sm text-[#4A2415]/80">
-                  <NavLink to="/shop?category=Jaggery+Blocks" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Jaggery Blocks</NavLink>
-                  <NavLink to="/shop?category=Jaggery+Powder" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Jaggery Powder</NavLink>
-                  <NavLink to="/shop?category=Jaggery+Cubes" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Jaggery Cubes</NavLink>
-                  <NavLink to="/shop?category=Liquid+Jaggery" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Liquid Jaggery (Kakvi)</NavLink>
-                  <NavLink to="/shop?category=Jaggery+Specialities" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Festive Specialities</NavLink>
+                  <NavLink to="/shop?category=Raw+Gud" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Raw Gud</NavLink>
+                  <NavLink to="/shop?category=Gud+Cubes" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Gud Cubes (Raw, Dryfruits, Peanut, All-in-One)</NavLink>
+                  <NavLink to="/shop?category=Pure+Desi+Khand" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Pure Desi Khand</NavLink>
+                  <NavLink to="/shop?category=Pure+Organic+Shakkar" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#47752F] py-1">Pure Organic Shakkar</NavLink>
                 </div>
               </div>
             </div>

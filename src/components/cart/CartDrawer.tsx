@@ -4,6 +4,7 @@ import { X, Trash2, ArrowRight, Share2, Truck, Tag, Check, ShoppingBag } from 'l
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { PRODUCTS, FREE_SHIPPING_THRESHOLD } from '../../data/products';
+import { SECURITY_RULES } from '../../utils/security';
 
 const DISCOUNT_THRESHOLD = 999; // 5% discount milestone threshold
 
@@ -29,22 +30,12 @@ export const CartDrawer: React.FC = () => {
 
   if (!isDrawerOpen) return null;
 
-  // Selected quick-add recommendations
-  const recommendedSlugs = [
-    'brown-desi-khand-1kg',
-    'jaggery-cubes-gur-ki-dali-650gm',
-    'sulphurless-desi-khand-1kg',
-    'gur-chana-roasted-chickpeas-200gm',
-    'peanut-chikki-cookies-healthy-jaggery-snack-200g',
-    'palm-jaggery-270g',
-    'natural-desi-jaggery-block',
-    'liquid-jaggery-syrup-kakvi',
+  // Pick recommendations from fresh organic products
+  const cartProductIds = new Set(items.map((i) => i.productId));
+  const recommendationList = [
+    ...PRODUCTS.filter((p) => !cartProductIds.has(p.id)),
+    ...PRODUCTS.filter((p) => cartProductIds.has(p.id)),
   ];
-
-  // Pick recommendations that match or fall back to any available PRODUCTS
-  const recommendationList = recommendedSlugs
-    .map((slug) => PRODUCTS.find((p) => p.slug === slug))
-    .filter((p): p is (typeof PRODUCTS)[0] => Boolean(p));
 
   const handleQuickAdd = (product: (typeof PRODUCTS)[0]) => {
     addToCart(product, product.variants[0]?.weight || product.weight, 1);
@@ -421,7 +412,7 @@ export const CartDrawer: React.FC = () => {
                             {item.quantity}
                           </span>
                           <button
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => updateQuantity(item.id, Math.min(SECURITY_RULES.MAX_QUANTITY_PER_ITEM, item.quantity + 1))}
                             className="px-2.5 py-1 text-[#2E1810] hover:bg-[#FAF5EE] transition-colors font-medium"
                             aria-label="Increase quantity"
                           >

@@ -96,12 +96,23 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
               {product.shortDescription}
             </p>
 
-            {/* Pack Size / Variant Selector */}
+            {/* Moisture Care Note */}
+            <div className="mt-3 p-2.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-[11px] text-[#4A2415]">
+              <span className="font-bold text-[#47752F]">100% Fresh & Organic: </span>
+              Sourced from roots of UP. Store away from moisture in a sealed pack container, airtight jar, or packet.
+            </div>
+
+            {/* Quantity Option (500g / 1000g) Selector */}
             {product.variants.length > 1 && (
               <div className="mt-4">
-                <label className="block text-xs font-semibold text-[#4A2415] mb-2">
-                  Select Pack Size:
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-semibold text-[#4A2415]">
+                    Quantity Option: <span className="text-[#47752F]">{selectedWeight}</span>
+                  </label>
+                  <span className="text-[11px] font-semibold text-[#47752F] bg-[#EBF3E8] px-2 py-0.5 rounded-sm">
+                    {product.packagingType === 'Jar' ? 'Airtight Jar' : 'Airtight Packet'}
+                  </span>
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant) => (
                     <button
@@ -114,7 +125,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                           : 'border-[#E9DDC9] bg-[#FFF9EF] text-[#4A2415] hover:border-[#47752F]'
                       }`}
                     >
-                      {variant.weight}
+                      {variant.weight} — ₹{variant.price}
                     </button>
                   ))}
                 </div>
@@ -123,12 +134,13 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
 
             {/* Quantity Selector */}
             <div className="mt-4 flex items-center gap-3">
-              <span className="text-xs font-semibold text-[#4A2415]">Qty:</span>
+              <span className="text-xs font-semibold text-[#4A2415]">Units:</span>
               <div className="flex items-center border border-[#E9DDC9] rounded-lg bg-[#FFF9EF]">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-l-lg"
+                  aria-label="Decrease quantity"
                 >
                   -
                 </button>
@@ -137,8 +149,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                 </span>
                 <button
                   type="button"
-                  onClick={() => setQuantity((q) => q + 1)}
+                  onClick={() => setQuantity((q) => Math.min(99, q + 1))}
                   className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-r-lg"
+                  aria-label="Increase quantity"
                 >
                   +
                 </button>

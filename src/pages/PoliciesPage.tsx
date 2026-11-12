@@ -130,8 +130,9 @@ export const PoliciesPage: React.FC = () => {
               
               <div className="space-y-4">
                 <section>
-                  <h3 className="font-bold text-[#4A2415] text-sm mb-1">1. Food Safety & Perishable Goods</h3>
-                  <p>Because Gudbazaar products are pure food items free from chemical preservatives, we do not accept returns once a package has been opened, in compliance with FSSAI hygiene guidelines.</p>
+                  <h3 className="font-bold text-[#4A2415] text-sm mb-1">1. Food Safety & Natural Storage</h3>
+                  <p>Because Gudbazaar products are 100% organic, freshly prepared food items free from chemical preservatives, we do not accept returns once a package has been unsealed, in compliance with food safety and hygiene guidelines.</p>
+                  <p className="mt-1 text-xs text-[#4A2415]/75"><strong>Moisture & Storage Guidelines:</strong> Pure jaggery is naturally hygroscopic. Always keep away from moisture and store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.</p>
                 </section>
 
                 <section>

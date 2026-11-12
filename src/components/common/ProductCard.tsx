@@ -48,16 +48,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           }}
         />
 
-        {/* Discount & Bestseller tag: unboxed minimal clean text or small corner tag */}
+        {/* Discount, Bestseller & Packaging Tag */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm tracking-wide text-white ${
+            product.packagingType === 'Jar' ? 'bg-[#4A2415]' : 'bg-[#47752F]'
+          }`}>
+            {product.packagingType === 'Jar' ? 'Airtight Jar' : 'Airtight Packet'}
+          </span>
           {product.discountPercentage > 0 && (
-            <span className="text-[11px] font-bold text-[#FFFFFF] bg-[#E99A19] px-2 py-0.5 rounded-sm tracking-wide">
+            <span className="text-[10px] font-bold text-[#FFFFFF] bg-[#E99A19] px-2 py-0.5 rounded-sm tracking-wide">
               {product.discountPercentage}% OFF
-            </span>
-          )}
-          {product.isBestseller && (
-            <span className="text-[11px] font-semibold text-[#FFFFFF] bg-[#47752F] px-2 py-0.5 rounded-sm tracking-wide">
-              Bestseller
             </span>
           )}
         </div>
@@ -80,7 +80,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           <div className="flex items-center gap-1.5 text-xs text-[#4A2415]/70 mb-1">
             <span className="font-medium text-[#47752F]">{product.category}</span>
             <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
-            <span>{product.weight}</span>
+            <span className="font-semibold text-[#4A2415]">{product.packagingType}</span>
+            <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
+            <span>500g / 1000g</span>
           </div>
 
           {/* Product Title */}

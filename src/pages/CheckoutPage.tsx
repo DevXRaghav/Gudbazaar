@@ -8,6 +8,7 @@ import { INDIAN_STATES_AND_UT } from '../data/indianStates';
 import { CustomerAddress, Order } from '../types';
 import { SEOHead } from '../components/seo/SEOHead';
 import { validateIndianPincode } from '../utils/pincodeValidator';
+import { auditInputSecurity, sanitizeText, SECURITY_RULES } from '../utils/security';
 
 export const CheckoutPage: React.FC = () => {
   const { items, subtotal, discount, shippingFee, total, coupon, clearCart, setLastOrder } = useCart();
@@ -52,25 +53,72 @@ export const CheckoutPage: React.FC = () => {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
-    if (!/^\d{10}$/.test(formData.mobile.replace(/\D/g, ''))) {
-      newErrors.mobile = 'Enter a valid 10-digit mobile number';
+
+    // 1. Full name validation & injection audit
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = 'Full name is required';
+    } else {
+      const nameAudit = auditInputSecurity(formData.fullName, 'Full Name');
+      if (!nameAudit.isSafe) {
+        newErrors.fullName = nameAudit.errorMessage || 'Invalid characters in name';
+      }
     }
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
+
+    // 2. Mobile validation (strict 10-digit starting with 6,7,8,9)
+    const cleanMobile = formData.mobile.replace(/\D/g, '');
+    if (!/^[6-9]\d{9}$/.test(cleanMobile)) {
+      newErrors.mobile = 'Enter a valid 10-digit Indian mobile number (e.g. 9820012345)';
+    }
+
+    // 3. Email validation & header injection check
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Enter a valid email address';
+    } else {
+      const emailAudit = auditInputSecurity(formData.email, 'Email Address');
+      if (!emailAudit.isSafe) {
+        newErrors.email = emailAudit.errorMessage || 'Invalid email format';
+      }
     }
-    if (!formData.addressLine.trim()) newErrors.addressLine = 'Flat / House No. and Street address required';
+
+    // 4. Address line validation & injection check
+    if (!formData.addressLine.trim()) {
+      newErrors.addressLine = 'Flat / House No. and Street address required';
+    } else if (formData.addressLine.length < 5) {
+      newErrors.addressLine = 'Address must be at least 5 characters for courier delivery';
+    } else {
+      const addrAudit = auditInputSecurity(formData.addressLine, 'Delivery Address');
+      if (!addrAudit.isSafe) {
+        newErrors.addressLine = addrAudit.errorMessage || 'Disallowed characters in address';
+      }
+    }
+
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.state.trim()) newErrors.state = 'State is required';
     
-    // Strict Indian PIN code check
+    // 5. Strict Indian PIN code check
     const pinCheck = validateIndianPincode(formData.pincode);
     if (!pinCheck.isValid) {
       newErrors.pincode = pinCheck.message;
     }
 
-    if (paymentMethod === 'UPI' && upiId && !upiId.includes('@')) {
-      newErrors.upi = 'Enter a valid UPI ID (e.g., username@okaxis)';
+    // 6. Landmark audit
+    if (formData.landmark?.trim()) {
+      const lmAudit = auditInputSecurity(formData.landmark, 'Landmark');
+      if (!lmAudit.isSafe) {
+        newErrors.landmark = lmAudit.errorMessage || 'Invalid landmark pattern';
+      }
+    }
+
+    // 7. Payment validation
+    if (paymentMethod === 'UPI') {
+      if (upiId && (!upiId.includes('@') || !auditInputSecurity(upiId, 'UPI ID').isSafe)) {
+        newErrors.upi = 'Enter a valid UPI ID (e.g., username@okaxis) without special code characters';
+      }
+    }
+
+    // 8. Order sanity check
+    if (total <= 0) {
+      newErrors.cart = 'Security Alert: Invalid total amount calculated. Please refresh cart.';
     }
 
     setErrors(newErrors);
@@ -541,6 +589,12 @@ export const CheckoutPage: React.FC = () => {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              {/* Freshness & Moisture Packaging Guarantee */}
+              <div className="bg-[#FFF9EF] p-2.5 rounded-lg border border-[#E9DDC9] text-[11px] text-[#4A2415]/80 flex items-start gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#47752F] shrink-0 mt-0.5" />
+                <span>Packed fresh on order from our organic Uttar Pradesh harvest. Guaranteed moisture-proof seal.</span>
               </div>
 
               {/* Price Details */}

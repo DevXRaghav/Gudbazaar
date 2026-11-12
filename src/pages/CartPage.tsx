@@ -109,6 +109,12 @@ export const CartPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Freshness & Moisture Reminder */}
+              <div className="bg-[#FFF9EF] p-3.5 rounded-xl border border-[#E9DDC9] flex items-center gap-3 text-xs text-[#4A2415]">
+                <Sparkles className="w-4 h-4 text-[#47752F] shrink-0" />
+                <span><strong>Fresh Batch Guarantee:</strong> All items are prepared fresh from organic UP sugarcane. To preserve peak taste, keep away from moisture and store in a sealed pack container, airtight jar, or packet.</span>
+              </div>
+
               {/* Items Card */}
               <div className="bg-white rounded-xl border border-[#E9DDC9] divide-y divide-[#E9DDC9]/70 shadow-xs overflow-hidden">
                 {items.map((item) => (

@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { CustomerProfile, Order } from '../types';
+import {
+  checkAuthRateLimit,
+  recordFailedAuthAttempt,
+  resetAuthRateLimit,
+  auditInputSecurity,
+  sanitizeText,
+} from '../utils/security';
 
 interface AuthContextType {
   user: CustomerProfile | null;
@@ -88,8 +95,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const register = (data: Omit<CustomerProfile, 'id' | 'createdAt'>) => {
+    // 1. Cybersecurity: Audit for injection scripts
+    const nameAudit = auditInputSecurity(data.fullName, 'Full Name');
+    if (!nameAudit.isSafe) return { success: false, message: nameAudit.errorMessage };
+
+    const emailAudit = auditInputSecurity(data.email, 'Email Address');
+    if (!emailAudit.isSafe) return { success: false, message: emailAudit.errorMessage };
+
     const cleanEmail = data.email.trim().toLowerCase();
-    const cleanMobile = data.mobile.replace(/\D/g, '');
+    const cleanMobile = data.mobile.replace(/\D/g, '').slice(0, 10);
 
     // Check existing registered users database
     let existingUsers: CustomerProfile[] = [];
@@ -101,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const alreadyExists = existingUsers.some(
-      (u) => u.email.toLowerCase() === cleanEmail || u.mobile === cleanMobile
+      (u) => u.email.toLowerCase() === cleanEmail || (cleanMobile && u.mobile === cleanMobile)
     );
 
     if (alreadyExists) {
@@ -114,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const newProfile: CustomerProfile = {
       ...data,
       id: `usr_${Date.now()}`,
+      fullName: data.fullName.trim().slice(0, 80),
       email: cleanEmail,
       mobile: cleanMobile,
       createdAt: new Date().toISOString(),
@@ -126,13 +141,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // ignore
     }
 
+    resetAuthRateLimit();
     setUser(newProfile);
     return { success: true };
   };
 
   const login = (emailOrPhone: string, password?: string) => {
+    // 1. Cybersecurity: Rate limit check against brute-force credential stuffing
+    const rateCheck = checkAuthRateLimit();
+    if (!rateCheck.isAllowed) {
+      return { success: false, message: rateCheck.errorMessage };
+    }
+
+    // 2. Cybersecurity: Audit injection tokens
+    const audit = auditInputSecurity(emailOrPhone, 'Login Identifier');
+    if (!audit.isSafe) {
+      recordFailedAuthAttempt();
+      return { success: false, message: audit.errorMessage };
+    }
+
     const identifier = emailOrPhone.trim().toLowerCase();
-    const cleanMobile = emailOrPhone.replace(/\D/g, '');
+    const cleanMobile = emailOrPhone.replace(/\D/g, '').slice(0, 10);
 
     let existingUsers: CustomerProfile[] = [];
     try {
@@ -143,7 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const found = existingUsers.find(
-      (u) => u.email.toLowerCase() === identifier || u.mobile === cleanMobile
+      (u) => u.email.toLowerCase() === identifier || (cleanMobile && u.mobile === cleanMobile)
     );
 
     if (!found) {
@@ -163,15 +192,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch {
         // ignore
       }
+      resetAuthRateLimit();
       setUser(guestProfile);
       return { success: true };
     }
 
     // Verify password if specified
     if (found.password && password && found.password !== password) {
-      return { success: false, message: 'Incorrect password. Please try again.' };
+      const lockMsg = recordFailedAuthAttempt();
+      return {
+        success: false,
+        message: lockMsg || 'Incorrect password. Security attempt logged. Please try again.',
+      };
     }
 
+    resetAuthRateLimit();
     setUser(found);
     return { success: true };
   };
