@@ -223,10 +223,10 @@ export const CheckoutPage: React.FC = () => {
         </div>
 
         <form onSubmit={handlePlaceOrder}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-12 items-start">
             
             {/* Left Column: Delivery Address & Payment */}
-            <div className="lg:col-span-7 space-y-6">
+            <div className="md:col-span-7 space-y-6">
               
               {/* Customer Contact & Address Form */}
               <div className="bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-6 shadow-xs transition-colors">
@@ -319,7 +319,7 @@ export const CheckoutPage: React.FC = () => {
                     {errors.addressLine && <p className="text-red-700 dark:text-red-400 text-[11px] mt-1">{errors.addressLine}</p>}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                       <label className="block font-semibold text-[#4A2415] dark:text-[#F5EBE1] mb-1">
                         PIN Code *
@@ -570,7 +570,7 @@ export const CheckoutPage: React.FC = () => {
             </div>
 
             {/* Right Column: Order Summary & Place Order */}
-            <div className="lg:col-span-5 bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-6 shadow-xs space-y-5 sticky top-24 transition-colors">
+            <div className="md:col-span-5 bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-5 sm:p-6 shadow-xs space-y-5 [@media(min-width:1024px)_and_(min-height:760px)]:sticky [@media(min-width:1024px)_and_(min-height:760px)]:top-24 transition-colors">
               <h2 className="text-base font-bold text-[#4A2415] dark:text-[#F5EBE1] pb-3 border-b border-[#E9DDC9] dark:border-[#3B2519]">
                 Order Items ({items.length})
               </h2>

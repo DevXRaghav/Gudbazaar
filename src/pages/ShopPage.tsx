@@ -1,15 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Filter, X, ArrowUpDown, ShieldCheck, AlertCircle, Package } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Search, Filter, X, ArrowUpDown, ShieldCheck, AlertCircle, Package, ShoppingBag, ArrowRight } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
 import { ProductCategory, Product } from '../types';
 import { ProductCard } from '../components/common/ProductCard';
 import { QuickViewModal } from '../components/common/QuickViewModal';
 import { SEOHead } from '../components/seo/SEOHead';
+import { useCart } from '../context/CartContext';
 import { auditInputSecurity, SECURITY_RULES } from '../utils/security';
 
 export const ShopPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { totalItemCount, subtotal, openDrawer, isDrawerOpen } = useCart();
   const initialCategory = searchParams.get('category') || 'All';
   const initialPackaging = (searchParams.get('packaging') as 'All' | 'Packet' | 'Jar') || 'All';
   const initialQuery = searchParams.get('q') || '';
@@ -136,7 +139,7 @@ export const ShopPage: React.FC = () => {
     selectedCategory !== 'All' || selectedPackaging !== 'All' || searchQuery.trim().length > 0 || inStockOnly;
 
   return (
-    <div className="bg-[#FFF9EF] dark:bg-[#120A06] min-h-screen py-8 sm:py-12 transition-colors duration-200">
+    <div className={`bg-[#FFF9EF] dark:bg-[#120A06] min-h-screen py-8 sm:py-12 transition-colors duration-200 ${totalItemCount > 0 ? 'pb-28 sm:pb-24' : ''}`}>
       <SEOHead
         title="Shop 100% Organic Jaggery, Cubes, Khand & Shakkar | Gudbazaar"
         description="Browse authentic organic jaggery from the roots of Uttar Pradesh. Available in 500g & 1000g Packets and Airtight Jars."
@@ -345,6 +348,8 @@ export const ShopPage: React.FC = () => {
                 key={product.id}
                 product={product}
                 onQuickView={(p) => setQuickViewProduct(p)}
+                enableQtySelector
+                enableWeightSelector
               />
             ))}
           </div>
@@ -357,6 +362,45 @@ export const ShopPage: React.FC = () => {
         />
 
       </div>
+
+      {/* Floating Bottom-Right Bag & Checkout Bar when cart has items */}
+      {totalItemCount > 0 && !isDrawerOpen && !quickViewProduct && (
+        <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-30">
+          <div className="bg-[#4A2415] dark:bg-[#1C110B] text-[#FFF9EF] border border-[#E99A19]/40 dark:border-[#6BB545]/50 rounded-xl shadow-2xl px-4 py-3 flex items-center justify-between gap-4 sm:min-w-[340px]">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-lg bg-[#FFF9EF]/10 dark:bg-[#6BB545]/15 border border-[#FFF9EF]/15 dark:border-[#6BB545]/30 flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-4 h-4 text-[#E99A19] dark:text-[#6BB545]" />
+              </div>
+              <div className="min-w-0">
+                <span className="text-[11px] text-[#FFF9EF]/80 dark:text-[#D8C7B8] block leading-tight">
+                  {totalItemCount} {totalItemCount === 1 ? 'item' : 'items'} in bag
+                </span>
+                <span className="text-sm font-extrabold tabular-nums text-[#FFF9EF]">
+                  ₹{subtotal}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={openDrawer}
+                className="px-3 py-2 rounded-lg bg-[#FFF9EF]/10 hover:bg-[#FFF9EF]/20 text-[#FFF9EF] text-xs font-semibold transition-colors touch-manipulation cursor-pointer"
+              >
+                View Bag
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/checkout')}
+                className="px-4 py-2 rounded-lg bg-[#47752F] dark:bg-[#6BB545] hover:bg-[#3d6826] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors touch-manipulation cursor-pointer"
+              >
+                <span>Checkout</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

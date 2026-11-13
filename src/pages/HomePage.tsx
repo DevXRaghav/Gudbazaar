@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Leaf, Sparkles, Truck, CheckCircle2, Check, ArrowUpRight } from 'lucide-react';
-import { PRODUCTS, CATEGORIES, STORY_FARM_IMG } from '../data/products';
+import { PRODUCTS, CATEGORIES, STORY_FARM_IMG, HERO_IMAGE } from '../data/products';
 import { ProductCard } from '../components/common/ProductCard';
 import { QuickViewModal } from '../components/common/QuickViewModal';
 import { SEOHead } from '../components/seo/SEOHead';
@@ -59,7 +59,7 @@ export const HomePage: React.FC = () => {
               to={`/shop?category=${encodeURIComponent(category.name)}`}
               className="group relative flex flex-col bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-3 overflow-hidden hover:border-[#47752F] dark:hover:border-[#6BB545] hover:shadow-md transition-all duration-300"
             >
-              <div className="aspect-square w-full rounded-lg overflow-hidden bg-[#FFF9EF] dark:bg-[#261810] mb-3 relative">
+              <div className="aspect-4/3 w-full rounded-lg overflow-hidden bg-[#FFF9EF] dark:bg-[#261810] mb-3 relative">
                 <img
                   src={category.image}
                   alt={category.name}
@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
                   className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
                   loading="lazy"
                   onError={(e) => {
-                    e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                    e.currentTarget.src = HERO_IMAGE;
                   }}
                 />
               </div>

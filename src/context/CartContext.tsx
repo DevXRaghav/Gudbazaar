@@ -12,7 +12,7 @@ import {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, variantWeight?: string, quantity?: number) => void;
+  addToCart: (product: Product, variantWeight?: string, quantity?: number, options?: { openDrawer?: boolean }) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
   clearCart: () => void;
@@ -99,7 +99,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const addToCart = (product: Product, variantWeight?: string, rawQuantity = 1) => {
+  const addToCart = (
+    product: Product,
+    variantWeight?: string,
+    rawQuantity = 1,
+    options: { openDrawer?: boolean } = { openDrawer: true }
+  ) => {
     const qtyCheck = sanitizeCartQuantity(rawQuantity);
     const quantity = qtyCheck.value;
 
@@ -136,7 +141,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [...prevItems, newItem];
     });
 
-    setIsDrawerOpen(true);
+    if (options.openDrawer !== false) {
+      setIsDrawerOpen(true);
+    }
   };
 
   const updateQuantity = (itemId: string, rawQuantity: number) => {

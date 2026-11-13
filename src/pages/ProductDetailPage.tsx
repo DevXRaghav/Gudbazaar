@@ -12,7 +12,7 @@ import {
   ArrowRight,
   AlertCircle,
 } from 'lucide-react';
-import { PRODUCTS } from '../data/products';
+import { PRODUCTS, HERO_IMAGE } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { ProductCard } from '../components/common/ProductCard';
 import { SEOHead } from '../components/seo/SEOHead';
@@ -185,7 +185,7 @@ export const ProductDetailPage: React.FC = () => {
                     : undefined
                 }
                 onError={(e) => {
-                  e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                  e.currentTarget.src = HERO_IMAGE;
                 }}
               />
 
@@ -204,28 +204,40 @@ export const ProductDetailPage: React.FC = () => {
             {/* Thumbnail Navigation */}
             {product.galleryImages.length > 1 && (
               <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
-                {product.galleryImages.map((img, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => setActiveImage(img)}
-                    className={`relative w-18 h-18 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 shrink-0 transition-all touch-manipulation ${
-                      activeImage === img
-                        ? 'border-[#47752F] dark:border-[#6BB545] shadow-sm'
-                        : 'border-[#E9DDC9] dark:border-[#3B2519] opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${product.name} view ${idx + 1}`}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/hero_jaggery_display.jpg';
-                      }}
-                    />
-                  </button>
-                ))}
+                {product.galleryImages.map((img, idx) => {
+                  const viewLabel =
+                    idx === 0
+                      ? product.packagingType === 'Jar'
+                        ? 'Branded Jar'
+                        : 'Branded Packet'
+                      : idx === 1
+                        ? 'Texture Close-Up'
+                        : 'Presentation';
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveImage(img)}
+                      title={viewLabel}
+                      aria-label={`View ${product.name} — ${viewLabel}`}
+                      className={`relative w-24 sm:w-28 aspect-4/3 rounded-lg overflow-hidden border-2 shrink-0 transition-all touch-manipulation ${
+                        activeImage === img
+                          ? 'border-[#47752F] dark:border-[#6BB545] shadow-sm'
+                          : 'border-[#E9DDC9] dark:border-[#3B2519] opacity-75 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`${product.name} — ${viewLabel}`}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.src = HERO_IMAGE;
+                        }}
+                      />
+                    </button>
+                  );
+                })}
               </div>
             )}
 

@@ -118,15 +118,15 @@ export const CartPage: React.FC = () => {
               {/* Items Card */}
               <div className="bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] divide-y divide-[#E9DDC9]/70 dark:divide-[#3B2519] shadow-xs overflow-hidden">
                 {items.map((item) => (
-                  <div key={item.id} className="p-4 sm:p-6 flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
-                    <div className="flex items-center gap-4">
+                  <div key={item.id} className="p-4 sm:p-5 lg:p-6 flex flex-col sm:flex-row md:flex-col xl:flex-row gap-4 sm:items-center md:items-stretch xl:items-center justify-between">
+                    <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
                       <img
                         src={item.image}
                         alt={item.name}
                         referrerPolicy="no-referrer"
                         className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#3B2519] shrink-0"
                       />
-                      <div>
+                      <div className="min-w-0 flex-1">
                         <span className="text-[11px] font-semibold text-[#47752F] dark:text-[#6BB545] uppercase tracking-wider block">
                           {item.category}
                         </span>
@@ -152,7 +152,7 @@ export const CartPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E9DDC9]/50 dark:border-[#3B2519]">
+                    <div className="flex items-center justify-between sm:justify-end md:justify-between xl:justify-end gap-4 sm:gap-6 pt-2 sm:pt-0 md:pt-3 xl:pt-0 border-t sm:border-t-0 md:border-t xl:border-t-0 border-[#E9DDC9]/50 dark:border-[#3B2519] shrink-0">
                       {/* Quantity Stepper */}
                       <div className="flex items-center border border-[#E9DDC9] dark:border-[#3B2519] rounded-lg bg-[#FFF9EF] dark:bg-[#261810]">
                         <button
@@ -213,7 +213,7 @@ export const CartPage: React.FC = () => {
             </div>
 
             {/* Right Summary Column */}
-            <div className="lg:col-span-4 bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-6 shadow-xs space-y-5 transition-colors">
+            <div className="md:col-span-5 lg:col-span-4 [@media(min-width:1024px)_and_(min-height:760px)]:sticky [@media(min-width:1024px)_and_(min-height:760px)]:top-24 bg-white dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9] dark:border-[#3B2519] p-5 md:p-4 lg:p-6 shadow-xs space-y-5 md:space-y-4 lg:space-y-5 transition-colors min-w-0">
               <h2 className="text-base font-bold text-[#4A2415] dark:text-[#F5EBE1] pb-3 border-b border-[#E9DDC9] dark:border-[#3B2519]">
                 Order Summary
               </h2>
@@ -232,6 +232,7 @@ export const CartPage: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <span className="font-bold text-[#47752F] dark:text-[#6BB545] tabular-nums">-₹{discount}</span>
                       <button
+                        type="button"
                         onClick={removeCoupon}
                         className="text-xs text-red-700 dark:text-red-400 hover:underline touch-manipulation"
                       >
@@ -246,11 +247,11 @@ export const CartPage: React.FC = () => {
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
                       placeholder="e.g. SWEET10, FIRSTGUD"
-                      className="flex-1 px-3 py-2 bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#42291C] rounded-lg text-xs uppercase tracking-wider text-[#4A2415] dark:text-[#F5EBE1] focus:outline-none focus:border-[#47752F] dark:focus:border-[#6BB545]"
+                      className="flex-1 min-w-0 w-full px-3 py-2 bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#42291C] rounded-lg text-xs uppercase tracking-wider text-[#4A2415] dark:text-[#F5EBE1] focus:outline-none focus:border-[#47752F] dark:focus:border-[#6BB545]"
                     />
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg transition-colors touch-manipulation"
+                      className="shrink-0 px-3.5 lg:px-4 py-2 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg transition-colors touch-manipulation cursor-pointer"
                     >
                       Apply
                     </button>
@@ -303,8 +304,9 @@ export const CartPage: React.FC = () => {
 
               {/* Checkout Button */}
               <button
+                type="button"
                 onClick={() => navigate('/checkout')}
-                className="w-full py-3.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-98 touch-manipulation"
+                className="w-full py-3.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-98 touch-manipulation cursor-pointer"
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight className="w-4 h-4" />

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { X, Check, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Product } from '../../types';
 import { useCart } from '../../context/CartContext';
+import { HERO_IMAGE } from '../../data/products';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -10,14 +11,23 @@ interface QuickViewModalProps {
 }
 
 export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose }) => {
-  if (!product) return null;
-
   const { addToCart } = useCart();
+  const [activeImage, setActiveImage] = useState(product?.primaryImage || HERO_IMAGE);
   const [selectedWeight, setSelectedWeight] = useState(
-    product.variants[0]?.weight || product.weight
+    product?.variants[0]?.weight || product?.weight || '1000g'
   );
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+
+  React.useEffect(() => {
+    if (product) {
+      setActiveImage(product.primaryImage);
+      setSelectedWeight(product.variants[0]?.weight || product.weight);
+      setQuantity(1);
+    }
+  }, [product]);
+
+  if (!product) return null;
 
   const activeVariant =
     product.variants.find((v) => v.weight === selectedWeight) || product.variants[0];
@@ -49,18 +59,45 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
         </button>
 
         {/* Product Media */}
-        <div className="w-full md:w-1/2 bg-[#FFF9EF] dark:bg-[#261810] flex items-center justify-center p-6 border-b md:border-b-0 md:border-r border-[#E9DDC9] dark:border-[#3B2519]">
-          <div className="relative aspect-4/3 md:aspect-square w-full rounded-xl overflow-hidden shadow-inner">
+        <div className="w-full md:w-1/2 bg-[#FFF9EF] dark:bg-[#261810] flex flex-col items-center justify-center p-5 sm:p-6 gap-3 border-b md:border-b-0 md:border-r border-[#E9DDC9] dark:border-[#3B2519]">
+          <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden shadow-inner">
             <img
-              src={product.primaryImage}
+              src={activeImage}
               alt={product.name}
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover object-center"
               onError={(e) => {
-                e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                e.currentTarget.src = HERO_IMAGE;
               }}
             />
           </div>
+          {product.galleryImages.length > 1 && (
+            <div className="flex items-center justify-center gap-2 w-full">
+              {product.galleryImages.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setActiveImage(img)}
+                  aria-label={`View ${product.name} image ${idx + 1}`}
+                  className={`w-16 aspect-4/3 rounded-md overflow-hidden border-2 transition-all touch-manipulation ${
+                    activeImage === img
+                      ? 'border-[#47752F] dark:border-[#6BB545] shadow-xs'
+                      : 'border-[#E9DDC9] dark:border-[#3B2519] opacity-75 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={img}
+                    alt={`${product.name} thumbnail ${idx + 1}`}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = HERO_IMAGE;
+                    }}
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Product Info */}

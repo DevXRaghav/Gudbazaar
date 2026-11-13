@@ -46,7 +46,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
       {/* SECTION B — STICKY NAVIGATION BAR (Strict 3-zone contract) */}
       <header className="sticky top-0 z-40 bg-[#FFFFFF] dark:bg-[#180E08]/95 border-b border-[#E9DDC9]/70 dark:border-[#3B2519] backdrop-blur-md bg-white/95 transition-colors">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-17 md:h-18 flex items-center justify-between gap-2 sm:gap-3 md:gap-4 lg:gap-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8 h-16 sm:h-17 md:h-18 flex items-center justify-between gap-2 sm:gap-3 lg:gap-8">
           
           {/* Zone 1: Brand Wordmark & Motif */}
           <div className="shrink-0 flex items-center gap-1.5 sm:gap-3">
@@ -61,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
           </div>
 
           {/* Zone 2: 4 Clean Single-Line Text Links */}
-          <nav className="hidden md:flex items-center gap-3.5 md:gap-4.5 lg:gap-8 text-sm lg:text-[15px] font-medium text-[#4A2415] dark:text-[#F5EBE1]">
+          <nav className="hidden md:flex items-center gap-3.5 lg:gap-8 text-xs md:text-sm lg:text-[15px] font-medium text-[#4A2415] dark:text-[#F5EBE1]">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}

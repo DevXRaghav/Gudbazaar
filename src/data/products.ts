@@ -1,34 +1,82 @@
 import { Product, Coupon } from '../types';
 
-export const HERO_IMAGE = '/images/hero_jaggery_display.jpg';
-export const JAGGERY_BLOCKS_IMG = '/images/cat_jaggery_blocks.jpg';
-export const JAGGERY_POWDER_IMG = '/images/cat_jaggery_powder.jpg';
-export const LIQUID_JAGGERY_IMG = '/images/cat_liquid_jaggery.jpg';
+import rawGudPacketImg from '../assets/images/v2_raw_gud_packet_1794557863698.jpg';
+import rawGudJarImg from '../assets/images/v2_raw_gud_jar_1794557868057.jpg';
+import rawCubesPacketImg from '../assets/images/v2_raw_cubes_packet_1794557865879.jpg';
+import rawCubesJarImg from '../assets/images/v2_raw_cubes_jar_1794557867144.jpg';
+import dryfruitsCubesPacketImg from '../assets/images/v2_dryfruits_cubes_packet_1794557867247.jpg';
+import dryfruitsCubesJarImg from '../assets/images/v2_dryfruits_cubes_jar_1794557867592.jpg';
+import peanutCubesPacketImg from '../assets/images/v2_peanut_cubes_packet_1794557869437.jpg';
+import peanutCubesJarImg from '../assets/images/v2_peanut_cubes_jar_1794557869148.jpg';
+import allInOneCubesPacketImg from '../assets/images/v2_allinone_cubes_packet_1794557870200.jpg';
+import allInOneCubesJarImg from '../assets/images/v2_allinone_cubes_jar_1794557870002.jpg';
+import desiKhandPacketImg from '../assets/images/v2_desi_khand_packet_1794557870856.jpg';
+import desiKhandJarImg from '../assets/images/v2_desi_khand_jar_final.jpg';
+import organicShakkarPacketImg from '../assets/images/v2_organic_shakkar_packet_1794557872208.jpg';
+import organicShakkarJarImg from '../assets/images/v2_organic_shakkar_jar_final.jpg';
+
+import closeupRawGudImg from '../assets/images/v2_closeup_raw_gud.jpg';
+import closeupRawCubesImg from '../assets/images/v2_closeup_raw_cubes.jpg';
+import closeupDryfruitsCubesImg from '../assets/images/v2_closeup_dryfruits_cubes.jpg';
+import closeupPeanutCubesImg from '../assets/images/v2_closeup_peanut_cubes.jpg';
+import closeupAllInOneCubesImg from '../assets/images/v2_closeup_allinone_cubes.jpg';
+import closeupDesiKhandImg from '../assets/images/v2_closeup_desi_khand.jpg';
+import closeupOrganicShakkarImg from '../assets/images/v2_closeup_organic_shakkar.jpg';
+
+import lifestyleRawGudImg from '../assets/images/v2_lifestyle_raw_gud.jpg';
+import lifestyleRawCubesImg from '../assets/images/v2_lifestyle_raw_cubes.jpg';
+import lifestyleDryfruitsCubesImg from '../assets/images/v2_lifestyle_dryfruits_cubes.jpg';
+import lifestylePeanutCubesImg from '../assets/images/v2_lifestyle_peanut_cubes.jpg';
+import lifestyleAllInOneCubesImg from '../assets/images/v2_lifestyle_allinone_cubes.jpg';
+import lifestyleDesiKhandImg from '../assets/images/v2_lifestyle_desi_khand.jpg';
+import lifestyleOrganicShakkarImg from '../assets/images/v2_lifestyle_organic_shakkar.jpg';
+
+export const PRODUCT_IMAGES = {
+  rawGudPacket: rawGudPacketImg,
+  rawGudJar: rawGudJarImg,
+  rawCubesPacket: rawCubesPacketImg,
+  rawCubesJar: rawCubesJarImg,
+  dryfruitsCubesPacket: dryfruitsCubesPacketImg,
+  dryfruitsCubesJar: dryfruitsCubesJarImg,
+  peanutCubesPacket: peanutCubesPacketImg,
+  peanutCubesJar: peanutCubesJarImg,
+  allInOneCubesPacket: allInOneCubesPacketImg,
+  allInOneCubesJar: allInOneCubesJarImg,
+  desiKhandPacket: desiKhandPacketImg,
+  desiKhandJar: desiKhandJarImg,
+  organicShakkarPacket: organicShakkarPacketImg,
+  organicShakkarJar: organicShakkarJarImg,
+} as const;
+
+export const HERO_IMAGE = dryfruitsCubesPacketImg;
+export const JAGGERY_BLOCKS_IMG = rawGudPacketImg;
+export const JAGGERY_POWDER_IMG = organicShakkarPacketImg;
+export const LIQUID_JAGGERY_IMG = rawGudJarImg;
 export const STORY_FARM_IMG = '/images/story_sugarcane_farm.jpg';
 
 export const CATEGORIES = [
   {
     name: 'Raw Gud',
     description: '100% Organic, fresh unrefined authentic jaggery direct from the roots of Uttar Pradesh.',
-    image: JAGGERY_BLOCKS_IMG,
+    image: rawGudJarImg,
     itemCount: 2,
   },
   {
     name: 'Gud Cubes',
     description: 'Fresh bite-sized artisanal cubes: Raw, Dryfruits, Crunchy Peanut, and All-in-One blend.',
-    image: HERO_IMAGE,
+    image: dryfruitsCubesJarImg,
     itemCount: 8,
   },
   {
     name: 'Pure Desi Khand',
     description: 'Sulphurless, unbleached sparkling raw cane sugar crystals handcrafted fresh in Western UP.',
-    image: JAGGERY_POWDER_IMG,
+    image: desiKhandJarImg,
     itemCount: 2,
   },
   {
     name: 'Pure Organic Shakkar',
     description: 'Fresh micro-sieved golden brown jaggery powder that dissolves effortlessly in tea and recipes.',
-    image: JAGGERY_POWDER_IMG,
+    image: organicShakkarJarImg,
     itemCount: 2,
   },
 ] as const;
@@ -50,8 +98,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Freshly Prepared · 100% Certified Organic · Roots of Uttar Pradesh',
     shortDescription: 'Fresh authentic unrefined raw jaggery handcrafted in open pans from single-origin UP sugarcane. Sealed in multi-layer moisture-barrier packets.',
     description: 'Our Raw Gud is prepared fresh in small farm batches using ancestral open-pan boiling techniques in Western Uttar Pradesh — the heartland recognized by the Government of India for premier sugarcane produce. Packed in airtight, moisture-proof zip-sealed packets to guarantee fresh farm flavor.',
-    primaryImage: JAGGERY_BLOCKS_IMG,
-    galleryImages: [JAGGERY_BLOCKS_IMG, HERO_IMAGE, STORY_FARM_IMG],
+    primaryImage: rawGudPacketImg,
+    galleryImages: [rawGudPacketImg, closeupRawGudImg, lifestyleRawGudImg],
     weight: '1000g',
     price: 139,
     mrp: 185,
@@ -97,8 +145,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Freshly Prepared · Reusable Food-Grade Airtight Glass/PET Jar',
     shortDescription: 'Fresh authentic unrefined raw jaggery packed in a durable, reusable airtight jar designed to keep humidity and moisture out.',
     description: 'Enjoy authentic golden raw gud from Western Uttar Pradesh packaged in a rigid airtight jar. Easy to store on kitchen shelves, protects against atmospheric dampness, and ensures pristine caramel aroma from the first spoon to the last.',
-    primaryImage: JAGGERY_BLOCKS_IMG,
-    galleryImages: [JAGGERY_BLOCKS_IMG, HERO_IMAGE, STORY_FARM_IMG],
+    primaryImage: rawGudJarImg,
+    galleryImages: [rawGudJarImg, closeupRawGudImg, lifestyleRawGudImg],
     weight: '1000g',
     price: 199,
     mrp: 259,
@@ -144,8 +192,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Portioned Precision Sweetening · Sealed Moisture-Lock Packet',
     shortDescription: 'Uniform 10g cubes of pure organic raw jaggery. Pre-cut for effortless tea sweetening and stored in airtight packets.',
     description: 'No scraping or cutting needed. Our Raw Gud Cubes are molded fresh into bite-sized portioned squares and sealed into moisture-proof multi-layer packets. Certified organic cane harvested in the Government of India recognized sugarcane belt of Uttar Pradesh.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, JAGGERY_BLOCKS_IMG, STORY_FARM_IMG],
+    primaryImage: rawCubesPacketImg,
+    galleryImages: [rawCubesPacketImg, closeupRawCubesImg, lifestyleRawCubesImg],
     weight: '1000g',
     price: 159,
     mrp: 210,
@@ -191,8 +239,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Portioned Precision Sweetening · Airtight Reusable Jar',
     shortDescription: 'Uniform 10g cubes of pure organic raw jaggery housed in an airtight jar for convenient kitchen counter access.',
     description: 'Keep your tea station organized and free from dampness. Our Raw Gud Cubes in a sturdy airtight jar make popping a cube into your morning masala chai or evening milk quick and neat.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, JAGGERY_BLOCKS_IMG, STORY_FARM_IMG],
+    primaryImage: rawCubesJarImg,
+    galleryImages: [rawCubesJarImg, closeupRawCubesImg, lifestyleRawCubesImg],
     weight: '1000g',
     price: 219,
     mrp: 285,
@@ -238,8 +286,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Loaded with California Almonds, Cashews, Pistachios & Cardamom',
     shortDescription: 'Royal festive organic jaggery cubes enriched with slow-roasted dry fruits. Packed in sealed moisture-lock packets.',
     description: 'A decadent and nourishing bite. Handcrafted fresh by folding roasted California almonds, cashews, crunchy pistachios, and Idukki cardamom into bubbling organic Uttar Pradesh gud. Sealed against ambient air to keep nuts crisp.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, STORY_FARM_IMG, JAGGERY_BLOCKS_IMG],
+    primaryImage: dryfruitsCubesPacketImg,
+    galleryImages: [dryfruitsCubesPacketImg, closeupDryfruitsCubesImg, lifestyleDryfruitsCubesImg],
     weight: '1000g',
     price: 329,
     mrp: 439,
@@ -289,8 +337,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Royal Confectionery · Giftable Airtight Protective Jar',
     shortDescription: 'Festive dryfruits organic jaggery cubes housed in a premium airtight jar. The ultimate healthy gifting and family indulgence.',
     description: 'Loaded with whole almonds, cashews, and pistachios. The rigid airtight jar protects the cubes from transit impact and kitchen moisture, keeping the outer jaggery melt-in-mouth and the nuts delightfully crunchy.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, STORY_FARM_IMG, JAGGERY_BLOCKS_IMG],
+    primaryImage: dryfruitsCubesJarImg,
+    galleryImages: [dryfruitsCubesJarImg, closeupDryfruitsCubesImg, lifestyleDryfruitsCubesImg],
     weight: '1000g',
     price: 379,
     mrp: 499,
@@ -340,8 +388,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Crunchy Roasted Peanuts in Organic Gud · Sealed Packets',
     shortDescription: 'Golden roasted groundnuts bound in freshly prepared organic jaggery. Sealed in moisture-protective packets.',
     description: 'High-protein winter power snack. We hand-roast crunchy peanuts and enrobe them in aromatic organic gud fresh from Uttar Pradesh boiling pans. Packed in sealed pouches to preserve lasting crunch and energy.',
-    primaryImage: STORY_FARM_IMG,
-    galleryImages: [STORY_FARM_IMG, HERO_IMAGE, JAGGERY_BLOCKS_IMG],
+    primaryImage: peanutCubesPacketImg,
+    galleryImages: [peanutCubesPacketImg, closeupPeanutCubesImg, lifestylePeanutCubesImg],
     weight: '1000g',
     price: 219,
     mrp: 289,
@@ -389,8 +437,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Crunchy Roasted Peanuts in Organic Gud · Airtight Jar',
     shortDescription: 'Golden roasted groundnuts bound in fresh organic jaggery, packed in a sturdy airtight jar.',
     description: 'Crunchy, wholesome, and nutritious. The airtight jar ensures that humidity does not soften the roasted peanuts, giving you that authentic fresh chikki-cube snap every single time.',
-    primaryImage: STORY_FARM_IMG,
-    galleryImages: [STORY_FARM_IMG, HERO_IMAGE, JAGGERY_BLOCKS_IMG],
+    primaryImage: peanutCubesJarImg,
+    galleryImages: [peanutCubesJarImg, closeupPeanutCubesImg, lifestylePeanutCubesImg],
     weight: '1000g',
     price: 259,
     mrp: 339,
@@ -438,8 +486,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Dryfruits, Roasted Peanuts, Sesame, Sonth & Cardamom Blend',
     shortDescription: 'The grand Ayurvedic blend in 10g cubes. Infused with almonds, cashews, peanuts, til, and warming sonth in sealed packets.',
     description: 'An ancient immunity recipe crafted fresh in Western Uttar Pradesh. Combines almonds, cashews, peanuts, golden sesame seeds, tellicherry black pepper, and dry ginger in bubbling organic jaggery. Sealed against moisture in durable packets.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, JAGGERY_BLOCKS_IMG, STORY_FARM_IMG],
+    primaryImage: allInOneCubesPacketImg,
+    galleryImages: [allInOneCubesPacketImg, closeupAllInOneCubesImg, lifestyleAllInOneCubesImg],
     weight: '1000g',
     price: 299,
     mrp: 399,
@@ -490,8 +538,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'The Grand Ayurvedic Vitality Blend · Airtight Reusable Jar',
     shortDescription: 'The grand Ayurvedic blend of dryfruits, peanuts, sesame seeds, and spices housed in an airtight jar.',
     description: 'Keep this royal vitality jar on your dining table. Storing in our airtight jar locks in the aromatic oils of sonth and green cardamom while keeping atmospheric moisture away.',
-    primaryImage: HERO_IMAGE,
-    galleryImages: [HERO_IMAGE, JAGGERY_BLOCKS_IMG, STORY_FARM_IMG],
+    primaryImage: allInOneCubesJarImg,
+    galleryImages: [allInOneCubesJarImg, closeupAllInOneCubesImg, lifestyleAllInOneCubesImg],
     weight: '1000g',
     price: 349,
     mrp: 459,
@@ -542,8 +590,8 @@ export const PRODUCTS: Product[] = [
     tagline: '100% Zero-Sulphur Raw Sugar Crystals · Moisture-Proof Packet',
     shortDescription: 'Unrefined, unbleached sparkling khandsari raw sugar naturally clarified with wild okra extract. Sealed in moisture-lock packets.',
     description: 'Replacing refined white sugar has never been purer. Handcrafted in the Government of India recognized sugarcane heartland of Uttar Pradesh, our Pure Desi Khand is spun from unboiled, naturally clarified cane juice. Preserves plant micronutrients and subtle caramel notes.',
-    primaryImage: JAGGERY_POWDER_IMG,
-    galleryImages: [JAGGERY_POWDER_IMG, HERO_IMAGE],
+    primaryImage: desiKhandPacketImg,
+    galleryImages: [desiKhandPacketImg, closeupDesiKhandImg, lifestyleDesiKhandImg],
     weight: '1000g',
     price: 139,
     mrp: 185,
@@ -589,8 +637,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Zero-Sulphur Raw Sugar Crystals · Airtight Reusable Jar',
     shortDescription: 'Unrefined sparkling khandsari raw sugar packed in a moisture-tight jar for daily tea and coffee sweetening.',
     description: 'Keep your raw khandsari sugar completely free from clumping. The airtight jar prevents moisture absorption during humid monsoon or kitchen cooking cycles.',
-    primaryImage: JAGGERY_POWDER_IMG,
-    galleryImages: [JAGGERY_POWDER_IMG, HERO_IMAGE],
+    primaryImage: desiKhandJarImg,
+    galleryImages: [desiKhandJarImg, closeupDesiKhandImg, lifestyleDesiKhandImg],
     weight: '1000g',
     price: 189,
     mrp: 249,
@@ -636,8 +684,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Micro-Sieved Free-Flowing Desi Jaggery Powder · Sealed Packets',
     shortDescription: 'Silky free-flowing golden desi shakkar that dissolves instantly in hot chai or coffee without curdling milk. Packed in moisture-proof zip packets.',
     description: 'The ultimate daily pantry staple. Micro-sieved from fresh organic jaggery in Western Uttar Pradesh. Completely free from anti-caking agents, synthetic preservatives, or artificial colouring. Packed in sealed moisture-proof packets.',
-    primaryImage: JAGGERY_POWDER_IMG,
-    galleryImages: [JAGGERY_POWDER_IMG, HERO_IMAGE, STORY_FARM_IMG],
+    primaryImage: organicShakkarPacketImg,
+    galleryImages: [organicShakkarPacketImg, closeupOrganicShakkarImg, lifestyleOrganicShakkarImg],
     weight: '1000g',
     price: 139,
     mrp: 185,
@@ -682,8 +730,8 @@ export const PRODUCTS: Product[] = [
     tagline: 'Micro-Sieved Golden Jaggery Powder · Airtight Storage Jar',
     shortDescription: 'Free-flowing golden organic desi shakkar stored in an airtight jar. Convenient for everyday spooning without clumping.',
     description: 'Keep your organic shakkar perfectly free-flowing all year round. Storing in our airtight jar locks out moisture and prevents clumping, making everyday chai sweetening effortless.',
-    primaryImage: JAGGERY_POWDER_IMG,
-    galleryImages: [JAGGERY_POWDER_IMG, HERO_IMAGE, STORY_FARM_IMG],
+    primaryImage: organicShakkarJarImg,
+    galleryImages: [organicShakkarJarImg, closeupOrganicShakkarImg, lifestyleOrganicShakkarImg],
     weight: '1000g',
     price: 189,
     mrp: 249,

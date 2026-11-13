@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { X, Trash2, ArrowRight, Share2, Truck, Tag, Check, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { PRODUCTS, FREE_SHIPPING_THRESHOLD } from '../../data/products';
+import { PRODUCTS, FREE_SHIPPING_THRESHOLD, HERO_IMAGE } from '../../data/products';
 import { SECURITY_RULES } from '../../utils/security';
 
 const DISCOUNT_THRESHOLD = 999; // 5% discount milestone threshold
@@ -89,7 +89,7 @@ export const CartDrawer: React.FC = () => {
   const discountAway = Math.max(0, DISCOUNT_THRESHOLD - subtotal);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex justify-end overflow-hidden">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-[#2E1810]/60 dark:bg-black/75 backdrop-blur-xs transition-opacity duration-300"
@@ -98,7 +98,7 @@ export const CartDrawer: React.FC = () => {
       />
 
       {/* Drawer Container */}
-      <div className="relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl bg-[#FFFFFF] dark:bg-[#1C110B] h-full shadow-2xl flex flex-col z-10 text-[#2E1810] dark:text-[#F5EBE1] animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-full md:max-w-3xl lg:max-w-4xl xl:max-w-5xl bg-[#FFFFFF] dark:bg-[#1C110B] h-full max-h-full shadow-2xl flex flex-col overflow-hidden z-10 text-[#2E1810] dark:text-[#F5EBE1]">
         
         {/* Top Header Bar matching reference */}
         <div className="px-4 py-3.5 sm:px-6 sm:py-4 md:px-5 lg:px-7 border-b border-[#EFE7DA] dark:border-[#3B2519] bg-[#FFFFFF] dark:bg-[#180E08] flex items-center justify-between transition-colors shrink-0">
@@ -107,19 +107,6 @@ export const CartDrawer: React.FC = () => {
           </h2>
 
           <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
-            {/* Quick Header Checkout Button on Tablet/Desktop */}
-            {items.length > 0 && (
-              <button
-                type="button"
-                onClick={handleCheckout}
-                className="inline-flex items-center gap-1 px-3 py-1.5 bg-[#47752F] dark:bg-[#6BB545] hover:bg-[#3d6826] dark:hover:bg-[#5aa038] text-white dark:text-[#120A06] text-xs font-bold rounded-lg transition-all shadow-xs cursor-pointer touch-manipulation active:scale-95"
-                title="Proceed directly to checkout"
-              >
-                <span>Checkout (₹{subtotal.toFixed(0)})</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-
             {/* Share Button */}
             <div className="relative">
               <button
@@ -209,7 +196,7 @@ export const CartDrawer: React.FC = () => {
           
           {/* LEFT COLUMN: Recommendations */}
           <div
-            className={`w-full md:w-[46%] lg:w-[48%] h-full max-h-full bg-[#FAF5EE] dark:bg-[#160D08] border-b md:border-b-0 md:border-r border-[#EFE7DA] dark:border-[#3B2519] flex flex-col min-h-0 overflow-hidden ${
+            className={`w-full md:w-5/12 lg:w-1/2 flex-1 md:flex-none min-h-0 bg-[#FAF5EE] dark:bg-[#160D08] border-b md:border-b-0 md:border-r border-[#EFE7DA] dark:border-[#3B2519] flex-col overflow-hidden ${
               mobileTab === 'cart' ? 'hidden md:flex' : 'flex'
             }`}
           >
@@ -244,7 +231,7 @@ export const CartDrawer: React.FC = () => {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                         onError={(e) => {
-                          e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                          e.currentTarget.src = HERO_IMAGE;
                         }}
                       />
                     </div>
@@ -289,9 +276,9 @@ export const CartDrawer: React.FC = () => {
               })}
             </div>
 
-            {/* Quick Sticky Checkout Bar in Recommendations when items exist */}
+            {/* Quick Sticky Checkout Bar in Recommendations on small screens when items exist */}
             {items.length > 0 && (
-              <div className="shrink-0 p-3 bg-white dark:bg-[#1C110B] border-t border-[#EFE7DA] dark:border-[#3B2519] flex items-center justify-between gap-2 shadow-xs">
+              <div className="md:hidden shrink-0 p-3 bg-white dark:bg-[#1C110B] border-t border-[#EFE7DA] dark:border-[#3B2519] flex items-center justify-between gap-2 shadow-xs pb-[max(0.75rem,env(safe-area-inset-bottom))]">
                 <div>
                   <span className="text-[10px] text-[#2E1810]/60 dark:text-[#D8C7B8]/60 block leading-tight">Total ({totalItemCount} item{totalItemCount === 1 ? '' : 's'})</span>
                   <span className="text-xs sm:text-sm font-bold text-[#2E1810] dark:text-[#F5EBE1] tabular-nums">₹{subtotal.toFixed(2)}</span>
@@ -300,7 +287,7 @@ export const CartDrawer: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setMobileTab('cart')}
-                    className="px-2.5 py-1.5 bg-[#FAF5EE] dark:bg-[#261810] hover:bg-[#EFE7DA] text-[#4A2415] dark:text-[#F5EBE1] text-xs font-semibold rounded-lg border border-[#E8DEC8]/80 dark:border-[#3B2519] transition-colors"
+                    className="md:hidden px-2.5 py-1.5 bg-[#FAF5EE] dark:bg-[#261810] hover:bg-[#EFE7DA] text-[#4A2415] dark:text-[#F5EBE1] text-xs font-semibold rounded-lg border border-[#E8DEC8]/80 dark:border-[#3B2519] transition-colors"
                   >
                     View Bag
                   </button>
@@ -319,7 +306,7 @@ export const CartDrawer: React.FC = () => {
 
           {/* RIGHT COLUMN: Milestones, Cart Items & Checkout */}
           <div
-            className={`w-full md:w-[54%] lg:w-[52%] h-full max-h-full bg-[#FFFFFF] dark:bg-[#1C110B] flex flex-col min-h-0 overflow-hidden ${
+            className={`w-full md:w-7/12 lg:w-1/2 flex-1 md:flex-none min-h-0 bg-[#FFFFFF] dark:bg-[#1C110B] flex-col overflow-hidden ${
               mobileTab === 'addons' ? 'hidden md:flex' : 'flex'
             }`}
           >
@@ -407,7 +394,7 @@ export const CartDrawer: React.FC = () => {
             {/* Cart Items List */}
             <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3.5 sm:p-4 md:p-3.5 lg:p-6 space-y-3.5 lg:space-y-4">
               {items.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#2E1810] dark:text-[#F5EBE1]">
+                <div className="min-h-full flex flex-col items-center justify-center text-center p-6 text-[#2E1810] dark:text-[#F5EBE1]">
                   <div className="w-16 h-16 rounded-full bg-[#FAF5EE] dark:bg-[#261810] border border-[#EFE7DA] dark:border-[#3B2519] flex items-center justify-center mb-3">
                     <ShoppingBag className="w-8 h-8 text-[#47752F]/70 dark:text-[#6BB545]" />
                   </div>
@@ -435,7 +422,7 @@ export const CartDrawer: React.FC = () => {
                         alt={item.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.currentTarget.src = '/images/hero_jaggery_display.jpg';
+                          e.currentTarget.src = HERO_IMAGE;
                         }}
                       />
                     </div>
@@ -517,14 +504,16 @@ export const CartDrawer: React.FC = () => {
                 </span>
               </div>
 
-              {/* Checkout Button */}
+              {/* Checkout Button (Bottom Right) */}
               <button
                 type="button"
                 onClick={handleCheckout}
                 disabled={items.length === 0}
-                className="w-full py-3 lg:py-3.5 bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#35190e] dark:hover:bg-[#5aa038] disabled:opacity-50 disabled:cursor-not-allowed text-white dark:text-[#120A06] font-bold text-xs sm:text-sm md:text-xs lg:text-base tracking-wide flex items-center justify-center gap-1.5 rounded-xl transition-all shadow-md touch-manipulation active:scale-[0.99] cursor-pointer"
+                className="w-full py-3 lg:py-3.5 bg-[#47752F] dark:bg-[#6BB545] hover:bg-[#3d6826] dark:hover:bg-[#5aa038] disabled:bg-[#4A2415] disabled:opacity-50 disabled:cursor-not-allowed text-white dark:text-[#120A06] font-bold text-xs sm:text-sm md:text-xs lg:text-base tracking-wide flex items-center justify-center gap-1.5 rounded-xl transition-all shadow-md touch-manipulation active:scale-[0.99] cursor-pointer"
               >
-                <span>Checkout</span>
+                <span>
+                  {items.length > 0 ? `Checkout (₹${subtotal.toFixed(0)})` : 'Checkout'}
+                </span>
                 <ArrowRight className="w-4 h-4 ml-1" />
               </button>
             </div>
