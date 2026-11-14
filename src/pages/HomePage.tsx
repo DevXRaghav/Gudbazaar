@@ -6,6 +6,7 @@ import { ProductCard } from '../components/common/ProductCard';
 import { QuickViewModal } from '../components/common/QuickViewModal';
 import { SEOHead } from '../components/seo/SEOHead';
 import { ProductBannerSection } from '../components/home/ProductBannerSection';
+import { CustomerTestimonialsSection } from '../components/home/CustomerTestimonialsSection';
 import { Product } from '../types';
 
 export const HomePage: React.FC = () => {
@@ -296,7 +297,10 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* SECTION I — NEWSLETTER */}
+      {/* SECTION I — CUSTOMER REVIEWS & TESTIMONIALS */}
+      <CustomerTestimonialsSection />
+
+      {/* SECTION J — NEWSLETTER */}
       <section className="py-16 sm:py-20 bg-[#FFF9EF] dark:bg-[#120A06] border-t border-[#E9DDC9] dark:border-[#3B2519] transition-colors">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="text-xs font-semibold text-[#47752F] dark:text-[#6BB545] uppercase tracking-wider">Stay Connected</span>

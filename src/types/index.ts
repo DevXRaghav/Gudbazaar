@@ -138,3 +138,17 @@ export interface CustomerProfile {
   createdAt: string;
 }
 
+export interface Testimonial {
+  id: string;
+  customerName: string;
+  city: string;
+  state: string;
+  residentCategory: 'indian' | 'expat';
+  residentLabel: string;
+  rating: number;
+  productName: string;
+  productSlug: string;
+  review: string;
+  isSample: boolean;
+}
+
