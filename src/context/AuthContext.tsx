@@ -13,10 +13,10 @@ import {
 interface AuthContextType {
   user: CustomerProfile | null;
   isAuthModalOpen: boolean;
-  authModalMode: 'prompt' | 'signup' | 'signin' | 'profile';
-  openAuthModal: (mode?: 'prompt' | 'signup' | 'signin' | 'profile') => void;
+  authModalMode: 'prompt' |'signup' |'signin' |'profile';
+  openAuthModal: (mode?: 'prompt' |'signup' |'signin' |'profile') => void;
   closeAuthModal: () => void;
-  register: (data: Omit<CustomerProfile, 'id' | 'createdAt'>, rawPassword?: string) => { success: boolean; message?: string };
+  register: (data: Omit<CustomerProfile,'id' |'createdAt'>, rawPassword?: string) => { success: boolean; message?: string };
   login: (emailOrPhone: string, password?: string) => { success: boolean; message?: string };
   logout: () => void;
   updateProfile: (updates: Partial<CustomerProfile>) => void;
@@ -26,9 +26,9 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USER_STORAGE_KEY = 'gudbazaar_customer_user_v1';
-const USERS_DB_STORAGE_KEY = 'gudbazaar_registered_users_db_v1';
-const ORDERS_HISTORY_STORAGE_KEY = 'gudbazaar_orders_history_v1';
+const USER_STORAGE_KEY ='gudbazaar_customer_user_v1';
+const USERS_DB_STORAGE_KEY ='gudbazaar_registered_users_db_v1';
+const ORDERS_HISTORY_STORAGE_KEY ='gudbazaar_orders_history_v1';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<CustomerProfile | null>(() => {
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'prompt' | 'signup' | 'signin' | 'profile'>('prompt');
+  const [authModalMode, setAuthModalMode] = useState<'prompt' |'signup' |'signin' |'profile'>('prompt');
 
   useEffect(() => {
     try {
@@ -84,14 +84,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const timer = setTimeout(() => {
         setIsAuthModalOpen(true);
         setAuthModalMode('prompt');
-        sessionStorage.setItem('gudbazaar_auto_auth_prompt_seen_v1', 'true');
+        sessionStorage.setItem('gudbazaar_auto_auth_prompt_seen_v1','true');
       }, 1000);
 
       return () => clearTimeout(timer);
     }
   }, [user]);
 
-  const openAuthModal = (mode: 'prompt' | 'signup' | 'signin' | 'profile' = user ? 'profile' : 'prompt') => {
+  const openAuthModal = (mode: 'prompt' |'signup' |'signin' |'profile' = user ?'profile' : 'prompt') => {
     setAuthModalMode(mode);
     setIsAuthModalOpen(true);
   };
@@ -100,16 +100,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsAuthModalOpen(false);
   };
 
-  const register = (data: Omit<CustomerProfile, 'id' | 'createdAt'>, rawPassword?: string) => {
+  const register = (data: Omit<CustomerProfile,'id' |'createdAt'>, rawPassword?: string) => {
     // 1. Cybersecurity: Audit for injection scripts
-    const nameAudit = auditInputSecurity(data.fullName, 'Full Name');
+    const nameAudit = auditInputSecurity(data.fullName,'Full Name');
     if (!nameAudit.isSafe) return { success: false, message: nameAudit.errorMessage };
 
-    const emailAudit = auditInputSecurity(data.email, 'Email Address');
+    const emailAudit = auditInputSecurity(data.email,'Email Address');
     if (!emailAudit.isSafe) return { success: false, message: emailAudit.errorMessage };
 
     const cleanEmail = data.email.trim().toLowerCase();
-    const cleanMobile = data.mobile.replace(/\D/g, '').slice(0, 10);
+    const cleanMobile = data.mobile.replace(/\D/g,'').slice(0, 10);
 
     // Check existing registered users database
     let existingUsers: (CustomerProfile & { password?: string })[] = [];
@@ -132,7 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Cryptographic hashing of password before saving
-    const passwordToHash = rawPassword || 'gudbazaar123';
+    const passwordToHash = rawPassword ||'gudbazaar123';
     const passwordHash = hashCredentialSync(passwordToHash);
 
     const newRecord: CustomerProfile = {
@@ -166,14 +166,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // 2. Cybersecurity: Audit injection tokens
-    const audit = auditInputSecurity(emailOrPhone, 'Login Identifier');
+    const audit = auditInputSecurity(emailOrPhone,'Login Identifier');
     if (!audit.isSafe) {
       recordFailedAuthAttempt();
       return { success: false, message: audit.errorMessage };
     }
 
     const identifier = emailOrPhone.trim().toLowerCase();
-    const cleanMobile = emailOrPhone.replace(/\D/g, '').slice(0, 10);
+    const cleanMobile = emailOrPhone.replace(/\D/g,'').slice(0, 10);
 
     let existingUsers: (CustomerProfile & { password?: string })[] = [];
     try {
@@ -190,11 +190,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!found) {
       // Create guest-converted account if not found with hashed default
       const isPhone = /^\d{10}$/.test(cleanMobile);
-      const defaultHash = hashCredentialSync(password || 'gudbazaar123');
+      const defaultHash = hashCredentialSync(password ||'gudbazaar123');
       const guestProfile: CustomerProfile = {
         id: `usr_${Date.now()}`,
-        fullName: isPhone ? 'Valued Customer' : identifier.split('@')[0],
-        email: isPhone ? `${cleanMobile}@gudbazaar.com` : identifier,
+        fullName: isPhone ?'Valued Customer' : identifier.split('@')[0],
+        email: isPhone ?`${cleanMobile}@gudbazaar.com` : identifier,
         mobile: isPhone ? cleanMobile : '9820012345',
         passwordHash: defaultHash,
         createdAt: new Date().toISOString(),
@@ -220,7 +220,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const lockMsg = recordFailedAuthAttempt();
         return {
           success: false,
-          message: lockMsg || 'Incorrect password. Security attempt logged. Please try again.',
+          message: lockMsg ||'Incorrect password. Security attempt logged. Please try again.',
         };
       }
     }

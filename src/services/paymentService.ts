@@ -1,12 +1,12 @@
 /**
  * GUDBAZAAR CISO SECURITY ARCHITECTURE: PAYMENT SERVICE MODULE (FUTURE INTEGRATION)
- * 
+ *
  * SECURITY DIRECTIVE:
  * - This application is currently in development mode.
  * - NO live payment gateway (Razorpay / Cashfree / Stripe) is integrated.
- * - Per CISO protocol: Never mark orders as 'paid' or simulate client-side fake approvals.
+ * - Per CISO protocol: Never mark orders as'paid' or simulate client-side fake approvals.
  * - In production, payment verification MUST occur strictly on the backend via HMAC-SHA256
- *   webhook signature verification (e.g., X-Razorpay-Signature) or server-to-server inquiry.
+ * webhook signature verification (e.g., X-Razorpay-Signature) or server-to-server inquiry.
  * - This module defines the decoupled contract and defensive interfaces ready for future backend integration.
  */
 
@@ -47,12 +47,12 @@ class PaymentService {
 
   /**
    * Prepares the order payment record in development mode without faking payment confirmation.
-   * Online payment orders are safely tagged as 'pending_payment'.
+   * Online payment orders are safely tagged as'pending_payment'.
    */
   public registerOrderForPayment(
-    paymentMethod: 'UPI' | 'Card' | 'NetBanking' | 'COD'
+    paymentMethod: 'UPI' |'Card' |'NetBanking' |'COD'
   ): { paymentStatus: PaymentStatus; note: string } {
-    if (paymentMethod === 'COD') {
+    if (paymentMethod ==='COD') {
       return {
         paymentStatus: 'awaiting_cod_verification',
         note: 'Cash on Delivery selected. Payment will be collected in cash upon doorstep delivery.',

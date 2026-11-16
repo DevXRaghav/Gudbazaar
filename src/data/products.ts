@@ -1,22 +1,22 @@
 import { Product, Coupon } from '../types';
 
 import rawGudPacketImg from '../assets/images/v2_raw_gud_packet_1794557863698.jpg';
-import rawGudJarImg from '../assets/images/v2_raw_gud_jar_1794557868057.jpg';
+import rawGudJarImg from '../assets/images/plastic_jar_raw_gud_1794812790263.jpg';
 import rawCubesPacketImg from '../assets/images/v2_raw_cubes_packet_1794557865879.jpg';
-import rawCubesJarImg from '../assets/images/v2_raw_cubes_jar_1794557867144.jpg';
+import rawCubesJarImg from '../assets/images/plastic_jar_raw_cubes_1794812795031.jpg';
 import dryfruitsCubesPacketImg from '../assets/images/v2_dryfruits_cubes_packet_1794557867247.jpg';
-import dryfruitsCubesJarImg from '../assets/images/v2_dryfruits_cubes_jar_1794557867592.jpg';
+import dryfruitsCubesJarImg from '../assets/images/plastic_jar_dryfruits_cubes_1794812792898.jpg';
 import peanutCubesPacketImg from '../assets/images/v2_peanut_cubes_packet_1794557869437.jpg';
-import peanutCubesJarImg from '../assets/images/v2_peanut_cubes_jar_1794557869148.jpg';
+import peanutCubesJarImg from '../assets/images/plastic_jar_peanut_cubes_1794812794720.jpg';
 import allInOneCubesPacketImg from '../assets/images/v2_allinone_cubes_packet_1794557870200.jpg';
-import allInOneCubesJarImg from '../assets/images/v2_allinone_cubes_jar_1794557870002.jpg';
+import allInOneCubesJarImg from '../assets/images/plastic_jar_allinone_cubes_1794812795128.jpg';
 import desiKhandPacketImg from '../assets/images/v2_desi_khand_packet_1794557870856.jpg';
-import desiKhandJarImg from '../assets/images/v2_desi_khand_jar_final.jpg';
+import desiKhandJarImg from '../assets/images/plastic_jar_desi_khand_1794812798935.jpg';
 import organicShakkarPacketImg from '../assets/images/v2_organic_shakkar_packet_1794557872208.jpg';
-import organicShakkarJarImg from '../assets/images/v2_organic_shakkar_jar_final.jpg';
+import organicShakkarJarImg from '../assets/images/plastic_jar_organic_shakkar_1794812795221.jpg';
 
-import closeupRawGudImg from '../assets/images/v2_closeup_raw_gud.jpg';
-import closeupRawCubesImg from '../assets/images/v2_closeup_raw_cubes.jpg';
+import closeupRawGudImg from '../assets/images/texture_closeup_raw_gud_1794812913022.jpg';
+import closeupRawCubesImg from '../assets/images/texture_closeup_raw_cubes_1794812911753.jpg';
 import closeupDryfruitsCubesImg from '../assets/images/v2_closeup_dryfruits_cubes.jpg';
 import closeupPeanutCubesImg from '../assets/images/v2_closeup_peanut_cubes.jpg';
 import closeupAllInOneCubesImg from '../assets/images/v2_closeup_allinone_cubes.jpg';
@@ -24,12 +24,12 @@ import closeupDesiKhandImg from '../assets/images/v2_closeup_desi_khand.jpg';
 import closeupOrganicShakkarImg from '../assets/images/v2_closeup_organic_shakkar.jpg';
 
 import lifestyleRawGudImg from '../assets/images/v2_lifestyle_raw_gud.jpg';
-import lifestyleRawCubesImg from '../assets/images/v2_lifestyle_raw_cubes.jpg';
-import lifestyleDryfruitsCubesImg from '../assets/images/v2_lifestyle_dryfruits_cubes.jpg';
-import lifestylePeanutCubesImg from '../assets/images/v2_lifestyle_peanut_cubes.jpg';
-import lifestyleAllInOneCubesImg from '../assets/images/v2_lifestyle_allinone_cubes.jpg';
-import lifestyleDesiKhandImg from '../assets/images/v2_lifestyle_desi_khand.jpg';
-import lifestyleOrganicShakkarImg from '../assets/images/v2_lifestyle_organic_shakkar.jpg';
+import lifestyleRawCubesImg from '../assets/images/plastic_lifestyle_raw_cubes_1794812876241.jpg';
+import lifestyleDryfruitsCubesImg from '../assets/images/plastic_lifestyle_dryfruits_cubes_1794812872206.jpg';
+import lifestylePeanutCubesImg from '../assets/images/plastic_lifestyle_peanut_cubes_1794812876648.jpg';
+import lifestyleAllInOneCubesImg from '../assets/images/plastic_lifestyle_allinone_cubes_1794812871423.jpg';
+import lifestyleDesiKhandImg from '../assets/images/plastic_lifestyle_desi_khand_1794812879018.jpg';
+import lifestyleOrganicShakkarImg from '../assets/images/plastic_lifestyle_organic_shakkar_1794812873401.jpg';
 
 export const PRODUCT_IMAGES = {
   rawGudPacket: rawGudPacketImg,
@@ -52,7 +52,7 @@ export const HERO_IMAGE = dryfruitsCubesPacketImg;
 export const JAGGERY_BLOCKS_IMG = rawGudPacketImg;
 export const JAGGERY_POWDER_IMG = organicShakkarPacketImg;
 export const LIQUID_JAGGERY_IMG = rawGudJarImg;
-export const STORY_FARM_IMG = '/images/story_sugarcane_farm.jpg';
+export const STORY_FARM_IMG ='/images/story_sugarcane_farm.jpg';
 
 export const CATEGORIES = [
   {
@@ -115,8 +115,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 139, mrp: 185, inStock: true, sku: 'GB-RGUD-PKT-1000' },
     ],
     ingredients: [
-      '100% Pure Organic Sugarcane Juice',
-      'Natural vegetable mucilage (Organic Okra clarifier)',
+     '100% Pure Organic Sugarcane Juice',
+     'Natural vegetable mucilage (Organic Okra clarifier)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -142,7 +142,7 @@ export const PRODUCTS: Product[] = [
     slug: 'raw-gud-jar',
     category: 'Raw Gud',
     packagingType: 'Jar',
-    tagline: 'Freshly Prepared · Reusable Food-Grade Airtight Glass/PET Jar',
+    tagline: 'Freshly Prepared · Reusable Food-Grade Airtight PET Jar',
     shortDescription: 'Fresh authentic unrefined raw jaggery packed in a durable, reusable airtight jar designed to keep humidity and moisture out.',
     description: 'Enjoy authentic golden raw gud from Western Uttar Pradesh packaged in a rigid airtight jar. Easy to store on kitchen shelves, protects against atmospheric dampness, and ensures pristine caramel aroma from the first spoon to the last.',
     primaryImage: rawGudJarImg,
@@ -162,8 +162,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 199, mrp: 259, inStock: true, sku: 'GB-RGUD-JAR-1000' },
     ],
     ingredients: [
-      '100% Pure Organic Sugarcane Juice',
-      'Natural vegetable mucilage (Organic Okra clarifier)',
+     '100% Pure Organic Sugarcane Juice',
+     'Natural vegetable mucilage (Organic Okra clarifier)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -209,8 +209,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 159, mrp: 210, inStock: true, sku: 'GB-RCUB-PKT-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
-      'Natural Plant-Based Okra Clarifier',
+     '100% Clarified Organic Sugarcane Juice',
+     'Natural Plant-Based Okra Clarifier',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -256,8 +256,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 219, mrp: 285, inStock: true, sku: 'GB-RCUB-JAR-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
-      'Natural Plant-Based Okra Clarifier',
+     '100% Clarified Organic Sugarcane Juice',
+     'Natural Plant-Based Okra Clarifier',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -303,12 +303,12 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 329, mrp: 439, inStock: true, sku: 'GB-DFRC-PKT-1000' },
     ],
     ingredients: [
-      'Pure Organic Sugarcane Jaggery',
-      'Roasted California Almonds (Badam)',
-      'Whole Cashew Nuts (Kaju)',
-      'Pistachios (Pista)',
-      'Green Cardamom Powder (Elaichi)',
-      'Desi Cow Ghee (trace)',
+     'Pure Organic Sugarcane Jaggery',
+     'Roasted California Almonds (Badam)',
+     'Whole Cashew Nuts (Kaju)',
+     'Pistachios (Pista)',
+     'Green Cardamom Powder (Elaichi)',
+     'Desi Cow Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -354,12 +354,12 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 379, mrp: 499, inStock: true, sku: 'GB-DFRC-JAR-1000' },
     ],
     ingredients: [
-      'Pure Organic Sugarcane Jaggery',
-      'Roasted California Almonds (Badam)',
-      'Whole Cashew Nuts (Kaju)',
-      'Pistachios (Pista)',
-      'Green Cardamom Powder (Elaichi)',
-      'Desi Cow Ghee (trace)',
+     'Pure Organic Sugarcane Jaggery',
+     'Roasted California Almonds (Badam)',
+     'Whole Cashew Nuts (Kaju)',
+     'Pistachios (Pista)',
+     'Green Cardamom Powder (Elaichi)',
+     'Desi Cow Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -405,10 +405,10 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 219, mrp: 289, inStock: true, sku: 'GB-PNC-PKT-1000' },
     ],
     ingredients: [
-      'Pure Organic Sugarcane Jaggery',
-      'Golden Roasted Peanuts (Moongphali)',
-      'Green Cardamom',
-      'Pure Desi Ghee (trace)',
+     'Pure Organic Sugarcane Jaggery',
+     'Golden Roasted Peanuts (Moongphali)',
+     'Green Cardamom',
+     'Pure Desi Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -454,10 +454,10 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 259, mrp: 339, inStock: true, sku: 'GB-PNC-JAR-1000' },
     ],
     ingredients: [
-      'Pure Organic Sugarcane Jaggery',
-      'Golden Roasted Peanuts (Moongphali)',
-      'Green Cardamom',
-      'Pure Desi Ghee (trace)',
+     'Pure Organic Sugarcane Jaggery',
+     'Golden Roasted Peanuts (Moongphali)',
+     'Green Cardamom',
+     'Pure Desi Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -503,13 +503,13 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 299, mrp: 399, inStock: true, sku: 'GB-AIO-PKT-1000' },
     ],
     ingredients: [
-      '100% Organic Sugarcane Jaggery',
-      'Roasted Almonds & Cashews',
-      'Roasted Peanuts',
-      'White Sesame Seeds (Til)',
-      'Dry Ginger Root (Sonth)',
-      'Black Pepper & Cardamom',
-      'Pure Desi Ghee (trace)',
+     '100% Organic Sugarcane Jaggery',
+     'Roasted Almonds & Cashews',
+     'Roasted Peanuts',
+     'White Sesame Seeds (Til)',
+     'Dry Ginger Root (Sonth)',
+     'Black Pepper & Cardamom',
+     'Pure Desi Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -555,13 +555,13 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 349, mrp: 459, inStock: true, sku: 'GB-AIO-JAR-1000' },
     ],
     ingredients: [
-      '100% Organic Sugarcane Jaggery',
-      'Roasted Almonds & Cashews',
-      'Roasted Peanuts',
-      'White Sesame Seeds (Til)',
-      'Dry Ginger Root (Sonth)',
-      'Black Pepper & Cardamom',
-      'Pure Desi Ghee (trace)',
+     '100% Organic Sugarcane Jaggery',
+     'Roasted Almonds & Cashews',
+     'Roasted Peanuts',
+     'White Sesame Seeds (Til)',
+     'Dry Ginger Root (Sonth)',
+     'Black Pepper & Cardamom',
+     'Pure Desi Ghee (trace)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -607,8 +607,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 139, mrp: 185, inStock: true, sku: 'GB-KHD-PKT-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
-      'Wild Okra Plant Clarifier (Zero Sulphur, Zero Bleach)',
+     '100% Clarified Organic Sugarcane Juice',
+     'Wild Okra Plant Clarifier (Zero Sulphur, Zero Bleach)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -654,8 +654,8 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 189, mrp: 249, inStock: true, sku: 'GB-KHD-JAR-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
-      'Wild Okra Plant Clarifier (Zero Sulphur, Zero Bleach)',
+     '100% Clarified Organic Sugarcane Juice',
+     'Wild Okra Plant Clarifier (Zero Sulphur, Zero Bleach)',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -701,7 +701,7 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 139, mrp: 185, inStock: true, sku: 'GB-SHK-PKT-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
+     '100% Clarified Organic Sugarcane Juice',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -747,7 +747,7 @@ export const PRODUCTS: Product[] = [
       { weight: '1000g', price: 189, mrp: 249, inStock: true, sku: 'GB-SHK-JAR-1000' },
     ],
     ingredients: [
-      '100% Clarified Organic Sugarcane Juice',
+     '100% Clarified Organic Sugarcane Juice',
     ],
     storageInstructions: 'Keep away from moisture! Always store in a sealed pack container, airtight jar, or sealed packet in a cool, dry place. Avoid using wet spoons.',
     nutritionalInfo: {
@@ -792,19 +792,19 @@ export const VALID_COUPONS: Coupon[] = [
 ];
 
 export const PINCODE_DELIVERY_DATA: Record<string, { city: string; state: string; days: number; codAvailable: boolean }> = {
-  '110001': { city: 'New Delhi', state: 'Delhi', days: 2, codAvailable: true },
-  '400001': { city: 'Mumbai', state: 'Maharashtra', days: 2, codAvailable: true },
-  '560001': { city: 'Bengaluru', state: 'Karnataka', days: 2, codAvailable: true },
-  '500001': { city: 'Hyderabad', state: 'Telangana', days: 3, codAvailable: true },
-  '600001': { city: 'Chennai', state: 'Tamil Nadu', days: 3, codAvailable: true },
-  '700001': { city: 'Kolkata', state: 'West Bengal', days: 3, codAvailable: true },
-  '411001': { city: 'Pune', state: 'Maharashtra', days: 2, codAvailable: true },
-  '380001': { city: 'Ahmedabad', state: 'Gujarat', days: 2, codAvailable: true },
-  '302001': { city: 'Jaipur', state: 'Rajasthan', days: 3, codAvailable: true },
-  '226001': { city: 'Lucknow', state: 'Uttar Pradesh', days: 2, codAvailable: true },
-  '250001': { city: 'Meerut', state: 'Uttar Pradesh', days: 1, codAvailable: true },
-  '251001': { city: 'Muzaffarnagar', state: 'Uttar Pradesh', days: 1, codAvailable: true },
-  '160017': { city: 'Chandigarh', state: 'Punjab/Haryana', days: 2, codAvailable: true },
+ '110001': { city: 'New Delhi', state: 'Delhi', days: 2, codAvailable: true },
+ '400001': { city: 'Mumbai', state: 'Maharashtra', days: 2, codAvailable: true },
+ '560001': { city: 'Bengaluru', state: 'Karnataka', days: 2, codAvailable: true },
+ '500001': { city: 'Hyderabad', state: 'Telangana', days: 3, codAvailable: true },
+ '600001': { city: 'Chennai', state: 'Tamil Nadu', days: 3, codAvailable: true },
+ '700001': { city: 'Kolkata', state: 'West Bengal', days: 3, codAvailable: true },
+ '411001': { city: 'Pune', state: 'Maharashtra', days: 2, codAvailable: true },
+ '380001': { city: 'Ahmedabad', state: 'Gujarat', days: 2, codAvailable: true },
+ '302001': { city: 'Jaipur', state: 'Rajasthan', days: 3, codAvailable: true },
+ '226001': { city: 'Lucknow', state: 'Uttar Pradesh', days: 2, codAvailable: true },
+ '250001': { city: 'Meerut', state: 'Uttar Pradesh', days: 1, codAvailable: true },
+ '251001': { city: 'Muzaffarnagar', state: 'Uttar Pradesh', days: 1, codAvailable: true },
+ '160017': { city: 'Chandigarh', state: 'Punjab/Haryana', days: 2, codAvailable: true },
 };
 
 export const FREE_SHIPPING_THRESHOLD = 499;

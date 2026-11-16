@@ -94,21 +94,21 @@ export const VALID_INDIAN_PINCODE_PREFIXES: Record<number, string> = {
 
 // Test / dummy repeated number sequences
 const INVALID_DUMMY_PATTERNS = new Set([
-  '000000',
-  '111111',
-  '222222',
-  '333333',
-  '444444',
-  '555555',
-  '666666',
-  '777777',
-  '888888',
-  '999999',
-  '123456',
-  '654321',
-  '123123',
-  '987654',
-  '012345',
+ '000000',
+ '111111',
+ '222222',
+ '333333',
+ '444444',
+ '555555',
+ '666666',
+ '777777',
+ '888888',
+ '999999',
+ '123456',
+ '654321',
+ '123123',
+ '987654',
+ '012345',
 ]);
 
 /**
@@ -164,7 +164,7 @@ export function validateIndianPincode(rawInput: string): PincodeValidationResult
   if (!region) {
     return {
       isValid: false,
-      message: `Postal circle "${pincode.slice(0, 2)}" is not a valid India Post zone. Please fill an authentic Indian PIN code properly.`,
+      message: `Postal circle"${pincode.slice(0, 2)}" is not a valid India Post zone. Please fill an authentic Indian PIN code properly.`,
     };
   }
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import { ScrollToTop } from './components/common/ScrollToTop';
@@ -20,13 +19,12 @@ import { PoliciesPage } from './pages/PoliciesPage';
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        {/* Route-aware ScrollToTop handles only real route navigation without affecting in-page actions */}
-        <ScrollToTop />
-        <AuthProvider>
-          <CartProvider>
-            <div className="min-h-screen flex flex-col bg-[#FFF9EF] text-[#4A2415] dark:bg-[#120A06] dark:text-[#F5EBE1] transition-colors duration-200 selection:bg-[#E99A19]/25 selection:text-[#4A2415]">
+    <BrowserRouter>
+      {/* Route-aware ScrollToTop handles only real route navigation without affecting in-page actions */}
+      <ScrollToTop />
+      <AuthProvider>
+        <CartProvider>
+          <div className="min-h-screen flex flex-col bg-[#FFF9EF] text-[#4A2415] selection:bg-[#E99A19]/25 selection:text-[#4A2415]">
               {/* Main Top Header */}
               <Header />
 
@@ -55,9 +53,8 @@ export default function App() {
               {/* Full Brand Footer */}
               <Footer />
             </div>
-          </CartProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+        </CartProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

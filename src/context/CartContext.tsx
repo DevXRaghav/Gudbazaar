@@ -35,9 +35,9 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_STORAGE_KEY = 'gudbazaar_cart_v1';
-const COUPON_STORAGE_KEY = 'gudbazaar_coupon_v1';
-const ORDER_STORAGE_KEY = 'gudbazaar_last_order_v1';
+const CART_STORAGE_KEY ='gudbazaar_cart_v1';
+const COUPON_STORAGE_KEY ='gudbazaar_coupon_v1';
+const ORDER_STORAGE_KEY ='gudbazaar_last_order_v1';
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
@@ -115,7 +115,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const weight = selectedVariant?.weight || product.weight;
     const price = selectedVariant?.price || product.price;
     const mrp = selectedVariant?.mrp || product.mrp;
-    const itemId = `${product.id}-${weight}`;
+    const itemId =`${product.id}-${weight}`;
 
     setItems((prevItems) => {
       const existing = prevItems.find((item) => item.id === itemId);
@@ -184,31 +184,31 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // 1. Cybersecurity: Check rate limiter
     const rateCheck = checkCouponRateLimit();
     if (!rateCheck.isAllowed) {
-      const err = rateCheck.errorMessage || 'Too many attempts. Please try again later.';
+      const err = rateCheck.errorMessage ||'Too many attempts. Please try again later.';
       setCouponError(err);
       return { success: false, message: err };
     }
 
     // 2. Cybersecurity: Audit for malicious injection tokens
-    const secAudit = auditInputSecurity(rawCode, 'Coupon Code');
+    const secAudit = auditInputSecurity(rawCode,'Coupon Code');
     if (!secAudit.isSafe) {
-      const lockMsg = recordFailedCouponAttempt() || secAudit.errorMessage || 'Invalid input pattern.';
+      const lockMsg = recordFailedCouponAttempt() || secAudit.errorMessage ||'Invalid input pattern.';
       setCouponError(lockMsg);
       return { success: false, message: lockMsg };
     }
 
-    const cleanCode = rawCode.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const cleanCode = rawCode.trim().toUpperCase().replace(/[^A-Z0-9]/g,'');
     const found = VALID_COUPONS.find((c) => c.code === cleanCode);
 
     if (!found) {
       const lockMsg = recordFailedCouponAttempt();
-      const msg = lockMsg || 'Invalid coupon code. Try SWEET10 or FIRSTGUD';
+      const msg = lockMsg ||'Invalid coupon code. Try SWEET10 or FIRSTGUD';
       setCouponError(msg);
       return { success: false, message: msg };
     }
 
     if (subtotal < found.minOrderValue) {
-      const msg = `Minimum cart subtotal of ₹${found.minOrderValue} required for coupon ${found.code}`;
+      const msg =`Minimum cart subtotal of ₹${found.minOrderValue} required for coupon ${found.code}`;
       setCouponError(msg);
       return { success: false, message: msg };
     }

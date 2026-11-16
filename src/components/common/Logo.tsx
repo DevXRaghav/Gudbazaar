@@ -3,25 +3,25 @@ import { Link } from 'react-router-dom';
 
 interface LogoProps {
   className?: string;
-  variant?: 'dark' | 'light';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'dark' |'light';
+  size?: 'sm' |'md' |'lg';
 }
 
-export const OFFICIAL_LOGO_URL = '/assets/gudbazaar_logo_transparent.png';
+export const OFFICIAL_LOGO_URL ='/assets/gudbazaar_logo_transparent.png';
 
 export const GudbazaarLogo: React.FC<LogoProps> = ({
-  className = '',
-  variant = 'dark',
-  size = 'md',
+  className ='',
+  variant ='dark',
+  size ='md',
 }) => {
-  const isLight = variant === 'light';
+  const isLight = variant ==='light';
 
   // Sizing mapping with responsive mobile scale
   const heightClass =
-    size === 'sm'
-      ? 'h-8 sm:h-9 md:h-10'
-      : size === 'lg'
-      ? 'h-12 sm:h-14 md:h-16'
+    size ==='sm'
+      ?'h-8 sm:h-9 md:h-10'
+      : size ==='lg'
+      ?'h-12 sm:h-14 md:h-16'
       : 'h-8.5 sm:h-10 md:h-12';
 
   if (isLight) {
@@ -38,9 +38,8 @@ export const GudbazaarLogo: React.FC<LogoProps> = ({
     );
   }
 
-  // Standard logo with dark mode adaptive container for high contrast
   return (
-    <div className={`inline-flex items-center select-none dark:bg-[#FFF9EF] dark:px-2 dark:py-1 dark:rounded-xl dark:shadow-xs transition-colors ${className}`}>
+    <div className={`inline-flex items-center select-none ${className}`}>
       <img
         src={OFFICIAL_LOGO_URL}
         alt="Gudbazaar - Pure Jaggery"

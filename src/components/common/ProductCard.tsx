@@ -44,7 +44,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const isVariantInStock =
     product.inStock && (enableWeightSelector ? activeVariant?.inStock ?? true : true);
 
-  const cartItemId = `${product.id}-${activeWeight}`;
+  const cartItemId =`${product.id}-${activeWeight}`;
   const cartItem = items.find((item) => item.id === cartItemId);
   const currentQty = cartItem?.quantity || 0;
   const totalProductQtyInCart = items
@@ -85,12 +85,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="group relative flex flex-col bg-[#FFFFFF] dark:bg-[#1C110B] rounded-xl border border-[#E9DDC9]/80 dark:border-[#3B2519] overflow-hidden hover:border-[#47752F]/50 dark:hover:border-[#6BB545]/50 hover:shadow-lg transition-all duration-300">
-      
+    <div className="group relative flex flex-col bg-[#FFFFFF] rounded-xl border border-[#E9DDC9]/80 overflow-hidden hover:border-[#47752F]/50 hover:shadow-lg transition-all duration-300">
+     
       {/* Product Image Container */}
       <Link
         to={`/product/${product.slug}`}
-        className="relative block aspect-4/3 w-full bg-[#FFF9EF] dark:bg-[#261810] overflow-hidden"
+        className="relative block aspect-4/3 w-full bg-[#FFF9EF] overflow-hidden"
       >
         <img
           src={product.primaryImage}
@@ -106,12 +106,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Discount, Bestseller & Packaging Tag */}
         <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm tracking-wide text-white ${
-            product.packagingType === 'Jar' ? 'bg-[#4A2415] dark:bg-[#633520]' : 'bg-[#47752F] dark:bg-[#3d6826]'
+            product.packagingType ==='Jar' ?'bg-[#4A2415]' : 'bg-[#47752F]'
           }`}>
-            {product.packagingType === 'Jar' ? 'Airtight Jar' : 'Airtight Packet'}
+            {product.packagingType ==='Jar' ?'Airtight Jar' : 'Airtight Packet'}
           </span>
           {displayDiscount > 0 && (
-            <span className="text-[10px] font-bold text-[#FFFFFF] bg-[#E99A19] dark:bg-[#F5AA28] dark:text-[#120A06] px-2 py-0.5 rounded-sm tracking-wide">
+            <span className="text-[10px] font-bold text-[#FFFFFF] bg-[#E99A19] px-2 py-0.5 rounded-sm tracking-wide">
               {displayDiscount}% OFF
             </span>
           )}
@@ -120,7 +120,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Quick View Floating Action */}
         <button
           onClick={handleQuickView}
-          className="absolute right-2.5 bottom-2.5 p-2 bg-white/90 dark:bg-[#1C110B]/90 hover:bg-white dark:hover:bg-[#261810] text-[#4A2415] dark:text-[#F5EBE1] rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 touch-manipulation"
+          className="absolute right-2.5 bottom-2.5 p-2 bg-white/90 hover:bg-white text-[#4A2415] rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 touch-manipulation"
           aria-label={`Quick view ${product.name}`}
           title="Quick View"
         >
@@ -129,30 +129,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </Link>
 
       {/* Product Details */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-white dark:bg-[#1C110B] transition-colors">
+      <div className="p-4 flex flex-col flex-1 justify-between bg-white transition-colors">
         <div>
           {/* Category & Weight Metadata: Clean unboxed text with typographic separator */}
-          <div className="flex items-center gap-1.5 text-xs text-[#4A2415]/70 dark:text-[#D8C7B8]/70 mb-1">
-            <span className="font-semibold text-[#47752F] dark:text-[#6BB545]">{product.category}</span>
-            <span aria-hidden="true" className="text-[#E9DDC9] dark:text-[#3B2519]">·</span>
-            <span className="font-semibold text-[#4A2415] dark:text-[#F5EBE1]">{product.packagingType}</span>
+          <div className="flex items-center gap-1.5 text-xs text-[#4A2415]/70 mb-1">
+            <span className="font-semibold text-[#47752F]">{product.category}</span>
+            <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
+            <span className="font-semibold text-[#4A2415]">{product.packagingType}</span>
             {!enableWeightSelector && (
               <>
-                <span aria-hidden="true" className="text-[#E9DDC9] dark:text-[#3B2519]">·</span>
+                <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
                 <span>500g / 1000g</span>
               </>
             )}
           </div>
 
           {/* Product Title */}
-          <Link to={`/product/${product.slug}`} className="block group-hover:text-[#47752F] dark:group-hover:text-[#6BB545] transition-colors">
-            <h3 className="text-base font-bold text-[#4A2415] dark:text-[#F5EBE1] line-clamp-1 leading-snug">
+          <Link to={`/product/${product.slug}`} className="block group-hover:text-[#47752F] transition-colors">
+            <h3 className="text-base font-bold text-[#4A2415] line-clamp-1 leading-snug">
               {product.name}
             </h3>
           </Link>
 
           {/* Short Description */}
-          <p className="mt-1 text-xs text-[#4A2415]/75 dark:text-[#D8C7B8]/80 line-clamp-2 leading-relaxed">
+          <p className="mt-1 text-xs text-[#4A2415]/75 line-clamp-2 leading-relaxed">
             {product.shortDescription}
           </p>
         </div>
@@ -162,11 +162,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {enableWeightSelector && product.variants.length > 0 && (
             <div className="mb-3">
               <div className="flex items-center justify-between gap-2 mb-1.5">
-                <span className="text-[11px] font-semibold text-[#4A2415]/70 dark:text-[#D8C7B8]/70">
+                <span className="text-[11px] font-semibold text-[#4A2415]/70">
                   Pack Weight
                 </span>
                 {totalProductQtyInCart > 0 && (
-                  <span className="text-[10px] font-semibold text-[#47752F] dark:text-[#6BB545] tabular-nums">
+                  <span className="text-[10px] font-semibold text-[#47752F] tabular-nums">
                     {totalProductQtyInCart} in bag
                   </span>
                 )}
@@ -179,7 +179,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 {product.variants.map((variant) => {
                   const isSelected = activeWeight === variant.weight;
                   const variantQty =
-                    items.find((i) => i.id === `${product.id}-${variant.weight}`)?.quantity || 0;
+                    items.find((i) => i.id ===`${product.id}-${variant.weight}`)?.quantity || 0;
                   return (
                     <button
                       key={variant.sku}
@@ -193,14 +193,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                       }}
                       className={`flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg text-xs font-semibold border transition-all cursor-pointer touch-manipulation ${
                         isSelected
-                          ? 'border-[#47752F] dark:border-[#6BB545] bg-[#EBF3E8] dark:bg-[#6BB545]/15 text-[#47752F] dark:text-[#6BB545]'
-                          : 'border-[#E9DDC9] dark:border-[#3B2519] bg-[#FFF9EF]/60 dark:bg-[#261810] text-[#4A2415]/80 dark:text-[#D8C7B8] hover:border-[#47752F]/50 dark:hover:border-[#6BB545]/50'
+                          ?'border-[#47752F] bg-[#EBF3E8] text-[#47752F]'
+                          : 'border-[#E9DDC9] bg-[#FFF9EF]/60 text-[#4A2415]/80 hover:border-[#47752F]/50'
                       }`}
                     >
                       <span>{variant.weight}</span>
                       <span className="text-[10px] opacity-75 tabular-nums">· ₹{variant.price}</span>
                       {variantQty > 0 && (
-                        <span className="ml-0.5 px-1 min-w-[16px] h-4 inline-flex items-center justify-center rounded-full bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06] text-[9px] font-bold tabular-nums">
+                        <span className="ml-0.5 px-1 min-w-[16px] h-4 inline-flex items-center justify-center rounded-full bg-[#47752F] text-white text-[9px] font-bold tabular-nums">
                           {variantQty}
                         </span>
                       )}
@@ -212,22 +212,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           )}
 
           {/* Price & Action Row */}
-          <div className="pt-3 border-t border-[#E9DDC9]/50 dark:border-[#3B2519] flex items-center justify-between gap-2">
+          <div className="pt-3 border-t border-[#E9DDC9]/50 flex items-center justify-between gap-2">
             <div className="flex flex-col">
               <div className="flex items-baseline gap-1.5">
-                <span className="text-lg font-bold text-[#4A2415] dark:text-[#F5EBE1] tabular-nums">
+                <span className="text-lg font-bold text-[#4A2415] tabular-nums">
                   ₹{displayPrice}
                 </span>
                 {displayMrp > displayPrice && (
-                  <span className="text-xs text-[#4A2415]/40 dark:text-[#D8C7B8]/40 line-through tabular-nums">
+                  <span className="text-xs text-[#4A2415]/40 line-through tabular-nums">
                     ₹{displayMrp}
                   </span>
                 )}
               </div>
               {product.rating > 0 && (
-                <div className="flex items-center gap-1 text-[11px] text-[#4A2415]/70 dark:text-[#D8C7B8]/70 mt-0.5">
-                  <span className="text-[#E99A19] dark:text-[#F5AA28]">★</span>
-                  <span className="font-semibold text-[#4A2415] dark:text-[#F5EBE1]">{product.rating}</span>
+                <div className="flex items-center gap-1 text-[11px] text-[#4A2415]/70 mt-0.5">
+                  <span className="text-[#E99A19]">★</span>
+                  <span className="font-semibold text-[#4A2415]">{product.rating}</span>
                   <span>({product.reviewCount})</span>
                 </div>
               )}
@@ -235,7 +235,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
             {enableQtySelector && currentQty > 0 ? (
               <div
-                className="inline-flex items-center rounded-lg bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06] shadow-sm overflow-hidden shrink-0"
+                className="inline-flex items-center rounded-lg bg-[#47752F] text-white shadow-sm overflow-hidden shrink-0"
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -244,7 +244,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <button
                   type="button"
                   onClick={handleDecrement}
-                  className="px-2.5 py-2 hover:bg-[#3d6826] dark:hover:bg-[#5aa038] transition-colors touch-manipulation active:scale-95 flex items-center justify-center cursor-pointer"
+                  className="px-2.5 py-2 hover:bg-[#3d6826] transition-colors touch-manipulation active:scale-95 flex items-center justify-center cursor-pointer"
                   aria-label={`Decrease quantity of ${product.name} (${activeWeight})`}
                 >
                   <Minus className="w-3.5 h-3.5" />
@@ -259,7 +259,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   type="button"
                   onClick={handleIncrement}
                   disabled={currentQty >= SECURITY_RULES.MAX_QUANTITY_PER_ITEM}
-                  className="px-2.5 py-2 hover:bg-[#3d6826] dark:hover:bg-[#5aa038] disabled:opacity-50 transition-colors touch-manipulation active:scale-95 flex items-center justify-center cursor-pointer"
+                  className="px-2.5 py-2 hover:bg-[#3d6826] disabled:opacity-50 transition-colors touch-manipulation active:scale-95 flex items-center justify-center cursor-pointer"
                   aria-label={`Increase quantity of ${product.name} (${activeWeight})`}
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -271,8 +271,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 disabled={!isVariantInStock}
                 className={`flex items-center gap-1.5 py-2 px-3.5 rounded-lg text-xs font-semibold transition-all touch-manipulation cursor-pointer ${
                   added
-                    ? 'bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06] shadow-sm'
-                    : 'bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06] hover:shadow-md'
+                    ?'bg-[#47752F] text-white shadow-sm'
+                    : 'bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF] hover:shadow-md'
                 } active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed`}
               >
                 {added ? (

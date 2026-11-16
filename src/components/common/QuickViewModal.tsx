@@ -14,7 +14,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
   const { addToCart } = useCart();
   const [activeImage, setActiveImage] = useState(product?.primaryImage || HERO_IMAGE);
   const [selectedWeight, setSelectedWeight] = useState(
-    product?.variants[0]?.weight || product?.weight || '1000g'
+    product?.variants[0]?.weight || product?.weight ||'1000g'
   );
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
@@ -43,23 +43,23 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#4A2415]/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+      className="fixed inset-0 z-50 bg-[#4A2415]/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-[#1C110B] rounded-2xl shadow-2xl border border-[#E9DDC9] dark:border-[#3B2519] overflow-hidden flex flex-col md:flex-row max-h-[90vh] text-[#4A2415] dark:text-[#F5EBE1]"
+        className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-[#E9DDC9] overflow-hidden flex flex-col md:flex-row max-h-[90vh] text-[#4A2415]"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-3.5 right-3.5 z-20 p-2 rounded-full bg-white/90 dark:bg-[#261810]/90 text-[#4A2415] dark:text-[#F5EBE1] hover:bg-[#FFF9EF] dark:hover:bg-[#322016] shadow-sm transition-colors touch-manipulation"
+          className="absolute top-3.5 right-3.5 z-20 p-2 rounded-full bg-white/90 text-[#4A2415] hover:bg-[#FFF9EF] shadow-sm transition-colors touch-manipulation"
           aria-label="Close modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Product Media */}
-        <div className="w-full md:w-1/2 bg-[#FFF9EF] dark:bg-[#261810] flex flex-col items-center justify-center p-5 sm:p-6 gap-3 border-b md:border-b-0 md:border-r border-[#E9DDC9] dark:border-[#3B2519]">
+        <div className="w-full md:w-1/2 bg-[#FFF9EF] flex flex-col items-center justify-center p-5 sm:p-6 gap-3 border-b md:border-b-0 md:border-r border-[#E9DDC9]">
           <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden shadow-inner">
             <img
               src={activeImage}
@@ -81,8 +81,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                   aria-label={`View ${product.name} image ${idx + 1}`}
                   className={`w-16 aspect-4/3 rounded-md overflow-hidden border-2 transition-all touch-manipulation ${
                     activeImage === img
-                      ? 'border-[#47752F] dark:border-[#6BB545] shadow-xs'
-                      : 'border-[#E9DDC9] dark:border-[#3B2519] opacity-75 hover:opacity-100'
+                      ?'border-[#47752F] shadow-xs'
+                      : 'border-[#E9DDC9] opacity-75 hover:opacity-100'
                   }`}
                 >
                   <img
@@ -103,39 +103,39 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
         {/* Product Info */}
         <div className="w-full md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto">
           <div>
-            <div className="flex items-center gap-2 text-xs text-[#47752F] dark:text-[#6BB545] font-semibold uppercase tracking-wider">
+            <div className="flex items-center gap-2 text-xs text-[#47752F] font-semibold uppercase tracking-wider">
               <span>{product.category}</span>
-              <span className="text-[#E9DDC9] dark:text-[#3B2519]">·</span>
-              <span className="text-[#4A2415]/70 dark:text-[#D8C7B8]/70 normal-case font-normal">{product.harvestOrigin}</span>
+              <span className="text-[#E9DDC9]">·</span>
+              <span className="text-[#4A2415]/70 normal-case font-normal">{product.harvestOrigin}</span>
             </div>
 
-            <h2 className="mt-1 text-xl font-bold text-[#4A2415] dark:text-[#F5EBE1] leading-snug">
+            <h2 className="mt-1 text-xl font-bold text-[#4A2415] leading-snug">
               {product.name}
             </h2>
 
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-[#4A2415] dark:text-[#F5EBE1] tabular-nums">
+              <span className="text-2xl font-bold text-[#4A2415] tabular-nums">
                 ₹{activeVariant?.price || product.price}
               </span>
               {(activeVariant?.mrp || product.mrp) > (activeVariant?.price || product.price) && (
-                <span className="text-sm text-[#4A2415]/40 dark:text-[#D8C7B8]/40 line-through tabular-nums">
+                <span className="text-sm text-[#4A2415]/40 line-through tabular-nums">
                   ₹{activeVariant?.mrp || product.mrp}
                 </span>
               )}
               {((activeVariant?.mrp || product.mrp) > (activeVariant?.price || product.price)) && (
-                <span className="text-xs font-semibold text-[#E99A19] dark:text-[#F5AA28] bg-[#FFF9EF] dark:bg-[#261810] px-2 py-0.5 rounded border border-[#E99A19]/30 dark:border-[#F5AA28]/30">
+                <span className="text-xs font-semibold text-[#E99A19] bg-[#FFF9EF] px-2 py-0.5 rounded border border-[#E99A19]/30">
                   {Math.round((((activeVariant?.mrp || product.mrp) - (activeVariant?.price || product.price)) / (activeVariant?.mrp || product.mrp)) * 100)}% OFF
                 </span>
               )}
             </div>
 
-            <p className="mt-3 text-xs leading-relaxed text-[#4A2415]/80 dark:text-[#D8C7B8]">
+            <p className="mt-3 text-xs leading-relaxed text-[#4A2415]/80">
               {product.shortDescription}
             </p>
 
             {/* Moisture Care Note */}
-            <div className="mt-3 p-2.5 bg-[#FFF9EF] dark:bg-[#261810] border border-[#E9DDC9] dark:border-[#3B2519] rounded-lg text-[11px] text-[#4A2415] dark:text-[#F5EBE1]">
-              <span className="font-bold text-[#47752F] dark:text-[#6BB545]">100% Fresh & Organic: </span>
+            <div className="mt-3 p-2.5 bg-[#FFF9EF] border border-[#E9DDC9] rounded-lg text-[11px] text-[#4A2415]">
+              <span className="font-bold text-[#47752F]">100% Fresh & Organic: </span>
               Sourced from roots of UP. Store away from moisture in a sealed pack container, airtight jar, or packet.
             </div>
 
@@ -143,11 +143,11 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
             {product.variants.length > 1 && (
               <div className="mt-4">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-semibold text-[#4A2415] dark:text-[#F5EBE1]">
-                    Quantity Option: <span className="text-[#47752F] dark:text-[#6BB545]">{selectedWeight}</span>
+                  <label className="text-xs font-semibold text-[#4A2415]">
+                    Quantity Option: <span className="text-[#47752F]">{selectedWeight}</span>
                   </label>
-                  <span className="text-[11px] font-semibold text-[#47752F] dark:text-[#6BB545] bg-[#EBF3E8] dark:bg-[#6BB545]/15 px-2 py-0.5 rounded-sm">
-                    {product.packagingType === 'Jar' ? 'Airtight Jar' : 'Airtight Packet'}
+                  <span className="text-[11px] font-semibold text-[#47752F] bg-[#EBF3E8] px-2 py-0.5 rounded-sm">
+                    {product.packagingType ==='Jar' ?'Airtight Jar' : 'Airtight Packet'}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -158,8 +158,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                       onClick={() => setSelectedWeight(variant.weight)}
                       className={`text-xs py-1.5 px-3 rounded-md border font-medium transition-all touch-manipulation ${
                         selectedWeight === variant.weight
-                          ? 'border-[#47752F] dark:border-[#6BB545] bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06] shadow-sm'
-                          : 'border-[#E9DDC9] dark:border-[#3B2519] bg-[#FFF9EF] dark:bg-[#261810] text-[#4A2415] dark:text-[#F5EBE1] hover:border-[#47752F]'
+                          ?'border-[#47752F] bg-[#47752F] text-white shadow-sm'
+                          : 'border-[#E9DDC9] bg-[#FFF9EF] text-[#4A2415] hover:border-[#47752F]'
                       }`}
                     >
                       {variant.weight} — ₹{variant.price}
@@ -171,23 +171,23 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
 
             {/* Quantity Selector */}
             <div className="mt-4 flex items-center gap-3">
-              <span className="text-xs font-semibold text-[#4A2415] dark:text-[#F5EBE1]">Units:</span>
-              <div className="flex items-center border border-[#E9DDC9] dark:border-[#3B2519] rounded-lg bg-[#FFF9EF] dark:bg-[#261810]">
+              <span className="text-xs font-semibold text-[#4A2415]">Units:</span>
+              <div className="flex items-center border border-[#E9DDC9] rounded-lg bg-[#FFF9EF]">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] dark:text-[#F5EBE1] hover:bg-[#E9DDC9]/50 dark:hover:bg-[#322016] rounded-l-lg touch-manipulation"
+                  className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-l-lg touch-manipulation"
                   aria-label="Decrease quantity"
                 >
                   -
                 </button>
-                <span className="px-3 py-1 text-xs font-bold tabular-nums text-[#4A2415] dark:text-[#F5EBE1]">
+                <span className="px-3 py-1 text-xs font-bold tabular-nums text-[#4A2415]">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.min(99, q + 1))}
-                  className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] dark:text-[#F5EBE1] hover:bg-[#E9DDC9]/50 dark:hover:bg-[#322016] rounded-r-lg touch-manipulation"
+                  className="px-2.5 py-1 text-sm font-semibold text-[#4A2415] hover:bg-[#E9DDC9]/50 rounded-r-lg touch-manipulation"
                   aria-label="Increase quantity"
                 >
                   +
@@ -197,13 +197,13 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
           </div>
 
           {/* Action Buttons */}
-          <div className="mt-6 pt-4 border-t border-[#E9DDC9] dark:border-[#3B2519] flex flex-col gap-2.5">
+          <div className="mt-6 pt-4 border-t border-[#E9DDC9] flex flex-col gap-2.5">
             <button
               onClick={handleAdd}
               className={`w-full py-3 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all touch-manipulation ${
                 added
-                  ? 'bg-[#47752F] dark:bg-[#6BB545] text-white dark:text-[#120A06]'
-                  : 'bg-[#4A2415] dark:bg-[#6BB545] hover:bg-[#47752F] dark:hover:bg-[#5aa038] text-[#FFF9EF] dark:text-[#120A06]'
+                  ?'bg-[#47752F] text-white'
+                  : 'bg-[#4A2415] hover:bg-[#47752F] text-[#FFF9EF]'
               }`}
             >
               {added ? (
@@ -222,7 +222,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
             <Link
               to={`/product/${product.slug}`}
               onClick={onClose}
-              className="text-center text-xs font-medium text-[#47752F] dark:text-[#6BB545] hover:text-[#4A2415] dark:hover:text-[#F5EBE1] flex items-center justify-center gap-1 py-1"
+              className="text-center text-xs font-medium text-[#47752F] hover:text-[#4A2415] flex items-center justify-center gap-1 py-1"
             >
               <span>View Full Product Specifications</span>
               <ArrowRight className="w-3.5 h-3.5" />

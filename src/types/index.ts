@@ -1,14 +1,14 @@
 export type ProductCategory =
-  | 'All'
-  | 'Raw Gud'
-  | 'Gud Cubes'
-  | 'Pure Desi Khand'
-  | 'Pure Organic Shakkar';
+  |'All'
+  |'Raw Gud'
+  |'Gud Cubes'
+  |'Pure Desi Khand'
+  |'Pure Organic Shakkar';
 
-export type PackagingType = 'Packet' | 'Jar';
+export type PackagingType ='Packet' |'Jar';
 
 export interface ProductVariant {
-  weight: string; // '500g' | '1000g'
+  weight: string; //'500g' |'1000g'
   price: number;
   mrp: number;
   inStock: boolean;
@@ -58,7 +58,7 @@ export interface Product {
 }
 
 export interface CartItem {
-  id: string; // product.id + '-' + variant.weight
+  id: string; // product.id +'-' + variant.weight
   productId: string;
   name: string;
   slug: string;
@@ -80,23 +80,23 @@ export interface CustomerAddress {
   state: string;
   pincode: string;
   landmark?: string;
-  addressType: 'home' | 'work';
+  addressType: 'home' |'work';
 }
 
 export type PaymentStatus =
-  | 'pending_payment'
-  | 'awaiting_cod_verification'
-  | 'verified_paid';
+  |'pending_payment'
+  |'awaiting_cod_verification'
+  |'verified_paid';
 
 export type OrderStatus =
-  | 'draft_order'
-  | 'pending_payment'
-  | 'received'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled';
+  |'draft_order'
+  |'pending_payment'
+  |'received'
+  |'confirmed'
+  |'processing'
+  |'shipped'
+  |'delivered'
+  |'cancelled';
 
 export interface Order {
   orderId: string;
@@ -107,7 +107,7 @@ export interface Order {
   total: number;
   couponCode?: string;
   customerAddress: CustomerAddress;
-  paymentMethod: 'UPI' | 'Card' | 'NetBanking' | 'COD';
+  paymentMethod: 'UPI' |'Card' |'NetBanking' |'COD';
   status: OrderStatus;
   paymentStatus: PaymentStatus;
   createdAt: string;
@@ -134,7 +134,7 @@ export interface CustomerProfile {
   state?: string;
   pincode?: string;
   landmark?: string;
-  sweetenerPreference?: 'Daily Tea & Beverages' | 'Ayurvedic & Health' | 'Traditional Cooking' | 'Baking & Gourmet';
+  sweetenerPreference?: 'Daily Tea & Beverages' |'Ayurvedic & Health' |'Traditional Cooking' |'Baking & Gourmet';
   createdAt: string;
 }
 
@@ -143,7 +143,7 @@ export interface Testimonial {
   customerName: string;
   city: string;
   state: string;
-  residentCategory: 'indian' | 'expat';
+  residentCategory: 'indian' |'expat';
   residentLabel: string;
   rating: number;
   productName: string;

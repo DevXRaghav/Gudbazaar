@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { HERO_IMAGE } from '../../data/products';
 
-import bannerRawGudImg from '../../assets/images/branded_banner_raw_gud_1794557469591.jpg';
-import bannerDryfruitsCubesImg from '../../assets/images/branded_banner_dryfruits_cubes_1794557472805.jpg';
-import bannerPeanutAllInOneImg from '../../assets/images/branded_banner_peanut_allinone_1794557471715.jpg';
-import bannerDesiKhandImg from '../../assets/images/branded_banner_desi_khand_1794557533955.jpg';
-import bannerOrganicShakkarImg from '../../assets/images/branded_banner_organic_shakkar_1794557534100.jpg';
+import bannerRawGudImg from '../../assets/images/plastic_banner_raw_gud_1794812842803.jpg';
+import bannerDryfruitsCubesImg from '../../assets/images/plastic_banner_dryfruits_cubes_1794812841803.jpg';
+import bannerPeanutAllInOneImg from '../../assets/images/plastic_banner_peanut_allinone_1794812841761.jpg';
+import bannerDesiKhandImg from '../../assets/images/plastic_banner_desi_khand_1794812843055.jpg';
+import bannerOrganicShakkarImg from '../../assets/images/plastic_banner_organic_shakkar_v2_1794812932470.jpg';
 
 export interface BannerItem {
   id: string;
@@ -41,7 +41,7 @@ export const ALL_PRODUCT_BANNERS: BannerItem[] = [
     imageUrl: bannerDryfruitsCubesImg,
     ctaLabel: 'Shop Dryfruits Cubes',
     ctaLink: '/product/dryfruits-gud-cubes-packets',
-    secondaryLabel: 'Shop Glass Jars',
+    secondaryLabel: 'Shop Airtight Jars',
     secondaryLink: '/product/dryfruits-gud-cubes-jar',
   },
   {
@@ -63,7 +63,7 @@ export const ALL_PRODUCT_BANNERS: BannerItem[] = [
     imageUrl: bannerDesiKhandImg,
     ctaLabel: 'Shop Desi Khand',
     ctaLink: '/shop?category=Pure+Desi+Khand',
-    secondaryLabel: 'Shop Glass Jars',
+    secondaryLabel: 'Shop Airtight Jars',
     secondaryLink: '/product/pure-desi-khand-jar',
   },
   {
@@ -74,7 +74,7 @@ export const ALL_PRODUCT_BANNERS: BannerItem[] = [
     imageUrl: bannerOrganicShakkarImg,
     ctaLabel: 'Shop Organic Shakkar',
     ctaLink: '/shop?category=Pure+Organic+Shakkar',
-    secondaryLabel: 'Shop Glass Jars',
+    secondaryLabel: 'Shop Airtight Jars',
     secondaryLink: '/product/pure-organic-shakkar-jar',
   },
 ];
@@ -107,7 +107,7 @@ export const ProductBannerSection: React.FC = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#1A0D07] border-b border-[#E9DDC9]/70 dark:border-[#3B2519]"
+      className="relative w-full overflow-hidden bg-[#1A0D07] border-b border-[#E9DDC9]/70"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -197,7 +197,7 @@ export const ProductBannerSection: React.FC = () => {
                   }}
                   className={`h-1.5 rounded-full transition-all touch-manipulation cursor-pointer ${
                     currentIndex === idx
-                      ? 'w-8 bg-[#F5AA28]'
+                      ?'w-8 bg-[#F5AA28]'
                       : 'w-4 bg-white/35 hover:bg-white/65'
                   }`}
                   aria-label={`Go to banner ${idx + 1}: ${b.title}`}

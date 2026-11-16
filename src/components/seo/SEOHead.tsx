@@ -10,9 +10,9 @@ interface SEOHeadProps {
 }
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
-  title = 'Gudbazaar — Pure Jaggery & Natural Sweetness',
-  description = 'Discover authentic traditional Indian jaggery. Shop handcrafted jaggery blocks, pure gud powder, cubes, and liquid kakvi direct to your doorstep.',
-  canonicalPath = '',
+  title ='Gudbazaar — Pure Jaggery & Natural Sweetness',
+  description ='Discover authentic traditional Indian jaggery. Shop handcrafted jaggery blocks, pure gud powder, cubes, and liquid kakvi direct to your doorstep.',
+  canonicalPath ='',
   ogImage = HERO_IMAGE,
   schema,
 }) => {
@@ -24,7 +24,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
       metaDesc = document.createElement('meta');
-      metaDesc.setAttribute('name', 'description');
+      metaDesc.setAttribute('name','description');
       document.head.appendChild(metaDesc);
     }
     metaDesc.setAttribute('content', description);
@@ -43,18 +43,18 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('rel','canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `https://gudbazaar.com${canonicalPath}`);
+    canonical.setAttribute('href',`https://gudbazaar.com${canonicalPath}`);
 
     // Update Dynamic JSON-LD if provided
     let scriptTag = document.getElementById('dynamic-json-ld') as HTMLScriptElement | null;
     if (schema) {
       if (!scriptTag) {
         scriptTag = document.createElement('script');
-        scriptTag.id = 'dynamic-json-ld';
-        scriptTag.type = 'application/ld+json';
+        scriptTag.id ='dynamic-json-ld';
+        scriptTag.type ='application/ld+json';
         document.head.appendChild(scriptTag);
       }
       scriptTag.textContent = JSON.stringify(schema);

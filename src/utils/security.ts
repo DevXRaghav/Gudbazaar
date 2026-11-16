@@ -2,7 +2,7 @@ import type { CustomerProfile } from '../types';
 
 /**
  * GUDBAZAAR CHIEF CYBERSECURITY OFFICER (CISO) DEFENSE SUITE
- * 
+ *
  * Production-grade application security controls:
  * - Anti-XSS (Cross-Site Scripting) & HTML sanitization
  * - Anti-SQLi / NoSQLi heuristic input validation
@@ -36,22 +36,22 @@ export const SECURITY_RULES = {
  * Escapes potentially dangerous characters to prevent DOM-based XSS.
  */
 export function sanitizeText(input: unknown): string {
-  if (typeof input !== 'string') return '';
+  if (typeof input !=='string') return '';
   return input
     .trim()
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#x27;')
+    .replace(/\//g,'&#x2F;');
 }
 
 /**
  * Validates whether an input string contains dangerous injection sequences
  * (e.g., <script>, javascript:, onerror=, SQL comment tokens, directory traversal).
  */
-export function auditInputSecurity(input: string, fieldName = 'Input'): { isSafe: boolean; errorMessage?: string } {
+export function auditInputSecurity(input: string, fieldName ='Input'): { isSafe: boolean; errorMessage?: string } {
   if (!input) return { isSafe: true };
 
   // Check input length to prevent denial-of-service / buffer allocation
@@ -158,7 +158,7 @@ export function sanitizeSlug(slug: string): string {
   if (!slug) return '';
   return slug
     .toLowerCase()
-    .replace(/[^a-z0-9-]/g, '') // only lowercase letters, digits, and hyphens allowed
+    .replace(/[^a-z0-9-]/g,'') // only lowercase letters, digits, and hyphens allowed
     .slice(0, 80);
 }
 
@@ -167,7 +167,7 @@ export function sanitizeSlug(slug: string): string {
  */
 export function checkCouponRateLimit(): { isAllowed: boolean; errorMessage?: string } {
   const now = Date.now();
-  const key = 'coupon_rate_limit';
+  const key ='coupon_rate_limit';
   const bucket = rateLimiters[key] || { attempts: 0, lastAttemptTime: now, lockedUntil: 0 };
 
   // Check if actively locked
@@ -184,7 +184,7 @@ export function checkCouponRateLimit(): { isAllowed: boolean; errorMessage?: str
 
 export function recordFailedCouponAttempt(): string | null {
   const now = Date.now();
-  const key = 'coupon_rate_limit';
+  const key ='coupon_rate_limit';
   const bucket = rateLimiters[key] || { attempts: 0, lastAttemptTime: now, lockedUntil: 0 };
 
   // Reset if time elapsed
@@ -199,7 +199,7 @@ export function recordFailedCouponAttempt(): string | null {
   if (bucket.attempts >= SECURITY_RULES.MAX_COUPON_ATTEMPTS) {
     bucket.lockedUntil = now + SECURITY_RULES.COUPON_LOCKOUT_MS;
     rateLimiters[key] = bucket;
-    return `Security Lock Activated: Maximum failed coupon attempts reached. Blocked for 60 seconds.`;
+    return`Security Lock Activated: Maximum failed coupon attempts reached. Blocked for 60 seconds.`;
   }
 
   rateLimiters[key] = bucket;
@@ -215,7 +215,7 @@ export function resetCouponRateLimit(): void {
  */
 export function checkAuthRateLimit(): { isAllowed: boolean; errorMessage?: string } {
   const now = Date.now();
-  const key = 'auth_rate_limit';
+  const key ='auth_rate_limit';
   const bucket = rateLimiters[key] || { attempts: 0, lastAttemptTime: now, lockedUntil: 0 };
 
   if (bucket.lockedUntil > now) {
@@ -231,7 +231,7 @@ export function checkAuthRateLimit(): { isAllowed: boolean; errorMessage?: strin
 
 export function recordFailedAuthAttempt(): string | null {
   const now = Date.now();
-  const key = 'auth_rate_limit';
+  const key ='auth_rate_limit';
   const bucket = rateLimiters[key] || { attempts: 0, lastAttemptTime: now, lockedUntil: 0 };
 
   if (now - bucket.lastAttemptTime > SECURITY_RULES.AUTH_LOCKOUT_MS) {
@@ -245,7 +245,7 @@ export function recordFailedAuthAttempt(): string | null {
   if (bucket.attempts >= SECURITY_RULES.MAX_AUTH_ATTEMPTS) {
     bucket.lockedUntil = now + SECURITY_RULES.AUTH_LOCKOUT_MS;
     rateLimiters[key] = bucket;
-    return `Security Lock: Suspicious login activity detected. Login locked for 60 seconds.`;
+    return`Security Lock: Suspicious login activity detected. Login locked for 60 seconds.`;
   }
 
   rateLimiters[key] = bucket;
@@ -260,15 +260,15 @@ export function resetAuthRateLimit(): void {
  * One-way cryptographic SHA-256 hash using Web Crypto API.
  * Ensures passwords are never stored in cleartext in client-side storage during development.
  */
-export async function hashCredential(value: string, salt: string = 'gudbazaar_auth_salt_v1'): Promise<string> {
+export async function hashCredential(value: string, salt: string ='gudbazaar_auth_salt_v1'): Promise<string> {
   if (!value) return '';
   try {
-    if (typeof crypto !== 'undefined' && crypto.subtle) {
+    if (typeof crypto !=='undefined' && crypto.subtle) {
       const encoder = new TextEncoder();
       const data = encoder.encode(`${salt}:${value}`);
       const hashBuffer = await crypto.subtle.digest('SHA-256', data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+      return hashArray.map((b) => b.toString(16).padStart(2,'0')).join('');
     }
   } catch {
     // fallback if WebCrypto subtle is unavailable
@@ -276,7 +276,7 @@ export async function hashCredential(value: string, salt: string = 'gudbazaar_au
   // Fallback hash implementation (FNV-1a 64-bit style)
   let h1 = 0xdeadbeef;
   let h2 = 0x41c64e6d;
-  const str = `${salt}:${value}`;
+  const str =`${salt}:${value}`;
   for (let i = 0; i < str.length; i++) {
     const ch = str.charCodeAt(i);
     h1 = Math.imul(h1 ^ ch, 2654435761);
@@ -290,11 +290,11 @@ export async function hashCredential(value: string, salt: string = 'gudbazaar_au
 /**
  * Synchronous credential hash fallback for synchronous auth operations.
  */
-export function hashCredentialSync(value: string, salt: string = 'gudbazaar_auth_salt_v1'): string {
+export function hashCredentialSync(value: string, salt: string ='gudbazaar_auth_salt_v1'): string {
   if (!value) return '';
   let h1 = 0xdeadbeef;
   let h2 = 0x41c64e6d;
-  const str = `${salt}:${value}`;
+  const str =`${salt}:${value}`;
   for (let i = 0; i < str.length; i++) {
     const ch = str.charCodeAt(i);
     h1 = Math.imul(h1 ^ ch, 2654435761);

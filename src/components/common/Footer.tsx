@@ -5,7 +5,7 @@ import { GudbazaarLogo } from './Logo';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#4A2415] dark:bg-[#150B07] text-[#FFF9EF] border-t border-[#4A2415] dark:border-[#3B2519] pt-16 pb-12 safe-pb mt-20 transition-colors">
+    <footer className="bg-[#4A2415] text-[#FFF9EF] border-t border-[#4A2415] pt-16 pb-12 safe-pb mt-20">
       {/* Trust Badges Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 border-b border-[#FFF9EF]/10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
 
       {/* Main Footer Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-5 gap-10">
-        
+       
         {/* Brand Information */}
         <div className="md:col-span-2 flex flex-col gap-4">
           <GudbazaarLogo variant="light" size="md" />
