@@ -169,15 +169,15 @@ export const ShopPage: React.FC = () => {
           </div>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#EBF3E8] text-[#47752F] text-[11px] font-bold uppercase tracking-wider mb-2 border border-[#47752F]/20">
-                <ShieldCheck className="w-3.5 h-3.5" />
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#47752F] tracking-wide mb-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
                 <span>Roots of Uttar Pradesh · Govt. of India Recognized</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-[#4A2415] tracking-tight">
-                Pure Organic & Fresh Collection
+              </p>
+              <h1 className="font-display text-3xl sm:text-4xl font-bold text-[#4A2415] tracking-tight text-balance">
+                Pure Organic &amp; Fresh Collection
               </h1>
-              <p className="mt-1 text-xs sm:text-sm text-[#4A2415]/80 max-w-2xl leading-relaxed">
-                100% Organic & freshly prepared in Western UP. Choose between <strong>Airtight Packets</strong> and <strong>Reusable Jars</strong> in <strong>500g and 1000g</strong> pack sizes. Always keep away from moisture!
+              <p className="mt-1.5 text-xs sm:text-sm text-[#4A2415]/80 max-w-2xl leading-relaxed">
+                100% Organic &amp; freshly prepared in Western UP. Choose between <strong>Airtight Packets</strong> and <strong>Reusable Jars</strong> in <strong>500g and 1000g</strong> pack sizes. Always keep away from moisture!
               </p>
             </div>
 

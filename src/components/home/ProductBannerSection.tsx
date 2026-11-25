@@ -81,15 +81,18 @@ export const ALL_PRODUCT_BANNERS: BannerItem[] = [
 
 export const ProductBannerSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isUserPaused, setIsUserPaused] = useState(false);
+
+  const isRunning = !isHovered && !isUserPaused;
 
   useEffect(() => {
-    if (isPaused || ALL_PRODUCT_BANNERS.length <= 1) return;
+    if (!isRunning || ALL_PRODUCT_BANNERS.length <= 1) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % ALL_PRODUCT_BANNERS.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isRunning, currentIndex]);
 
   const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -107,102 +110,136 @@ export const ProductBannerSection: React.FC = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-[#1A0D07] border-b border-[#E9DDC9]/70"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
+      className="relative w-full overflow-hidden bg-[#1A0D07]"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      aria-label="Featured seasonal offers"
     >
-      <div className="relative w-full">
-        <div className="relative w-full">
-          <div className="relative w-full min-h-[420px] sm:min-h-[450px] lg:min-h-[520px] xl:min-h-[560px] flex items-end md:items-center overflow-hidden">
-            {/* Full-Size Background Hero Photograph */}
+      <div className="relative w-full min-h-[440px] sm:min-h-[480px] lg:min-h-[540px] xl:min-h-[590px] flex items-end md:items-center overflow-hidden">
+        {/* Stacked Full-Bleed Slides for Smooth Crossfade + Subtle Ken-Burns */}
+        {ALL_PRODUCT_BANNERS.map((banner, idx) => {
+          const isActive = idx === currentIndex;
+          return (
             <img
-              key={currentBanner.id}
-              src={currentBanner.imageUrl}
-              alt={currentBanner.title}
+              key={banner.id}
+              src={banner.imageUrl}
+              alt={banner.title}
               referrerPolicy="no-referrer"
-              className="absolute inset-0 w-full h-full object-cover object-[78%_center] md:object-center transition-opacity duration-500"
+              aria-hidden={!isActive}
+              className={`absolute inset-0 w-full h-full object-cover object-[78%_center] md:object-center transition-opacity duration-700 ease-out ${
+                isActive ? 'opacity-100 animate-gb-kenburns' : 'opacity-0 pointer-events-none'
+              }`}
               onError={(e) => {
                 e.currentTarget.src = HERO_IMAGE;
               }}
             />
+          );
+        })}
 
-            {/* Editorial Contrast Scrim — clear readability left/bottom while leaving right product frame bright & uncropped */}
-            <div
-              className="absolute inset-0 bg-gradient-to-t from-[#1A0D07]/95 via-[#1A0D07]/75 to-[#1A0D07]/25 md:bg-gradient-to-r md:from-[#1A0D07] md:via-[#1A0D07]/85 md:via-[46%] md:to-transparent"
-              aria-hidden="true"
-            />
+        {/* Measured Editorial Contrast Scrim */}
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[#180C06]/95 via-[#180C06]/70 to-[#180C06]/20 md:bg-gradient-to-r md:from-[#180C06]/95 md:via-[#180C06]/80 md:via-[46%] md:to-transparent"
+          aria-hidden="true"
+        />
 
-            {/* Clean Offer Content Layer */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 pt-28 pb-14 md:py-16">
-              <div className="max-w-xl">
-                <p className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-[#F5AA28]">
-                  {currentBanner.offerKicker}
-                </p>
-
-                <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.08] text-balance drop-shadow-sm">
-                  {currentBanner.title}
-                </h2>
-
-                <p className="mt-3.5 text-sm sm:text-base text-[#FFF9EF]/90 font-normal leading-relaxed tabular-nums">
-                  {currentBanner.offerSummary}
-                </p>
-
-                <div className="mt-7 flex flex-wrap items-center gap-6">
-                  <Link
-                    to={currentBanner.ctaLink}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#E99A19] hover:bg-[#F5AA28] text-[#1A0D07] text-xs sm:text-sm font-bold uppercase tracking-wider rounded-xl shadow-lg transition-colors touch-manipulation"
-                  >
-                    <span>{currentBanner.ctaLabel}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-
-                  <Link
-                    to={currentBanner.secondaryLink}
-                    className="text-xs sm:text-sm font-semibold text-[#FFF9EF]/85 hover:text-[#F5AA28] underline underline-offset-4 decoration-white/30 hover:decoration-[#F5AA28] transition-colors touch-manipulation"
-                  >
-                    {currentBanner.secondaryLabel}
-                  </Link>
-                </div>
-              </div>
+        {/* Editorial Offer Content Layer */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 pt-28 pb-18 md:py-16">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-2.5 text-[11px] sm:text-xs font-semibold tracking-[0.14em] uppercase text-[#F5AA28]">
+              <span>{currentBanner.offerKicker}</span>
             </div>
 
-            {/* Subtle Edge Carousel Controls */}
-            <button
-              type="button"
-              onClick={handlePrev}
-              className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/35 hover:bg-black/60 text-white border border-white/15 items-center justify-center transition-colors z-20 focus:outline-none touch-manipulation cursor-pointer"
-              aria-label="Previous offer banner"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleNext}
-              className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/35 hover:bg-black/60 text-white border border-white/15 items-center justify-center transition-colors z-20 focus:outline-none touch-manipulation cursor-pointer"
-              aria-label="Next offer banner"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            <h1 className="font-display mt-3.5 text-3xl sm:text-4xl lg:text-[52px] font-bold text-white tracking-tight leading-[1.06] text-balance drop-shadow-sm">
+              {currentBanner.title}
+            </h1>
 
-            {/* Minimal Slide Bars */}
-            <div className="absolute bottom-5 inset-x-0 flex items-center justify-center gap-2 z-20">
-              {ALL_PRODUCT_BANNERS.map((b, idx) => (
-                <button
-                  key={b.id}
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setCurrentIndex(idx);
-                  }}
-                  className={`h-1.5 rounded-full transition-all touch-manipulation cursor-pointer ${
-                    currentIndex === idx
-                      ?'w-8 bg-[#F5AA28]'
-                      : 'w-4 bg-white/35 hover:bg-white/65'
-                  }`}
-                  aria-label={`Go to banner ${idx + 1}: ${b.title}`}
-                />
-              ))}
+            <p className="mt-4 text-sm sm:text-base text-[#FFF9EF]/90 font-normal leading-relaxed tabular-nums max-w-lg">
+              {currentBanner.offerSummary}
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-6">
+              <Link
+                to={currentBanner.ctaLink}
+                className="inline-flex items-center gap-2.5 px-6.5 py-3.5 bg-[#E99A19] hover:bg-[#F5AA28] text-[#1A0D07] text-xs sm:text-sm font-bold tracking-wide rounded-xl shadow-lg shadow-black/25 hover:-translate-y-0.5 transition-all touch-manipulation"
+              >
+                <span>{currentBanner.ctaLabel}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <Link
+                to={currentBanner.secondaryLink}
+                className="text-xs sm:text-sm font-semibold text-[#FFF9EF]/90 hover:text-[#F5AA28] underline underline-offset-4 decoration-white/35 hover:decoration-[#F5AA28] transition-colors touch-manipulation"
+              >
+                {currentBanner.secondaryLabel}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Modern Glassmorphic Edge Arrows */}
+        <button
+          type="button"
+          onClick={handlePrev}
+          className="hidden sm:flex absolute left-4 lg:left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md text-white border border-white/20 items-center justify-center transition-all z-20 focus:outline-none touch-manipulation cursor-pointer"
+          aria-label="Previous offer banner"
+        >
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <button
+          type="button"
+          onClick={handleNext}
+          className="hidden sm:flex absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/30 hover:bg-black/60 backdrop-blur-md text-white border border-white/20 items-center justify-center transition-all z-20 focus:outline-none touch-manipulation cursor-pointer"
+          aria-label="Next offer banner"
+        >
+          <ChevronRight className="w-5 h-5" />
+        </button>
+
+        {/* Bottom Running Progress Bars + Slide Index */}
+        <div className="absolute bottom-5 inset-x-0 z-20">
+          <div className="max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 flex-1 max-w-xs">
+              {ALL_PRODUCT_BANNERS.map((b, idx) => {
+                const isActive = idx === currentIndex;
+                return (
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setCurrentIndex(idx);
+                    }}
+                    className="relative h-1.5 flex-1 rounded-full bg-white/25 overflow-hidden cursor-pointer touch-manipulation focus:outline-none"
+                    aria-label={`Go to banner ${idx + 1}: ${b.title}`}
+                  >
+                    {isActive && (
+                      <span
+                        key={`${b.id}-${currentIndex}`}
+                        className={`block h-full w-full bg-[#F5AA28] rounded-full animate-gb-banner-progress ${
+                          !isRunning ? 'gb-marquee-paused' : ''
+                        }`}
+                      />
+                    )}
+                    {idx < currentIndex && (
+                      <span className="block h-full w-full bg-[#F5AA28]/80 rounded-full" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center gap-3 text-xs font-semibold text-white/85 tabular-nums">
+              <span>
+                0{currentIndex + 1} <span className="text-white/40">/ 0{ALL_PRODUCT_BANNERS.length}</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsUserPaused((p) => !p)}
+                className="text-[11px] font-semibold text-white/80 hover:text-[#F5AA28] underline underline-offset-4 decoration-white/30 transition-colors cursor-pointer touch-manipulation"
+                aria-label={isUserPaused ? 'Resume offer slider' : 'Pause offer slider'}
+              >
+                {isUserPaused ? 'Resume' : 'Pause'}
+              </button>
             </div>
           </div>
         </div>

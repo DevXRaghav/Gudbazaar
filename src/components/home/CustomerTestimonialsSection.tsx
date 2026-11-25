@@ -1,6 +1,15 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, MapPin, ArrowUpRight, Info } from 'lucide-react';
+import {
+  Star,
+  MapPin,
+  ArrowUpRight,
+  Info,
+  ChevronLeft,
+  ChevronRight,
+  Pause,
+  Play,
+} from 'lucide-react';
 import { CUSTOMER_TESTIMONIALS, TESTIMONIALS_CONFIG } from '../../data/testimonials';
 import { Testimonial } from '../../types';
 
@@ -13,12 +22,24 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
   testimonials = CUSTOMER_TESTIMONIALS,
   isSampleCollection = TESTIMONIALS_CONFIG.isSampleData,
 }) => {
-  const [filter, setFilter] = useState<'all' |'indian' |'expat'>('all');
+  const [filter, setFilter] = useState<'all' | 'indian' | 'expat'>('all');
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isTouching, setIsTouching] = useState(false);
+
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const scrollPosRef = useRef<number>(0);
 
   const filteredTestimonials = useMemo(() => {
-    if (filter ==='all') return testimonials;
+    if (filter === 'all') return testimonials;
     return testimonials.filter((item) => item.residentCategory === filter);
   }, [testimonials, filter]);
+
+  // Duplicate filtered list for seamless continuous running loop
+  const loopedTestimonials = useMemo(
+    () => [...filteredTestimonials, ...filteredTestimonials],
+    [filteredTestimonials]
+  );
 
   const averageRating = useMemo(() => {
     if (testimonials.length === 0) return '0.0';
@@ -26,30 +47,94 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
     return (sum / testimonials.length).toFixed(1);
   }, [testimonials]);
 
+  useEffect(() => {
+    const el = trackRef.current;
+    if (el) {
+      el.scrollLeft = 0;
+      scrollPosRef.current = 0;
+    }
+  }, [filter]);
+
+  // Gentle auto-running horizontal slider
+  useEffect(() => {
+    if (!isPlaying || isHovered || isTouching) return;
+
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    let rafId = 0;
+    let lastTime = performance.now();
+    const speedPxPerSec = 32;
+
+    const el = trackRef.current;
+    if (el) {
+      scrollPosRef.current = el.scrollLeft;
+    }
+
+    const step = (now: number) => {
+      const container = trackRef.current;
+      if (container) {
+        const dt = Math.min(now - lastTime, 50);
+        lastTime = now;
+
+        const halfWidth = container.scrollWidth / 2;
+        if (halfWidth > 0) {
+          scrollPosRef.current += (speedPxPerSec * dt) / 1000;
+          if (scrollPosRef.current >= halfWidth) {
+            scrollPosRef.current -= halfWidth;
+          }
+          container.scrollLeft = scrollPosRef.current;
+        }
+      }
+      rafId = requestAnimationFrame(step);
+    };
+
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [isPlaying, isHovered, isTouching, filter]);
+
+  const handleStep = (direction: 'prev' | 'next') => {
+    const container = trackRef.current;
+    if (!container) return;
+    const stepSize = Math.min(360, container.clientWidth * 0.85);
+    const halfWidth = container.scrollWidth / 2;
+
+    let nextLeft = container.scrollLeft + (direction === 'next' ? stepSize : -stepSize);
+    if (nextLeft < 0 && halfWidth > 0) {
+      container.scrollLeft = halfWidth + container.scrollLeft;
+      nextLeft = container.scrollLeft - stepSize;
+    } else if (halfWidth > 0 && nextLeft >= halfWidth) {
+      nextLeft -= halfWidth;
+    }
+
+    scrollPosRef.current = Math.max(0, nextLeft);
+    container.scrollTo({ left: scrollPosRef.current, behavior: 'smooth' });
+  };
+
   return (
     <section
       aria-labelledby="testimonials-heading"
-      className="py-16 sm:py-20 bg-white border-t border-[#E9DDC9]/70 transition-colors"
+      className="py-16 sm:py-22 bg-white border-t border-[#E9DDC9]/75 overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
           <div className="max-w-2xl">
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#47752F] uppercase tracking-wider">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-[#47752F] tracking-wide">
               <span>Customer Reviews &amp; Testimonials</span>
               {isSampleCollection && (
                 <>
-                  <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
-                  <span className="text-[#8D5B18] normal-case font-semibold">
-                    Sample Preview
-                  </span>
+                  <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
+                  <span className="text-[#8D5B18] font-semibold">Sample Preview</span>
                 </>
               )}
             </div>
 
             <h2
               id="testimonials-heading"
-              className="text-2xl sm:text-3xl font-extrabold text-[#4A2415] tracking-tight mt-1 text-balance"
+              className="font-display text-3xl sm:text-4xl font-bold text-[#4A2415] tracking-tight mt-1.5 text-balance"
             >
               Loved Across Kitchens in India
             </h2>
@@ -59,58 +144,90 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
                 <Star className="w-4 h-4 text-[#E99A19] fill-current" />
                 {averageRating} / 5.0
               </span>
-              <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
-              <span className="tabular-nums">{testimonials.length} {isSampleCollection ?'sample testimonials' : 'customer reviews'}</span>
-              <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
+              <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
+              <span className="tabular-nums">
+                {testimonials.length} {isSampleCollection ? 'sample testimonials' : 'customer reviews'}
+              </span>
+              <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
               <span>Indian households &amp; expats living in India</span>
             </div>
           </div>
 
-          {/* Interactive Audience Filter */}
-          <div
-            role="tablist"
-            aria-label="Filter testimonials by resident group"
-            className="inline-flex flex-wrap items-center gap-1 p-1 bg-[#FFF9EF] border border-[#E9DDC9] rounded-xl self-start lg:self-auto"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={filter ==='all'}
-              onClick={() => setFilter('all')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
-                filter ==='all'
-                  ?'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
-                  : 'text-[#4A2415]/80 hover:text-[#4A2415]'
-              }`}
+          {/* Interactive Audience Filter + Slider Controls */}
+          <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto">
+            <div
+              role="tablist"
+              aria-label="Filter testimonials by resident group"
+              className="inline-flex flex-wrap items-center gap-1 p-1 bg-[#FFF9EF] border border-[#E9DDC9] rounded-xl"
             >
-              All ({testimonials.length})
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={filter ==='indian'}
-              onClick={() => setFilter('indian')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
-                filter ==='indian'
-                  ?'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
-                  : 'text-[#4A2415]/80 hover:text-[#4A2415]'
-              }`}
-            >
-              Indian Customers ({testimonials.filter((t) => t.residentCategory ==='indian').length})
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={filter ==='expat'}
-              onClick={() => setFilter('expat')}
-              className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
-                filter ==='expat'
-                  ?'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
-                  : 'text-[#4A2415]/80 hover:text-[#4A2415]'
-              }`}
-            >
-              Expats in India ({testimonials.filter((t) => t.residentCategory ==='expat').length})
-            </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={filter === 'all'}
+                onClick={() => setFilter('all')}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
+                  filter === 'all'
+                    ? 'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
+                    : 'text-[#4A2415]/80 hover:text-[#4A2415]'
+                }`}
+              >
+                All ({testimonials.length})
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={filter === 'indian'}
+                onClick={() => setFilter('indian')}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
+                  filter === 'indian'
+                    ? 'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
+                    : 'text-[#4A2415]/80 hover:text-[#4A2415]'
+                }`}
+              >
+                Indian ({testimonials.filter((t) => t.residentCategory === 'indian').length})
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={filter === 'expat'}
+                onClick={() => setFilter('expat')}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-lg whitespace-nowrap shrink-0 transition-colors touch-manipulation cursor-pointer ${
+                  filter === 'expat'
+                    ? 'bg-[#4A2415] text-[#FFF9EF] shadow-xs'
+                    : 'text-[#4A2415]/80 hover:text-[#4A2415]'
+                }`}
+              >
+                Expats in India ({testimonials.filter((t) => t.residentCategory === 'expat').length})
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setIsPlaying((p) => !p)}
+                aria-label={isPlaying ? 'Pause testimonials slider' : 'Play testimonials slider'}
+                title={isPlaying ? 'Pause slider' : 'Play slider'}
+                className="w-9 h-9 rounded-xl border border-[#E9DDC9] bg-[#FFF9EF] hover:border-[#47752F] text-[#4A2415] hover:text-[#47752F] flex items-center justify-center transition-colors cursor-pointer touch-manipulation"
+              >
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleStep('prev')}
+                aria-label="Previous testimonials"
+                className="w-9 h-9 rounded-xl border border-[#E9DDC9] bg-[#FFF9EF] hover:border-[#47752F] text-[#4A2415] hover:text-[#47752F] flex items-center justify-center transition-colors cursor-pointer touch-manipulation"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleStep('next')}
+                aria-label="Next testimonials"
+                className="w-9 h-9 rounded-xl border border-[#E9DDC9] bg-[#FFF9EF] hover:border-[#47752F] text-[#4A2415] hover:text-[#47752F] flex items-center justify-center transition-colors cursor-pointer touch-manipulation"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -119,22 +236,33 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
           <div className="mb-8 px-4 py-3 rounded-xl bg-[#FFF9EF] border border-[#E9DDC9] flex items-start gap-2.5 text-xs text-[#4A2415]/85">
             <Info className="w-4 h-4 text-[#47752F] shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong className="text-[#4A2415]">{TESTIMONIALS_CONFIG.disclaimerTitle}:</strong>{''}
+              <strong className="text-[#4A2415]">{TESTIMONIALS_CONFIG.disclaimerTitle}:</strong>{' '}
               {TESTIMONIALS_CONFIG.disclaimerText}
             </p>
           </div>
         )}
+      </div>
 
-        {/* Responsive Testimonials Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6">
-          {filteredTestimonials.map((item) => (
+      {/* Smooth Running Horizontal Testimonials Slider */}
+      <div
+        className="relative max-w-[1440px] mx-auto gb-edge-fade"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={() => setIsTouching(true)}
+        onTouchEnd={() => setIsTouching(false)}
+      >
+        <div
+          ref={trackRef}
+          className="flex gap-5 sm:gap-6 overflow-x-auto scrollbar-none px-4 sm:px-6 lg:px-8 py-2"
+        >
+          {loopedTestimonials.map((item, idx) => (
             <article
-              key={item.id}
-              className="flex flex-col justify-between bg-[#FFF9EF] rounded-xl border border-[#E9DDC9] p-5 sm:p-6 transition-colors hover:border-[#47752F]/50"
+              key={`${item.id}-${idx}`}
+              className="w-[300px] sm:w-[340px] shrink-0 flex flex-col justify-between bg-[#FFF9EF] rounded-2xl border border-[#E9DDC9] p-6 transition-all duration-300 hover:border-[#47752F]/50 hover:shadow-md hover:shadow-[#4A2415]/5"
             >
               <div>
-                {/* Rating & Sample Marker Row (clean unboxed text) */}
-                <div className="flex items-center justify-between gap-2 mb-3">
+                {/* Rating & Sample Marker Row */}
+                <div className="flex items-center justify-between gap-2 mb-3.5">
                   <div
                     className="flex items-center gap-0.5 text-[#E99A19]"
                     aria-label={`${item.rating} out of 5 stars`}
@@ -144,7 +272,7 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
                         key={starIndex}
                         className={`w-3.5 h-3.5 ${
                           starIndex <= item.rating
-                            ?'fill-current text-[#E99A19]'
+                            ? 'fill-current text-[#E99A19]'
                             : 'text-[#E9DDC9]'
                         }`}
                       />
@@ -155,14 +283,14 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
                   </div>
 
                   {item.isSample && (
-                    <span className="text-[11px] font-medium text-[#4A2415]/60">
+                    <span className="text-[11px] font-medium text-[#4A2415]/55">
                       Sample Review
                     </span>
                   )}
                 </div>
 
                 {/* Review Body */}
-                <blockquote className="text-xs sm:text-[13px] text-[#4A2415]/90 leading-relaxed">
+                <blockquote className="text-[13px] sm:text-sm text-[#4A2415]/90 leading-relaxed">
                   &ldquo;{item.review}&rdquo;
                 </blockquote>
               </div>
@@ -178,7 +306,7 @@ export const CustomerTestimonialsSection: React.FC<CustomerTestimonialsSectionPr
                       <MapPin className="w-3 h-3 shrink-0" />
                       {item.city}, {item.state}
                     </span>
-                    <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
+                    <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
                     <span>{item.residentLabel}</span>
                   </div>
                 </div>

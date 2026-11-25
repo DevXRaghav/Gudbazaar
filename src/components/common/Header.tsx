@@ -35,15 +35,43 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSearch }) => {
 
   return (
     <>
-      {/* SECTION A — ANNOUNCEMENT BAR */}
-      <div className="bg-[#4A2415] text-[#FFF9EF] text-[11px] sm:text-xs py-1.5 sm:py-2 px-3 sm:px-4 text-center tracking-wide font-medium flex items-center justify-center gap-1.5 sm:gap-2 overflow-hidden border-b border-[#3B2519]/40">
-        <span className="truncate">🌿 100% Organic & Prepared Fresh · Sourced from the Roots of Uttar Pradesh (Govt. of India Recognized Sugarcane Belt)</span>
-        <span className="hidden sm:inline text-[#E99A19]">·</span>
-        <span className="hidden sm:inline text-[#FFF9EF]/90">Free Delivery above ₹499</span>
+      {/* SECTION A — RUNNING ANNOUNCEMENT TICKER */}
+      <div
+        aria-label="Store announcements and offers"
+        className="bg-[#34180D] text-[#FFF9EF] text-[11px] sm:text-xs py-2 overflow-hidden border-b border-[#4A2415]/60 select-none gb-marquee-container"
+      >
+        <div className="flex w-max animate-gb-marquee-medium">
+          {[0, 1].map((dupIdx) => (
+            <div
+              key={dupIdx}
+              aria-hidden={dupIdx === 1}
+              className="flex items-center shrink-0"
+            >
+              {[
+                '100% Organic & Freshly Prepared Jaggery',
+                'Sourced Directly from the Roots of Uttar Pradesh',
+                'Free Express Delivery on Orders Above ₹499',
+                'Extra 15% Off Your First Order · Code FIRSTGUD',
+                'Available in Airtight Resealable Pouches & Reusable PET Jars',
+                'Zero Added Sugar · Zero Chemicals · Zero Preservatives',
+              ].map((msg, idx) => (
+                <div
+                  key={`${dupIdx}-${idx}`}
+                  className="flex items-center whitespace-nowrap px-5 sm:px-7 font-medium tracking-wide text-[#FFF9EF]/95"
+                >
+                  <span>{msg}</span>
+                  <span className="ml-5 sm:ml-7 text-[#E99A19]" aria-hidden="true">
+                    ·
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* SECTION B — STICKY NAVIGATION BAR (Strict 3-zone contract) */}
-      <header className="sticky top-0 z-40 bg-[#FFFFFF]/95 border-b border-[#E9DDC9]/70 backdrop-blur-md">
+      <header className="sticky top-0 z-40 bg-[#FFFFFF]/92 border-b border-[#E9DDC9]/75 backdrop-blur-lg shadow-[0_1px_12px_rgba(74,36,21,0.04)]">
         <div className="max-w-7xl mx-auto px-3 sm:px-5 lg:px-8 h-16 sm:h-17 md:h-18 flex items-center justify-between gap-2 sm:gap-3 lg:gap-8">
          
           {/* Zone 1: Brand Wordmark & Motif */}

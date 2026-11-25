@@ -85,42 +85,34 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="group relative flex flex-col bg-[#FFFFFF] rounded-xl border border-[#E9DDC9]/80 overflow-hidden hover:border-[#47752F]/50 hover:shadow-lg transition-all duration-300">
-     
+    <div className="group relative flex flex-col bg-[#FFFFFF] rounded-2xl border border-[#E9DDC9]/80 overflow-hidden hover:border-[#47752F]/45 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#4A2415]/8 transition-all duration-300 h-full">
       {/* Product Image Container */}
       <Link
         to={`/product/${product.slug}`}
-        className="relative block aspect-4/3 w-full bg-[#FFF9EF] overflow-hidden"
+        className="relative block aspect-4/3 w-full bg-[#FBF5EC] overflow-hidden"
       >
         <img
           src={product.primaryImage}
           alt={product.name}
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover object-center group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           loading="lazy"
           onError={(e) => {
             e.currentTarget.src = HERO_IMAGE;
           }}
         />
 
-        {/* Discount, Bestseller & Packaging Tag */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10">
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm tracking-wide text-white ${
-            product.packagingType ==='Jar' ?'bg-[#4A2415]' : 'bg-[#47752F]'
-          }`}>
-            {product.packagingType ==='Jar' ?'Airtight Jar' : 'Airtight Packet'}
+        {/* Single Minimal Corner Offer Tag */}
+        {displayDiscount > 0 && (
+          <span className="absolute top-3 left-3 z-10 text-[10px] font-bold text-[#4A2415] bg-white/90 backdrop-blur-sm border border-[#E9DDC9]/80 px-2.5 py-1 rounded-md tracking-wide tabular-nums shadow-xs">
+            Save {displayDiscount}%
           </span>
-          {displayDiscount > 0 && (
-            <span className="text-[10px] font-bold text-[#FFFFFF] bg-[#E99A19] px-2 py-0.5 rounded-sm tracking-wide">
-              {displayDiscount}% OFF
-            </span>
-          )}
-        </div>
+        )}
 
         {/* Quick View Floating Action */}
         <button
           onClick={handleQuickView}
-          className="absolute right-2.5 bottom-2.5 p-2 bg-white/90 hover:bg-white text-[#4A2415] rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity focus:opacity-100 touch-manipulation"
+          className="absolute right-3 bottom-3 p-2.5 bg-white/95 hover:bg-[#4A2415] text-[#4A2415] hover:text-[#FFF9EF] rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 focus:opacity-100 touch-manipulation cursor-pointer"
           aria-label={`Quick view ${product.name}`}
           title="Quick View"
         >
@@ -129,30 +121,32 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </Link>
 
       {/* Product Details */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-white transition-colors">
+      <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between bg-white">
         <div>
-          {/* Category & Weight Metadata: Clean unboxed text with typographic separator */}
-          <div className="flex items-center gap-1.5 text-xs text-[#4A2415]/70 mb-1">
+          {/* Clean Unboxed Metadata Row */}
+          <div className="flex items-center gap-1.5 text-[11px] text-[#4A2415]/65 mb-1.5">
             <span className="font-semibold text-[#47752F]">{product.category}</span>
-            <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
-            <span className="font-semibold text-[#4A2415]">{product.packagingType}</span>
+            <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
+            <span className="font-medium text-[#4A2415]/80">
+              {product.packagingType === 'Jar' ? 'PET Jar' : 'Pouch'}
+            </span>
             {!enableWeightSelector && (
               <>
-                <span aria-hidden="true" className="text-[#E9DDC9]">·</span>
-                <span>500g / 1000g</span>
+                <span aria-hidden="true" className="text-[#D8C7AF]">·</span>
+                <span>500g / 1kg</span>
               </>
             )}
           </div>
 
           {/* Product Title */}
           <Link to={`/product/${product.slug}`} className="block group-hover:text-[#47752F] transition-colors">
-            <h3 className="text-base font-bold text-[#4A2415] line-clamp-1 leading-snug">
+            <h3 className="text-[15px] sm:text-base font-bold text-[#4A2415] line-clamp-1 leading-snug">
               {product.name}
             </h3>
           </Link>
 
           {/* Short Description */}
-          <p className="mt-1 text-xs text-[#4A2415]/75 line-clamp-2 leading-relaxed">
+          <p className="mt-1.5 text-xs text-[#4A2415]/70 line-clamp-2 leading-relaxed">
             {product.shortDescription}
           </p>
         </div>

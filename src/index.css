@@ -7,6 +7,103 @@
   --color-warm-cream: #FFF9EF;
   --color-natural-beige: #E9DDC9;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Smooth GPU-composited running sliders / marquees */
+@keyframes gb-marquee-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes gb-marquee-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes gb-banner-progress {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gb-kenburns {
+  0% {
+    transform: scale(1.0);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+.animate-gb-marquee-slow {
+  animation: gb-marquee-left 34s linear infinite;
+  will-change: transform;
+}
+
+.animate-gb-marquee-medium {
+  animation: gb-marquee-left 26s linear infinite;
+  will-change: transform;
+}
+
+.animate-gb-marquee-reverse {
+  animation: gb-marquee-right 38s linear infinite;
+  will-change: transform;
+}
+
+.gb-marquee-container:hover .animate-gb-marquee-slow,
+.gb-marquee-container:hover .animate-gb-marquee-medium,
+.gb-marquee-container:hover .animate-gb-marquee-reverse,
+.gb-marquee-paused {
+  animation-play-state: paused !important;
+}
+
+.animate-gb-banner-progress {
+  animation: gb-banner-progress 6s linear forwards;
+  transform-origin: left center;
+}
+
+.animate-gb-kenburns {
+  animation: gb-kenburns 7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.gb-edge-fade {
+  mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gb-marquee-slow,
+  .animate-gb-marquee-medium,
+  .animate-gb-marquee-reverse,
+  .animate-gb-banner-progress,
+  .animate-gb-kenburns {
+    animation: none !important;
+  }
 }
 
 :root {

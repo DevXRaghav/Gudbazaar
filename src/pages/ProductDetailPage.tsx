@@ -281,7 +281,7 @@ export const ProductDetailPage: React.FC = () => {
               </div>
 
               {/* Title */}
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#4A2415] leading-snug">
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#4A2415] leading-snug text-balance">
                 {product.name}
               </h1>
 
