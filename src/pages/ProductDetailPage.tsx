@@ -206,13 +206,21 @@ export const ProductDetailPage: React.FC = () => {
               <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none">
                 {product.galleryImages.map((img, idx) => {
                   const viewLabel =
-                    idx === 0
-                      ? product.packagingType ==='Jar'
-                        ?'Branded Jar'
-                        : 'Branded Packet'
-                      : idx === 1
-                        ?'Texture Close-Up'
-                        : 'Presentation';
+                    product.packagingType === 'Packet'
+                      ? idx === 0
+                        ? 'Front Pouch'
+                        : idx === 1
+                          ? 'Back of Pouch'
+                          : idx === 2
+                            ? 'Texture Close-Up'
+                            : 'Presentation'
+                      : idx === 0
+                        ? 'Front Jar'
+                        : idx === 1
+                          ? 'Back of Jar'
+                          : idx === 2
+                            ? 'Texture Close-Up'
+                            : 'Presentation';
                   return (
                     <button
                       key={idx}

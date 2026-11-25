@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { HERO_IMAGE } from '../../data/products';
 
-import bannerRawGudImg from '../../assets/images/plastic_banner_raw_gud_1794812842803.jpg';
-import bannerDryfruitsCubesImg from '../../assets/images/plastic_banner_dryfruits_cubes_1794812841803.jpg';
-import bannerPeanutAllInOneImg from '../../assets/images/plastic_banner_peanut_allinone_1794812841761.jpg';
-import bannerDesiKhandImg from '../../assets/images/plastic_banner_desi_khand_1794812843055.jpg';
-import bannerOrganicShakkarImg from '../../assets/images/plastic_banner_organic_shakkar_v2_1794812932470.jpg';
+import bannerRawGudImg from '../../assets/images/banner_dual_raw_gud_v2_1795590301212.jpg';
+import bannerDryfruitsCubesImg from '../../assets/images/banner_dual_dryfruits_v2_1795590309635.jpg';
+import bannerPeanutAllInOneImg from '../../assets/images/banner_dual_peanut_allinone_v2_1795590305625.jpg';
+import bannerDesiKhandImg from '../../assets/images/banner_dual_desi_khand_1795590214522.jpg';
+import bannerOrganicShakkarImg from '../../assets/images/banner_dual_organic_shakkar_1795590214966.jpg';
 
 export interface BannerItem {
   id: string;
